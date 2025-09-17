@@ -1,7 +1,6 @@
 // components/HeaderMobile.jsx
 "use client";
 
-// 1. AÑADE 'useState' a la importación de React
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -16,31 +15,39 @@ export default function HeaderMobile() {
   const { openModal } = useModal();
   const { cart } = useCarrito();
   const { openMenu } = useMenuLateral();
-  
-  // 2. QUITA 'isSearchFocused' y 'setIsSearchFocused' de esta línea
   const { searchTerm, setSearchTerm, suggestions } = useSearch();
   const { isVisible, isFullHeader } = useSmartHeader();
-  
-  // 3. AÑADE esta línea para manejar el foco localmente
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-
   useEffect(() => {
+    // ==================================================================
+    // === INICIO DE LA CORRECIÓN ===
+    // ==================================================================
     const mainContent = document.querySelector('#page-content-wrapper main');
+
     if (mainContent) {
-      mainContent.style.transition = 'none';
-      if (isFullHeader) {
-        mainContent.style.paddingTop = '188px';
+      // Condición: Solo ejecutar esta lógica en pantallas móviles (menores a 768px, que es el breakpoint 'md' de Tailwind)
+      if (window.innerWidth < 768) {
+        mainContent.style.transition = 'none';
+        if (isFullHeader) {
+          mainContent.style.paddingTop = '188px';
+        } else {
+          mainContent.style.paddingTop = '70px';
+        }
       } else {
-        mainContent.style.paddingTop = '70px';
+        // En pantallas de escritorio, nos aseguramos de que no haya padding-top
+        mainContent.style.paddingTop = '0';
       }
     }
+    // ==================================================================
+    // === FIN DE LA CORRECIÓN ===
+    // ==================================================================
   }, [isFullHeader]);
-
 
   const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   return (
+    // Este div ya tiene 'md:hidden' lo que lo oculta visualmente, pero el JS seguía corriendo.
     <div className={`md:hidden w-full fixed top-0 left-0 z-30 transition-transform duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
       
       <div className={`transition-[max-height] duration-300 ease-in-out overflow-hidden ${isFullHeader ? 'max-h-96' : 'max-h-0'}`}>
@@ -67,7 +74,6 @@ export default function HeaderMobile() {
       </div>
 
       <div className="bg-pink-50 py-2 border-t border-b border-pink-100 w-full">
-        {/* Ahora esto funcionará porque 'setIsSearchFocused' existe gracias a useState */}
         <div 
           className="relative px-4"
           onFocus={() => setIsSearchFocused(true)}

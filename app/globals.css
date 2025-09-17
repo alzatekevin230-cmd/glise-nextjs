@@ -1667,3 +1667,8 @@ body.menu-open {
     display: none !important;
   }
 }
+/* app/globals.css */
+
+.body-no-scroll {
+  overflow: hidden;
+}

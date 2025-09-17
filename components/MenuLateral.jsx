@@ -1,6 +1,8 @@
-// app/components/MenuLateral.jsx
+// components/MenuLateral.jsx
 "use client";
 
+// 1. IMPORTA 'useEffect' de React
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { useMenuLateral } from '@/contexto/ContextoMenuLateral';
 import { useAuth } from '@/contexto/ContextoAuth';
@@ -19,6 +21,29 @@ export default function MenuLateral() {
   const { currentUser, logout } = useAuth();
   const { openModal } = useModal();
 
+  // ==================================================================
+  // === INICIO DE LA SOLUCIÓN ===
+  // 2. AÑADE ESTE BLOQUE 'useEffect'
+  // ==================================================================
+  useEffect(() => {
+    // Si el menú está abierto, bloqueamos el scroll del body
+    if (isMenuOpen) {
+      document.body.classList.add('body-no-scroll');
+    } else {
+      // Si está cerrado, permitimos el scroll de nuevo
+      document.body.classList.remove('body-no-scroll');
+    }
+    
+    // Función de limpieza: se asegura de que el scroll se reactive si el componente desaparece
+    return () => {
+      document.body.classList.remove('body-no-scroll');
+    };
+  }, [isMenuOpen]); // Este efecto se ejecuta cada vez que 'isMenuOpen' cambia
+  // ==================================================================
+  // === FIN DE LA SOLUCIÓN ===
+  // ==================================================================
+
+
   const handleLogout = async () => {
     closeMenu();
     await logout();
@@ -33,6 +58,7 @@ export default function MenuLateral() {
     return null;
   }
 
+  // El resto del componente queda exactamente igual
   return (
     <div>
       <div 
@@ -49,7 +75,6 @@ export default function MenuLateral() {
             </button>
           </div>
           
-          {/* --- CAMBIO 1: Creamos un nuevo contenedor para el buscador --- */}
           <div className="p-4 border-b bg-pink-50">
             <div className="relative">
               <input type="text" placeholder="Busca tus productos..." className="w-full pl-5 pr-12 py-3 border-2 border-cyan-500 rounded-full text-sm" />
@@ -59,7 +84,6 @@ export default function MenuLateral() {
             </div>
           </div>
           
-          {/* --- CAMBIO 2: El buscador ya no está aquí dentro --- */}
           <div id="side-menu-content" className="p-4 flex-grow">
             <h3 className="menu-section-title">Tienda</h3>
             <Link href="/categoria/all" onClick={closeMenu} className="menu-link">
