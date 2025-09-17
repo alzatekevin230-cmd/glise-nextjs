@@ -16,9 +16,6 @@ import { getAllProducts } from '@/lib/data';
 import { ProveedorMenuLateral } from '@/contexto/ContextoMenuLateral';
 import BotonWhatsapp from '@/components/BotonWhatsapp';
 import BarraNavegacionMovil from '@/components/BarraNavegacionMovil';
-
-
-// --- IMPORTAMOS EL NUEVO LIGHTBOX ---
 import Lightbox from '@/components/Lightbox';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -35,9 +32,7 @@ export default async function RootLayout({ children }) {
     <html lang="es">
       <head>
          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
-  {/* --- AÑADE ESTA LÍNEA AQUÍ --- */}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ez-plus/1.2.2/jquery.ez-plus.min.css" />
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ez-plus/1.2.2/jquery.ez-plus.min.css" />
       </head>
       <body className={inter.className}>
         <ProveedorModal>
@@ -46,15 +41,28 @@ export default async function RootLayout({ children }) {
               <ProveedorMenuLateral>
                 <ProveedorProductos allProducts={allProducts}>
                   <Toaster position="bottom-center" />
+                  
+                  {/* --- INICIO DE LA ESTRUCTURA CORREGIDA --- */}
+                  
+                  {/* 1. Header y Menú Lateral ahora están fuera del div principal que se moverá */}
                   <Header />
                   <MenuLateral />
-                  <main className="pb-20 md:pb-0">{children}</main>
-                  <Footer />
+                  
+                  {/* 2. Este nuevo 'div' es la "lámina de vidrio" que se moverá */}
+                  <div id="page-content-wrapper" className="relative z-0">
+                    <main className="md:pt-0 pb-20 md:pb-0">{children}</main>
+                    <Footer />
+                  </div>
+
+                  {/* 3. Los modales y otros elementos fijos quedan al final */}
                   <CarritoModal />
                   <ModalAutenticacion />
                   <Lightbox />
                   <BotonWhatsapp />
                   <BarraNavegacionMovil />
+                  
+                  {/* --- FIN DE LA ESTRUCTURA CORREGIDA --- */}
+
                 </ProveedorProductos>
               </ProveedorMenuLateral>
             </ProveedorCarrito>

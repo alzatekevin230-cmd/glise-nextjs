@@ -28,7 +28,7 @@ export default async function PaginaProducto({ params }) {
   }));
   
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8">
+    <main className="container mx-auto px-2 sm:px-6 py-8">
       <BotonVolver texto="Volver a la tienda" />
       <div className="mt-8">
         <DetalleProductoCliente product={product} relatedProducts={relatedProducts} />

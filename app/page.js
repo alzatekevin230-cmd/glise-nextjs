@@ -53,7 +53,9 @@ export default async function HomePage() {
         <GliseProductsBanner />
         <GliseProducts products={gliseProductsData} />
         <NaturalProductsSection products={naturalProductsData} />
-        <ProductosVistosRecientemente allProducts={allProducts} />
+        <div className="container mx-auto px-2 sm:px-6">
+  <ProductosVistosRecientemente allProducts={allProducts} />
+</div>
         <ArticulosBlog posts={blogPosts} />
       </main>
     </>

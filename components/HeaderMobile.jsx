@@ -1,55 +1,73 @@
 // components/HeaderMobile.jsx
 "use client";
 
-import { useState } from 'react';
+// 1. AÑADE 'useState' a la importación de React
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useModal } from '@/contexto/ContextoModal';
 import { useCarrito } from '@/contexto/ContextoCarrito';
 import { useMenuLateral } from '@/contexto/ContextoMenuLateral';
-import { useSearch } from '@/hooks/useSearch'; // <-- Usamos nuestro hook
-import SearchResults from './SearchResults';   // <-- Usamos el componente de resultados
+import { useSearch } from '@/hooks/useSearch';
+import SearchResults from './SearchResults';
+import { useSmartHeader } from './hooks/useSmartHeader';
 
 export default function HeaderMobile() {
   const { openModal } = useModal();
   const { cart } = useCarrito();
   const { openMenu } = useMenuLateral();
+  
+  // 2. QUITA 'isSearchFocused' y 'setIsSearchFocused' de esta línea
+  const { searchTerm, setSearchTerm, suggestions } = useSearch();
+  const { isVisible, isFullHeader } = useSmartHeader();
+  
+  // 3. AÑADE esta línea para manejar el foco localmente
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-  // ¡La misma lógica en una sola línea!
-  const { searchTerm, setSearchTerm, suggestions } = useSearch();
+
+  useEffect(() => {
+    const mainContent = document.querySelector('#page-content-wrapper main');
+    if (mainContent) {
+      mainContent.style.transition = 'none';
+      if (isFullHeader) {
+        mainContent.style.paddingTop = '188px';
+      } else {
+        mainContent.style.paddingTop = '70px';
+      }
+    }
+  }, [isFullHeader]);
+
 
   const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   return (
-    <div className="md:hidden w-full">
-      {/* Barra superior con mensaje */}
-      <div className="bg-pink-500 text-white text-center text-sm font-semibold py-2 w-full">
-        <i className="fas fa-truck"></i>
-        <span> Glisé te lo lleva</span>
+    <div className={`md:hidden w-full fixed top-0 left-0 z-30 transition-transform duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+      
+      <div className={`transition-[max-height] duration-300 ease-in-out overflow-hidden ${isFullHeader ? 'max-h-96' : 'max-h-0'}`}>
+        <div className="bg-pink-500 text-white text-center text-sm font-semibold py-2 w-full">
+          <i className="fas fa-truck"></i>
+          <span> Glisé te lo lleva</span>
+        </div>
+        <div className="relative h-20 bg-white shadow w-full flex items-center justify-between px-4">
+          <button onClick={openMenu} className="text-2xl text-gray-600 z-10">
+            <i className="fas fa-bars"></i>
+          </button>
+          <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] z-0">
+            <Image src="/imagenespagina/logodeglise.png" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" />
+          </Link>
+          <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10">
+            <i className="fas fa-shopping-cart"></i>
+            {cartItemCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Encabezado principal */}
-      <div className="relative h-20 bg-white shadow w-full flex items-center justify-between px-4">
-        <button onClick={openMenu} className="text-2xl text-gray-600 z-10">
-          <i className="fas fa-bars"></i>
-        </button>
-        <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] z-0">
-          {/* Logo optimizado */}
-          <Image src="/imagenespagina/logodeglise.png" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" />
-        </Link>
-        <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10">
-          <i className="fas fa-shopping-cart"></i>
-          {cartItemCount > 0 && (
-            <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
-              {cartItemCount}
-            </span>
-          )}
-        </button>
-      </div>
-
-      {/* Buscador Móvil con la lógica implementada */}
       <div className="bg-pink-50 py-2 border-t border-b border-pink-100 w-full">
+        {/* Ahora esto funcionará porque 'setIsSearchFocused' existe gracias a useState */}
         <div 
           className="relative px-4"
           onFocus={() => setIsSearchFocused(true)}

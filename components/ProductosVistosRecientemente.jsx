@@ -32,14 +32,14 @@ export default function VistosRecientemente({ currentProductId }) {
   }
 
   return (
-    <section className="py-12 bg-gray-50 rounded-lg">
+    <section className="py-12 bg-gray-50 rounded-lg ">
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">Vistos Recientemente</h2>
       <ProductCarousel 
         products={viewedProducts}
         carouselClassName="detail-recently-viewed-carousel"
         nextButtonClassName="detail-recently-viewed-next"
         prevButtonClassName="detail-recently-viewed-prev"
-        
+      
       />
     </section>
   );

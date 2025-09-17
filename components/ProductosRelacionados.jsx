@@ -49,7 +49,7 @@ export default function ProductosRelacionados({ products }) {
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">También te puede interesar</h2>
       
       {/* --- ESTRUCTURA HTML CORREGIDA --- */}
-      <div className="relative group container mx-auto px-4 sm:px-6">
+      <div className="relative group">
         <div className="swiper-container related-products-carousel overflow-hidden">
           <div className="swiper-wrapper">
             {products.map(product => (

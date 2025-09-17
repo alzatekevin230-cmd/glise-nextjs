@@ -49,7 +49,7 @@ export default function ProductCarousel({
 
   return (
     // 1. AÑADIMOS LA CLASE "group" AL CONTENEDOR PRINCIPAL
-    <div className="container mx-auto px-2 sm:px-6 relative group">
+    <div className="relative group">
       <div className={`swiper ${carouselClassName} overflow-hidden`}>
         <div className="swiper-wrapper">
           {products.map(product => (
