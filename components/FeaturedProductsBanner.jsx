@@ -28,7 +28,7 @@ export default function FeaturedProductsBanner() {
               className="w-full h-full object-cover rounded-lg shadow-md" 
             />
           </Link>
-          <Link href="/producto/71" className="col-span-1 block">
+          <Link href="/producto/acuanova-soft-hidratante-220-g" className="col-span-1 block">
             <Image 
               src="/imagenespagina/ofertaacuanova.png" 
               alt="Banner Lateral Productos Destacados" 

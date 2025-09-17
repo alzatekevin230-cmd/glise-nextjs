@@ -25,7 +25,7 @@ export default function BestOffers() {
             />
           </Link>
           <div className="grid grid-cols-2 gap-4">
-            <Link href="/producto/192" className="offer-grid-card block">
+            <Link href="/producto/bloqueador-nivea-sun-antiedad-fps50-50-ml" className="offer-grid-card block">
               <Image 
                 src="/imagenespagina/tarjetaofertas.png" 
                 alt="Oferta en cuidado para bebés" 
@@ -35,7 +35,7 @@ export default function BestOffers() {
                 sizes="50vw"
               />
             </Link>
-            <Link href="/producto/49" className="offer-grid-card block">
+            <Link href="/producto/esencia-floral-dulces-suenos-25-ml-funat" className="offer-grid-card block">
               <Image 
                 src="/imagenespagina/tarjetaofertas2.png" 
                 alt="Oferta en productos de belleza" 
@@ -70,7 +70,7 @@ export default function BestOffers() {
             />
           </Link>
           <div className="grid grid-cols-2 gap-6">
-            <Link href="/producto/198" className="offer-grid-card relative aspect-square block">
+            <Link href="/producto/creatina-en-gomas-sabor-fresa" className="offer-grid-card relative aspect-square block">
               <Image 
                 src="/imagenespagina/tescritorio1.png" 
                 alt="Oferta en dermocosméticos" 
