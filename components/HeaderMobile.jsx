@@ -16,63 +16,61 @@ export default function HeaderMobile() {
   const { cart } = useCarrito();
   const { openMenu } = useMenuLateral();
   const { searchTerm, setSearchTerm, suggestions } = useSearch();
-  const { isVisible, isFullHeader } = useSmartHeader();
+  const { headerState } = useSmartHeader(); // Usamos el nuevo estado
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
+  // ==================================================================
+  // === INICIO DE LA CORRECIÓN CLAVE ===
+  // ==================================================================
   useEffect(() => {
-    // ==================================================================
-    // === INICIO DE LA CORRECIÓN ===
-    // ==================================================================
-    const mainContent = document.querySelector('#page-content-wrapper main');
+    // Limpiamos clases anteriores
+    document.body.classList.remove(
+      'header-visible-full',
+      'header-visible-search',
+      'header-hidden'
+    );
 
-    if (mainContent) {
-      // Condición: Solo ejecutar esta lógica en pantallas móviles (menores a 768px, que es el breakpoint 'md' de Tailwind)
-      if (window.innerWidth < 768) {
-        mainContent.style.transition = 'none';
-        if (isFullHeader) {
-          mainContent.style.paddingTop = '188px';
-        } else {
-          mainContent.style.paddingTop = '70px';
-        }
-      } else {
-        // En pantallas de escritorio, nos aseguramos de que no haya padding-top
-        mainContent.style.paddingTop = '0';
-      }
+    // Añadimos la clase actual basada en el estado del hook
+    if (headerState) {
+       document.body.classList.add(`header-${headerState}`);
     }
-    // ==================================================================
-    // === FIN DE LA CORRECIÓN ===
-    // ==================================================================
-  }, [isFullHeader]);
+  }, [headerState]);
+  // ==================================================================
+  // === FIN DE LA CORRECIÓN CLAVE ===
+  // ==================================================================
+
 
   const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
-  return (
-    // Este div ya tiene 'md:hidden' lo que lo oculta visualmente, pero el JS seguía corriendo.
-    <div className={`md:hidden w-full fixed top-0 left-0 z-30 transition-transform duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
-      
-      <div className={`transition-[max-height] duration-300 ease-in-out overflow-hidden ${isFullHeader ? 'max-h-96' : 'max-h-0'}`}>
-        <div className="bg-pink-500 text-white text-center text-sm font-semibold py-2 w-full">
-          <i className="fas fa-truck"></i>
-          <span> Glisé te lo lleva</span>
-        </div>
-        <div className="relative h-20 bg-white shadow w-full flex items-center justify-between px-4">
-          <button onClick={openMenu} className="text-2xl text-gray-600 z-10">
-            <i className="fas fa-bars"></i>
-          </button>
-          <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] z-0">
-            <Image src="/imagenespagina/logodeglise.png" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" />
-          </Link>
-          <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10">
-            <i className="fas fa-shopping-cart"></i>
-            {cartItemCount > 0 && (
-              <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
-                {cartItemCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </div>
+  // Definimos las alturas para usarlas en el CSS y aquí
+  const fullHeaderHeight = 118; // Altura de logo + banner
+  const searchBarHeight = 70; // Altura solo del buscador
 
+  return (
+    <div 
+      id="mobile-header"
+      className="md:hidden w-full fixed top-0 left-0 z-30 transition-transform duration-300 ease-in-out"
+    >
+      <div className="bg-pink-500 text-white text-center text-sm font-semibold py-2 w-full">
+        <i className="fas fa-truck"></i>
+        <span> Glisé te lo lleva</span>
+      </div>
+      <div className="relative h-20 bg-white shadow w-full flex items-center justify-between px-4">
+        <button onClick={openMenu} className="text-2xl text-gray-600 z-10">
+          <i className="fas fa-bars"></i>
+        </button>
+        <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] z-0">
+          <Image src="/imagenespagina/logodeglise.png" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" />
+        </Link>
+        <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10">
+          <i className="fas fa-shopping-cart"></i>
+          {cartItemCount > 0 && (
+            <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+              {cartItemCount}
+            </span>
+          )}
+        </button>
+      </div>
       <div className="bg-pink-50 py-2 border-t border-b border-pink-100 w-full">
         <div 
           className="relative px-4"

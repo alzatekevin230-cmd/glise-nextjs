@@ -1672,3 +1672,114 @@ body.menu-open {
 .body-no-scroll {
   overflow: hidden;
 }
+/* ==================================================================
+   === ESTILOS PARA EL ENCABEZADO MÓVIL INTELIGENTE Y FLUIDO ===
+   ================================================================== */
+
+@media (max-width: 767px) {
+
+  /* -- Definimos las alturas como variables para mantener consistencia -- */
+  :root {
+    --header-logo-height: 118px; /* Altura de la parte superior (logo + banner rosa) */
+    --header-search-height: 70px;  /* Altura de la barra de búsqueda */
+    --header-total-height: calc(var(--header-logo-height) + var(--header-search-height)); /* 188px */
+  }
+
+  /* 1. Transiciones suaves para el header y el contenido principal */
+  #mobile-header {
+    /* La magia está en transicionar la propiedad 'transform' */
+    transition: transform 0.3s ease-in-out;
+  }
+
+  #page-content-wrapper > main {
+    /* Y transicionar el 'padding-top' con la misma duración */
+    transition: padding-top 0.3s ease-in-out;
+  }
+
+  /* 2. Estado por defecto: El header está completamente visible */
+  .header-visible-full #mobile-header {
+    transform: translateY(0);
+  }
+  .header-visible-full #page-content-wrapper > main {
+    padding-top: var(--header-total-height);
+  }
+
+  /* 3. Estado al subir: Solo se ve la barra de búsqueda */
+  .header-visible-search #mobile-header {
+    /* Movemos el header hacia arriba, escondiendo la parte del logo */
+    transform: translateY(calc(-1 * var(--header-logo-height)));
+  }
+  .header-visible-search #page-content-wrapper > main {
+    /* El padding se ajusta a la altura de la barra de búsqueda */
+    padding-top: var(--header-search-height);
+  }
+
+  /* 4. Estado al bajar: El header se oculta por completo */
+  .header-hidden #mobile-header {
+    /* Movemos el header completamente fuera de la pantalla */
+    transform: translateY(-100%);
+  }
+  .header-hidden #page-content-wrapper > main {
+    /* El contenido no necesita padding porque el header no está */
+    padding-top: 0;
+  }
+}
+/* ===================================================================
+   ESTILOS FINALES Y LIMPIOS PARA LA GALERÍA DE PRODUCTOS
+   =================================================================== */
+
+.product-gallery-carousel {
+  position: relative;
+}
+
+/* Posiciona los puntos en la parte inferior, sin fondo */
+.product-gallery-carousel .swiper-pagination {
+  bottom: 10px !important;
+}
+
+/* Estilo para un punto (inactivo) */
+.product-gallery-carousel .swiper-pagination-bullet {
+  width: 9px;
+  height: 9px;
+  background-color: #1f2937; /* Puntos oscuros para buen contraste */
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+/* Estilo para el punto activo (la imagen que se está viendo) */
+.product-gallery-carousel .swiper-pagination-bullet-active {
+  background-color: #3b82f6; /* El azul principal de tu web */
+  opacity: 1;
+  transform: scale(1.25);
+}
+/* ===================================================================
+   ESTILOS PARA LOS PUNTOS PERSONALIZADOS DE LA GALERÍA (ESCRITORIO)
+   =================================================================== */
+
+.custom-dots-container {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px; /* Espacio entre los puntos */
+  z-index: 10;
+}
+
+.custom-dot {
+  width: 9px;
+  height: 9px;
+  background-color: #1f2937; /* Puntos oscuros para buen contraste */
+  opacity: 0.3;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.custom-dot.active {
+  background-color: #3b82f6; /* El azul principal de tu web */
+  opacity: 1;
+  transform: scale(1.25);
+}
