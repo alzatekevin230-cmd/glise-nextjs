@@ -20,7 +20,7 @@ export default function HeaderMobile() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // ==================================================================
-  // === INICIO DE LA CORRECIÓN CLAVE ===
+  // === INICIO DE LA CORRECIÃ“N CLAVE ===
   // ==================================================================
   useEffect(() => {
     // Limpiamos clases anteriores
@@ -30,19 +30,19 @@ export default function HeaderMobile() {
       'header-hidden'
     );
 
-    // Añadimos la clase actual basada en el estado del hook
+    // AÃ±adimos la clase actual basada en el estado del hook
     if (headerState) {
        document.body.classList.add(`header-${headerState}`);
     }
   }, [headerState]);
   // ==================================================================
-  // === FIN DE LA CORRECIÓN CLAVE ===
+  // === FIN DE LA CORRECIÃ“N CLAVE ===
   // ==================================================================
 
 
   const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
-  // Definimos las alturas para usarlas en el CSS y aquí
+  // Definimos las alturas para usarlas en el CSS y aquÃ­
   const fullHeaderHeight = 118; // Altura de logo + banner
   const searchBarHeight = 70; // Altura solo del buscador
 
@@ -60,7 +60,7 @@ export default function HeaderMobile() {
           <i className="fas fa-bars"></i>
         </button>
         <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] z-0">
-          <Image src="/imagenespagina/logodeglise.png" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" />
+          <Image src="/imagenespagina/logodeglise.png" alt="Logo GlisÃ©" width={112} height={56} className="h-14 w-auto object-contain" />
         </Link>
         <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10">
           <i className="fas fa-shopping-cart"></i>
