@@ -4,6 +4,11 @@
 export default function Pagination({ currentPage, totalPages, onPageChange }) {
   if (totalPages <= 1) return null;
 
+  const handlePageChange = (page) => {
+    onPageChange(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const getPaginationItems = () => {
     const pages = [];
     if (totalPages <= 7) {
@@ -37,7 +42,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
   return (
     <div className="flex justify-center items-center mt-12 space-x-1">
       <button
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className="pagination-btn"
       >
@@ -49,7 +54,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
         ) : (
           <button
             key={item}
-            onClick={() => onPageChange(item)}
+            onClick={() => handlePageChange(item)}
             className={`pagination-btn ${currentPage === item ? 'active' : ''}`}
           >
             {item}
@@ -57,7 +62,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
         )
       )}
       <button
-        onClick={() => onPageChange(currentPage + 1)}
+        onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className="pagination-btn"
       >

@@ -33,7 +33,7 @@ export default function ArticulosBlog({ posts }) {
   }, [posts]);
 
   return (
-    <section className="mb-4 md:mb-12">
+    <section className="-mb-8 md:mb-8">
       <div className="container mx-auto px-4 sm:px-6">
         <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">Artículos de nuestro Blog</h2>
         {/* 1. AÑADIMOS LA CLASE "group" AL CONTENEDOR */}

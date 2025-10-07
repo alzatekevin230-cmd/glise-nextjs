@@ -18,8 +18,8 @@ export default function ArticulosRelacionadosBlog({ posts }) {
     swiperRef.current = new Swiper('.related-blog-carousel', {
       modules: [Navigation, Autoplay],
       loop: posts.length > 3,
-      spaceBetween: 20,
-      slidesPerView: 1.2,
+      spaceBetween: 8,
+      slidesPerView: 1,
       autoplay: { delay: 5000, disableOnInteraction: false },
       navigation: { nextEl: '.related-blog-button-next', prevEl: '.related-blog-button-prev' },
       breakpoints: {
@@ -36,10 +36,10 @@ export default function ArticulosRelacionadosBlog({ posts }) {
   }
 
   return (
-    <section className="mb-12 mt-16 pt-8 border-t">
+    <section className="mb-0 md:mb-12 mt-16 pt-8 border-t">
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">Artículos Relacionados</h2>
-      <div className="container mx-auto px-4 sm:px-6 relative">
-        <div className="swiper-container related-blog-carousel overflow-hidden py-4">
+      <div className="container mx-auto px-2 sm:px-6 relative group">
+        <div className="swiper-container related-blog-carousel overflow-hidden">
           <div className="swiper-wrapper">
             {posts.map(post => {
               const imageUrl = post.imageUrl.startsWith('/') ? post.imageUrl : `/${post.imageUrl}`;
@@ -52,7 +52,7 @@ export default function ArticulosRelacionadosBlog({ posts }) {
                     <div className="aspect-video relative w-full">
                       <Image src={imageUrl} alt={post.title} fill className="object-cover" />
                     </div>
-                    <div className="p-6 flex flex-col flex-grow">
+                    <div className="p-4 flex flex-col flex-grow">
                       <span className="text-blue-600 font-semibold text-sm uppercase">{post.category}</span>
                       <h3 className="!mt-2 text-xl font-bold text-gray-800 flex-grow">{post.title}</h3>
                       <p className="text-blue-600 font-semibold mt-auto inline-block text-sm">Leer más →</p>
@@ -63,8 +63,8 @@ export default function ArticulosRelacionadosBlog({ posts }) {
             })}
           </div>
         </div>
-        <div className="swiper-button-next related-blog-button-next"></div>
-        <div className="swiper-button-prev related-blog-button-prev"></div>
+        <div className="swiper-button-next related-blog-button-next opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="swiper-button-prev related-blog-button-prev opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
     </section>
   );

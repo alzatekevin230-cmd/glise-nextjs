@@ -34,7 +34,7 @@ export default function Footer() {
 
   return (
     <footer ref={footerRef} className="bg-white pb-24 md:pb-0">
-      <div className="bg-pink-50 pt-4 pb-6 md:py-6 px-6">
+      <div className="bg-pink-50 py-3 px-6">
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-center gap-6">
           <h3 className="text-xl font-bold text-cyan-700 text-center md:text-left flex-shrink-0">
             Suscríbete a nuestro boletín

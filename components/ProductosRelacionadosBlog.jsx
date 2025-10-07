@@ -16,8 +16,8 @@ export default function ProductosRelacionadosBlog({ products }) {
 
     swiperRef.current = new Swiper('.blog-related-products-carousel', {
       modules: [Navigation, Autoplay],
-      loop: products.length > 5,
-      spaceBetween: 20,
+      loop: products.length > 4,
+      spaceBetween: 8,
       slidesPerView: 2,
       autoplay: { delay: 4000, disableOnInteraction: false },
       navigation: { nextEl: '.blog-related-products-next', prevEl: '.blog-related-products-prev' },
@@ -38,8 +38,8 @@ export default function ProductosRelacionadosBlog({ products }) {
   return (
     <section className="mb-12 mt-16 pt-8 border-t">
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">Productos que te pueden interesar</h2>
-      <div className="container mx-auto px-4 sm:px-6 relative">
-        <div className="swiper-container blog-related-products-carousel overflow-hidden py-4">
+      <div className="container mx-auto px-2 sm:px-6 relative group">
+        <div className="swiper-container blog-related-products-carousel overflow-hidden">
           <div className="swiper-wrapper">
             {products.map(product => (
               <div key={product.id} className="swiper-slide h-auto">
@@ -48,8 +48,8 @@ export default function ProductosRelacionadosBlog({ products }) {
             ))}
           </div>
         </div>
-        <div className="swiper-button-next blog-related-products-next"></div>
-        <div className="swiper-button-prev blog-related-products-prev"></div>
+        <div className="swiper-button-next blog-related-products-next opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="swiper-button-prev blog-related-products-prev opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
     </section>
   );

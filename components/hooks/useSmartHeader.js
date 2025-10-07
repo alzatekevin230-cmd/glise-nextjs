@@ -1,38 +1,42 @@
-// hooks/useSmartHeader.js
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function useSmartHeader() {
-  const [headerState, setHeaderState] = useState('visible-full'); // 'visible-full', 'visible-search', 'hidden'
+  const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
-  const scrollThreshold = 5;
+  const ticking = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (Math.abs(currentScrollY - lastScrollY.current) < scrollThreshold) {
-        return;
-      }
-
-      if (currentScrollY <= 10) {
-        setHeaderState('visible-full');
-      } else if (currentScrollY < lastScrollY.current) {
-        setHeaderState('visible-search');
-      } else {
-        setHeaderState('hidden');
-      }
+      if (ticking.current) return;
       
-      lastScrollY.current = currentScrollY;
+      ticking.current = true;
+      requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        const scrollDiff = currentScrollY - lastScrollY.current;
+
+        // Si hacemos scroll hacia abajo (scrollDiff > 0), esconder
+        if (scrollDiff > 5 && currentScrollY > 50) {
+          setIsVisible(false);
+        }
+        // Si hacemos scroll hacia arriba (scrollDiff < 0), mostrar
+        else if (scrollDiff < -5) {
+          setIsVisible(true);
+        }
+        // Si estamos en el tope de la página, siempre mostrar
+        else if (currentScrollY < 10) {
+          setIsVisible(true);
+        }
+
+        lastScrollY.current = currentScrollY;
+        ticking.current = false;
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return { headerState };
+  return { isVisible };
 }

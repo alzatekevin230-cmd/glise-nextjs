@@ -59,7 +59,7 @@ export default function Header() {
   }, [guestMenuRef, menuRef, userMenuRef]);
 
   return (
-    <header className="sticky top-0 z-30 bg-white shadow-md">
+    <header className="bg-white shadow-md">
       <div className="container mx-auto px-4 h-28 hidden md:flex items-center justify-between">
         <div className="flex items-center gap-x-8">
           <div className="flex-shrink-0">

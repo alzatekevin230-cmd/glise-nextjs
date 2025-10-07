@@ -2,11 +2,33 @@
 import Image from 'next/image';
 import Link from 'next/link';
 // 1. IMPORTAMOS las funciones correctas, incluyendo la nueva y 'createSlug'
-import { getBlogPostBySlug, getRelatedProductsForBlog, getRelatedBlogPosts, createSlug } from '@/lib/data.js';
+import { getBlogPostBySlug, getRelatedProductsForBlog, getRelatedBlogPosts, createSlug, getAllBlogPosts } from '@/lib/data.js';
 import { notFound } from 'next/navigation';
 import ProductosRelacionadosBlog from '@/components/ProductosRelacionadosBlog';
 import ArticulosRelacionadosBlog from '@/components/ArticulosRelacionadosBlog';
 
+// Genera todas las rutas de blog posts en build time
+export async function generateStaticParams() {
+  const posts = await getAllBlogPosts();
+  
+  return posts.map((post) => ({
+    slug: createSlug(post.title),
+  }));
+}
+
+export async function generateMetadata({ params }) {
+  const post = await getBlogPostBySlug(params.slug);
+  if (!post) return { title: 'Artículo no encontrado' };
+  return { 
+    title: `${post.title} - Blog Glisé`, 
+    description: post.description,
+    openGraph: {
+      title: `${post.title} - Blog Glisé`,
+      description: post.description,
+      images: [post.imageUrl],
+    },
+  };
+}
 
 export default async function PaginaArticulo({ params }) {
   // 2. Buscamos el post usando el SLUG de la URL, no el ID

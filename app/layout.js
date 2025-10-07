@@ -21,8 +21,36 @@ import Lightbox from '@/components/Lightbox';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Glisé - Farmacia y Belleza Natural',
-  description: 'Glisé es tu farmacia y tienda de belleza online en Colombia.',
+  metadataBase: new URL('https://www.glise.com.co'),
+  title: {
+    default: 'Glisé - Farmacia y Belleza Natural en Colombia',
+    template: '%s | Glisé'
+  },
+  description: 'Glisé es tu farmacia y tienda de belleza online en Colombia. Productos naturales, dermocosméticos y cuidado personal de las mejores marcas.',
+  keywords: ['farmacia online Colombia', 'productos naturales', 'dermocosméticos', 'belleza natural', 'cuidado personal', 'suplementos', 'Palmira'],
+  authors: [{ name: 'Glisé' }],
+  openGraph: {
+    type: 'website',
+    locale: 'es_CO',
+    url: 'https://www.glise.com.co',
+    siteName: 'Glisé',
+    title: 'Glisé - Farmacia y Belleza Natural en Colombia',
+    description: 'Glisé es tu farmacia y tienda de belleza online en Colombia. Productos naturales, dermocosméticos y cuidado personal.',
+    images: [
+      {
+        url: '/imagenespagina/logodeglise.png',
+        width: 1200,
+        height: 630,
+        alt: 'Glisé - Farmacia y Belleza Natural'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Glisé - Farmacia y Belleza Natural en Colombia',
+    description: 'Tu farmacia online de confianza. Productos naturales y dermocosméticos.',
+    images: ['/imagenespagina/logodeglise.png']
+  },
   icons: {
     icon: [
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
@@ -33,6 +61,9 @@ export const metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
+  alternates: {
+    canonical: 'https://www.glise.com.co'
+  }
 };
 
 
@@ -53,27 +84,22 @@ export default async function RootLayout({ children }) {
                 <ProveedorProductos allProducts={allProducts}>
                   <Toaster position="bottom-center" />
                   
-                  {/* --- INICIO DE LA ESTRUCTURA CORREGIDA --- */}
-                  
-                  {/* 1. Header y Menú Lateral ahora están fuera del div principal que se moverá */}
+                  {/* El Header y Menú Lateral se mantienen fuera del div que se mueve */}
                   <Header />
                   <MenuLateral />
                   
-                  {/* 2. Este nuevo 'div' es la "lámina de vidrio" que se moverá */}
                   <div id="page-content-wrapper" className="relative z-0">
                     <main className="md:pt-0 pb-20 md:pb-0">{children}</main>
                     <Footer />
                   </div>
 
-                  {/* 3. Los modales y otros elementos fijos quedan al final */}
+                  {/* Los modales y otros elementos fijos se mantienen al final */}
                   <CarritoModal />
                   <ModalAutenticacion />
                   <Lightbox />
                   <BotonWhatsapp />
                   <BarraNavegacionMovil />
                   
-                  {/* --- FIN DE LA ESTRUCTURA CORREGIDA --- */}
-
                 </ProveedorProductos>
               </ProveedorMenuLateral>
             </ProveedorCarrito>

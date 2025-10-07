@@ -1,7 +1,6 @@
-// components/HeaderMobile.jsx
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useModal } from '@/contexto/ContextoModal';
@@ -16,40 +15,15 @@ export default function HeaderMobile() {
   const { cart } = useCarrito();
   const { openMenu } = useMenuLateral();
   const { searchTerm, setSearchTerm, suggestions } = useSearch();
-  const { headerState } = useSmartHeader(); // Usamos el nuevo estado
+  const { isVisible } = useSmartHeader();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-
-  // ==================================================================
-  // === INICIO DE LA CORRECIÃ“N CLAVE ===
-  // ==================================================================
-  useEffect(() => {
-    // Limpiamos clases anteriores
-    document.body.classList.remove(
-      'header-visible-full',
-      'header-visible-search',
-      'header-hidden'
-    );
-
-    // AÃ±adimos la clase actual basada en el estado del hook
-    if (headerState) {
-       document.body.classList.add(`header-${headerState}`);
-    }
-  }, [headerState]);
-  // ==================================================================
-  // === FIN DE LA CORRECIÃ“N CLAVE ===
-  // ==================================================================
-
 
   const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
-  // Definimos las alturas para usarlas en el CSS y aquÃ­
-  const fullHeaderHeight = 118; // Altura de logo + banner
-  const searchBarHeight = 70; // Altura solo del buscador
-
   return (
-    <div 
+    <div
       id="mobile-header"
-      className="md:hidden w-full fixed top-0 left-0 z-30 transition-transform duration-300 ease-in-out"
+      className="md:hidden w-full"
     >
       <div className="bg-pink-500 text-white text-center text-sm font-semibold py-2 w-full">
         <i className="fas fa-truck"></i>
@@ -60,7 +34,7 @@ export default function HeaderMobile() {
           <i className="fas fa-bars"></i>
         </button>
         <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] z-0">
-          <Image src="/imagenespagina/logodeglise.png" alt="Logo GlisÃ©" width={112} height={56} className="h-14 w-auto object-contain" />
+          <Image src="/imagenespagina/logodeglise.png" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" />
         </Link>
         <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10">
           <i className="fas fa-shopping-cart"></i>
@@ -71,8 +45,8 @@ export default function HeaderMobile() {
           )}
         </button>
       </div>
-      <div className="bg-pink-50 py-2 border-t border-b border-pink-100 w-full">
-        <div 
+      <div className="bg-pink-50 py-2 w-full border-t border-b border-pink-100">
+        <div
           className="relative px-4"
           onFocus={() => setIsSearchFocused(true)}
           onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}

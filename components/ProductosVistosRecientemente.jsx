@@ -32,7 +32,7 @@ export default function VistosRecientemente({ currentProductId }) {
   }
 
   return (
-    <section className="py-12 bg-gray-50 rounded-lg ">
+    <section className="py-6 bg-gray-50 rounded-lg mb-4">
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">Vistos Recientemente</h2>
       <ProductCarousel 
         products={viewedProducts}
