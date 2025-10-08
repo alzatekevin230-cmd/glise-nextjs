@@ -28,7 +28,7 @@ export default function ImageWithZoom({ src, alt, openLightbox }) {
     return (
         <div 
             ref={imageContainerRef}
-            className="w-full relative overflow-hidden aspect-square border rounded-lg shadow-sm"
+            className="w-full relative overflow-hidden aspect-square border-2 border-cyan-500 rounded-lg shadow-sm bg-white"
             onMouseEnter={() => setIsZooming(true)}
             onMouseLeave={() => setIsZooming(false)}
             onMouseMove={handleMouseMove}
