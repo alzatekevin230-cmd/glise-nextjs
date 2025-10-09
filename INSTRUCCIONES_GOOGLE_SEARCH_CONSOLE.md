@@ -10,7 +10,7 @@
 
 ### Opción A: Prefijo de URL (Recomendado)
 1. Selecciona **"Prefijo de URL"**
-2. Ingresa: `https://www.glise.com.co`
+2. Ingresa: `https://glise.com.co`
 3. Haz clic en **"Continuar"**
 
 ### Métodos de verificación:
@@ -43,11 +43,11 @@ Una vez verificado:
 ## Paso 4: Solicitar indexación de páginas importantes
 
 1. Ve a **"Inspección de URL"** en el menú lateral
-2. Pega la URL de tu página principal: `https://www.glise.com.co`
+2. Pega la URL de tu página principal: `https://glise.com.co`
 3. Haz clic en **"Solicitar indexación"**
 4. Repite con otras páginas importantes:
-   - `https://www.glise.com.co/blog`
-   - `https://www.glise.com.co/categoria/all`
+   - `https://glise.com.co/blog`
+   - `https://glise.com.co/categoria/all`
    - Productos destacados
    - Artículos del blog más importantes
 
@@ -68,7 +68,7 @@ Revisa regularmente:
 
 ## ⚠️ Problemas comunes
 
-1. **"Sitemap no encontrado"**: Verifica que `https://www.glise.com.co/sitemap.xml` funcione
+1. **"Sitemap no encontrado"**: Verifica que `https://glise.com.co/sitemap.xml` funcione
 2. **"Páginas excluidas"**: Normal al principio, Google decide qué indexar
 3. **"Error de servidor"**: Verifica que tu hosting esté funcionando
 
