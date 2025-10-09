@@ -97,7 +97,7 @@ export default function Header() {
             <div className="relative" ref={userMenuRef}>
               <button onClick={() => setUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-2 text-cyan-600">
                 <i className="fas fa-user-circle fa-2x"></i>
-                <span className="text-sm font-medium">Hola, {currentUser.displayName?.split(' ')[0] || currentUser.email.split('@')[0]}</span>
+                <span className="text-sm font-medium">Hola, {currentUser.displayName?.split(' ')[0] || currentUser.email?.split('@')[0] || 'Usuario'}</span>
                 <i className={`fas fa-chevron-down text-xs transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`}></i>
               </button>
               {isUserMenuOpen && (
