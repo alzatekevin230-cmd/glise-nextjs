@@ -21,7 +21,7 @@ import Lightbox from '@/components/Lightbox';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  metadataBase: new URL('https://www.glise.com.co'),
+  metadataBase: new URL('https://glise.com.co'),
   title: {
     default: 'Glisé - Farmacia y Belleza Natural en Colombia',
     template: '%s | Glisé'
@@ -32,7 +32,7 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_CO',
-    url: 'https://www.glise.com.co',
+    url: 'https://glise.com.co',
     siteName: 'Glisé',
     title: 'Glisé - Farmacia y Belleza Natural en Colombia',
     description: 'Glisé es tu farmacia y tienda de belleza online en Colombia. Productos naturales, dermocosméticos y cuidado personal.',
@@ -66,7 +66,7 @@ export const metadata = {
   },
   manifest: '/site.webmanifest',
   alternates: {
-    canonical: 'https://www.glise.com.co'
+    canonical: 'https://glise.com.co'
   }
 };
 

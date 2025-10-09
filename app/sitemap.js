@@ -2,7 +2,7 @@
 import { getAllProducts, getAllBlogPosts, createSlug } from '@/lib/data';
 
 export default async function sitemap() {
-  const baseUrl = 'https://www.glise.com.co';
+  const baseUrl = 'https://glise.com.co';
   
   // Obtener todos los productos y posts
   const products = await getAllProducts();
