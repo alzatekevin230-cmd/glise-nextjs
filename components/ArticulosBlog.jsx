@@ -3,6 +3,8 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { processBlogImageUrl } from '@/lib/imageUtils';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -42,12 +44,21 @@ export default function ArticulosBlog({ posts }) {
             <div className="swiper-wrapper">
               {posts.map(post => {
                 const postLink = `/blog/${post.slug || post.id}`;
+                const imageUrl = processBlogImageUrl(post.imageUrl);
+                
                 return (
                   <div key={post.id} className="swiper-slide h-auto">
                     <div className="blog-post-card bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
                       <Link href={postLink} className="block">
-                        <div className="aspect-video w-full bg-gray-100">
-                          <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover" loading="lazy" />
+                        <div className="relative aspect-video w-full bg-gray-100">
+                          <Image 
+                            src={imageUrl} 
+                            alt={post.title} 
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            className="object-cover" 
+                            loading="lazy" 
+                          />
                         </div>
                       </Link>
                       <div className="p-6 flex flex-col flex-grow">

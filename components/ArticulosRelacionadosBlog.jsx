@@ -4,6 +4,7 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { processBlogImageUrl } from '@/lib/imageUtils';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -42,7 +43,7 @@ export default function ArticulosRelacionadosBlog({ posts }) {
         <div className="swiper-container related-blog-carousel overflow-hidden">
           <div className="swiper-wrapper">
             {posts.map(post => {
-              const imageUrl = post.imageUrl.startsWith('/') ? post.imageUrl : `/${post.imageUrl}`;
+              const imageUrl = processBlogImageUrl(post.imageUrl);
               const postLink = `/blog/${post.slug || post.id}`;
 
               return (

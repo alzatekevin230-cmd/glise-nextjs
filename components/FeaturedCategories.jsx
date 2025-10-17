@@ -11,12 +11,12 @@ import { Navigation, Autoplay } from 'swiper/modules';
 
 export default function FeaturedCategories() {
   const categoriesData = [
-    { name: 'Todos', img: '/imagenespagina/catetodos.png', link: '/categoria/all' },
-    { name: 'Natural', img: '/imagenespagina/catenatural.png', link: '/categoria/Naturales y Homeopáticos' },
-    { name: 'Dermocosmética', img: '/imagenespagina/catedermocosmetica.png', link: '/categoria/Dermocosméticos' },
-    { name: 'Milenario', img: '/imagenespagina/catemilenario.png', link: '/categoria/Milenario' },
-    { name: 'Infantil', img: '/imagenespagina/cateinfantil.png', link: '/categoria/Cuidado Infantil' },
-    { name: 'Belleza', img: '/imagenespagina/catebelleza.png', link: '/categoria/Cuidado y Belleza' }
+    { name: 'Todos', img: '/imagenespagina/catetodos.webp', link: '/categoria/all' },
+    { name: 'Natural', img: '/imagenespagina/catenatural.webp', link: '/categoria/Naturales y Homeopáticos' },
+    { name: 'Dermocosmética', img: '/imagenespagina/catedermocosmetica.webp', link: '/categoria/Dermocosméticos' },
+    { name: 'Milenario', img: '/imagenespagina/catemilenario.webp', link: '/categoria/Milenario' },
+    { name: 'Infantil', img: '/imagenespagina/cateinfantil.webp', link: '/categoria/Cuidado Infantil' },
+    { name: 'Belleza', img: '/imagenespagina/catebelleza.webp', link: '/categoria/Cuidado y Belleza' }
   ];
 
   useEffect(() => {

@@ -34,7 +34,7 @@ export default function NaturalProductsSection({ products }) {
         {/* Banners de la sección */}
         <Link href="/categoria/Naturales y Homeopáticos" className="block md:hidden mb-8">
           <Image 
-            src="/imagenespagina/banernatural.png" 
+            src="/imagenespagina/banernatural.webp" 
             alt="Ofertas Especiales en Naturales" 
             width={1000}
             height={750}
@@ -44,7 +44,7 @@ export default function NaturalProductsSection({ products }) {
         <div className="hidden md:grid grid-cols-2 gap-6 mb-8">
           <Link href="/categoria/Naturales y Homeopáticos" className="block">
             <Image 
-              src="/imagenespagina/banernaturalescritorio1.png" 
+              src="/imagenespagina/banernaturalescritorio1.webp" 
               alt="Ofertas en Cuidado Natural" 
               width={1000}
               height={750}
@@ -53,7 +53,7 @@ export default function NaturalProductsSection({ products }) {
           </Link>
           <Link href="/categoria/Naturales y Homeopáticos" className="block">
             <Image 
-              src="/imagenespagina/banernaturalescritorio.png" 
+              src="/imagenespagina/banernaturalescritorio.webp" 
               alt="Descubre Productos Naturales" 
               width={1000}
               height={750}

@@ -49,7 +49,7 @@ export const metadata = {
     description: '🛍️ ¡Descubre Glisé! Tu farmacia online #1 en Colombia. Productos naturales, dermocosméticos premium y cuidado personal de las mejores marcas. ✨ Envíos gratis, calidad garantizada.',
     images: [
       {
-        url: '/imagenespagina/logodeglise.png',
+        url: '/imagenespagina/logodeglise.webp',
         width: 1200,
         height: 630,
         alt: 'Glisé - Farmacia y Belleza Natural en Colombia'
@@ -60,7 +60,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Glisé - Farmacia y Belleza Natural en Colombia',
     description: '🛍️ Tu farmacia online #1 en Colombia. Productos naturales, dermocosméticos premium. ✨ Envíos gratis, calidad garantizada.',
-    images: ['/imagenespagina/logodeglise.png']
+    images: ['/imagenespagina/logodeglise.webp']
   },
   icons: {
     icon: [

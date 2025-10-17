@@ -99,7 +99,7 @@ export default function RastrearPedidoPage() {
               <div className="p-6 border-t bg-blue-50">
                   <p className="text-sm">
                     <span className="font-semibold">Enviado con:</span>
-                    <img src="/imagenespagina/coordinadora.png" alt="Coordinadora" className="inline-block h-5 ml-2 align-middle" />
+                    <img src="/imagenespagina/coordinadora.webp" alt="Coordinadora" className="inline-block h-5 ml-2 align-middle" />
                   </p>
                   <p className="mt-2 text-sm">
                     <span className="font-semibold">Nº de Seguimiento:</span>

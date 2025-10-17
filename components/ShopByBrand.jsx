@@ -32,15 +32,15 @@ export default function ShopByBrand() {
   }, []);
 
   const brands = [
-    { name: 'NIVEA', logo: '/imagenespagina/logonivea.png', link: '/marca/NIVEA' },
-    { name: 'EUCERIN', logo: '/imagenespagina/logoeucerin.png', link: '/marca/EUCERIN' },
-    { name: 'ISDIN', logo: '/imagenespagina/logoisdin.png', link: '/marca/ISDIN' },
-    { name: 'CERAVE', logo: '/imagenespagina/logocerave.png', link: '/marca/CERAVE' },
-    { name: 'HEEL', logo: '/imagenespagina/logoheel.png', link: '/marca/HEEL' },
-    { name: 'FUNAT', logo: '/imagenespagina/logofunat.png', link: '/marca/FUNAT' },
-    { name: 'DERMANAT', logo: '/imagenespagina/logodermanat.png', link: '/marca/DERMANAT' },
-    { name: 'ALMIPRO', logo: '/imagenespagina/logoalmipro.png', link: '/marca/ALMIPRO' },
-    { name: 'GLISÉ', logo: '/imagenespagina/logodeglise.png', link: '/marca/GLISÉ' }
+    { name: 'NIVEA', logo: '/imagenespagina/logonivea.webp', link: '/marca/NIVEA' },
+    { name: 'EUCERIN', logo: '/imagenespagina/logoeucerin.webp', link: '/marca/EUCERIN' },
+    { name: 'ISDIN', logo: '/imagenespagina/logoisdin.webp', link: '/marca/ISDIN' },
+    { name: 'CERAVE', logo: '/imagenespagina/logocerave.webp', link: '/marca/CERAVE' },
+    { name: 'HEEL', logo: '/imagenespagina/logoheel.webp', link: '/marca/Heel' },
+    { name: 'FUNAT', logo: '/imagenespagina/logofunat.webp', link: '/marca/FUNAT' },
+    { name: 'DERMANAT', logo: '/imagenespagina/logodermanat.webp', link: '/marca/DERMANAT' },
+    { name: 'ALMIPRO', logo: '/imagenespagina/logoalmipro.webp', link: '/marca/ALMIPRO' },
+    { name: 'GLISÉ', logo: '/imagenespagina/logodeglise.webp', link: '/marca/GLISÉ' }
   ];
 
   return (

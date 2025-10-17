@@ -16,7 +16,7 @@ export default function BestOffers() {
         <div className="grid grid-cols-1 gap-4 lg:hidden">
           <Link href="/categoria/Dermocosméticos" className="offer-grid-card">
             <Image 
-              src="/imagenespagina/ofertainicio1.png" 
+              src="/imagenespagina/ofertainicio1.webp" 
               alt="Oferta principal de productos naturales" 
               width={1200}
               height={900}
@@ -27,7 +27,7 @@ export default function BestOffers() {
           <div className="grid grid-cols-2 gap-4">
             <Link href="/producto/bloqueador-nivea-sun-antiedad-fps50-50-ml" className="offer-grid-card block">
               <Image 
-                src="/imagenespagina/tarjetaofertas.png" 
+                src="/imagenespagina/tarjetaofertas.webp" 
                 alt="Oferta en cuidado para bebés" 
                 width={800}
                 height={1200}
@@ -37,7 +37,7 @@ export default function BestOffers() {
             </Link>
             <Link href="/producto/esencia-floral-dulces-suenos-25-ml-funat" className="offer-grid-card block">
               <Image 
-                src="/imagenespagina/tarjetaofertas2.png" 
+                src="/imagenespagina/tarjetaofertas2.webp" 
                 alt="Oferta en productos de belleza" 
                 width={800}
                 height={1200}
@@ -48,7 +48,7 @@ export default function BestOffers() {
           </div>
           <Link href="/categoria/Cuidado Infantil" className="offer-grid-card">
             <Image 
-              src="/imagenespagina/ofertainicio2.png" 
+              src="/imagenespagina/ofertainicio2.webp" 
               alt="Oferta en suplementos" 
               width={1200}
               height={1200}
@@ -62,7 +62,7 @@ export default function BestOffers() {
         <div className="hidden lg:grid grid-cols-2 gap-6">
           <Link href="/categoria/Dermocosméticos" className="offer-grid-card relative block">
             <Image 
-              src="/imagenespagina/ofertaescritorio.png" 
+              src="/imagenespagina/ofertaescritorio.webp" 
               alt="Oferta principal de productos naturales" 
               fill
               sizes="50vw"
@@ -72,7 +72,7 @@ export default function BestOffers() {
           <div className="grid grid-cols-2 gap-6">
             <Link href="/producto/creatina-en-gomas-sabor-fresa" className="offer-grid-card relative aspect-square block">
               <Image 
-                src="/imagenespagina/tescritorio1.png" 
+                src="/imagenespagina/tescritorio1.webp" 
                 alt="Oferta en dermocosméticos" 
                 fill
                 sizes="25vw"
@@ -81,7 +81,7 @@ export default function BestOffers() {
             </Link>
             <Link href="/categoria/Naturales y Homeopáticos" className="offer-grid-card relative aspect-square block">
               <Image 
-                src="/imagenespagina/tescritorio2.png" 
+                src="/imagenespagina/tescritorio2.webp" 
                 alt="Oferta en productos de belleza" 
                 fill
                 sizes="25vw"
@@ -90,7 +90,7 @@ export default function BestOffers() {
             </Link>
             <Link href="/categoria/Cuidado y Belleza" className="offer-grid-card relative aspect-square block">
               <Image 
-                src="/imagenespagina/tescritorio3.png" 
+                src="/imagenespagina/tescritorio3.webp" 
                 alt="Oferta en suplementos" 
                 fill
                 sizes="25vw"
@@ -99,7 +99,7 @@ export default function BestOffers() {
             </Link>
             <Link href="/categoria/Cuidado Infantil" className="offer-grid-card relative aspect-square block">
               <Image 
-                src="/imagenespagina/tescritorio4.png" 
+                src="/imagenespagina/tescritorio4.webp" 
                 alt="Oferta en cuidado infantil" 
                 fill
                 sizes="25vw"

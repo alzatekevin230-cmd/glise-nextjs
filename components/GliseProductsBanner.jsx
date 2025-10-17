@@ -10,7 +10,7 @@ export default function GliseProductsBanner() {
         {/* Versión para Móvil */}
         <Link href="/categoria/Milenario" className="md:hidden block mb-8">
           <Image 
-            src="/imagenespagina/pglisemovil.png" 
+            src="/imagenespagina/pglisemovil.webp" 
             alt="Banner Productos Glisé Móvil" 
             width={1200}
             height={700}
@@ -21,7 +21,7 @@ export default function GliseProductsBanner() {
         <div className="hidden md:grid grid-cols-3 gap-6">
           <Link href="/categoria/Milenario" className="col-span-1 block">
             <Image 
-              src="/imagenespagina/ofertaaceitesescritorio.png" 
+              src="/imagenespagina/ofertaaceitesescritorio.webp" 
               alt="Banner Lateral Productos Glisé" 
               width={800}
               height={800}
@@ -30,7 +30,7 @@ export default function GliseProductsBanner() {
           </Link>
           <Link href="/categoria/Milenario" className="col-span-2 block">
             <Image 
-              src="/imagenespagina/pglisemovil.png" 
+              src="/imagenespagina/pglisemovil.webp" 
               alt="Banner Principal Productos Glisé" 
               width={1200}
               height={700}

@@ -15,7 +15,7 @@ export default function MobilePromo() {
             <p className="promo-card-cta">Ver ahora</p>
           </div>
           <Image 
-            src="/imagenespagina/tarjetatopic.png" 
+            src="/imagenespagina/tarjetatopic.webp" 
             alt="Nuevos Dermocosméticos"
             fill
             sizes="50vw" 
@@ -29,7 +29,7 @@ export default function MobilePromo() {
             <p className="promo-card-cta">Descubrir</p>
           </div>
           <Image 
-            src="/imagenespagina/ofertalavanda.png" 
+            src="/imagenespagina/ofertalavanda.webp" 
             alt="Ofertas Naturales" 
             fill
             sizes="50vw"
@@ -43,7 +43,7 @@ export default function MobilePromo() {
             <p className="promo-card-cta">Comprar</p>
           </div>
           <Image 
-            src="/imagenespagina/banereucerin.png" 
+            src="/imagenespagina/banereucerin.webp" 
             alt="Lo Mejor de Glisé" 
             fill
             sizes="100vw"
@@ -58,7 +58,7 @@ export default function MobilePromo() {
             <p className="promo-card-cta">Comprar todo</p>
           </div>
           <Image 
-            src="/imagenespagina/banerdenivea.png" 
+            src="/imagenespagina/banerdenivea.webp" 
             alt="Lo Mejor de Glisé" 
             fill
             sizes="100vw"
@@ -72,7 +72,7 @@ export default function MobilePromo() {
             <p className="promo-card-cta">Ver producto</p>
           </div>
           <Image 
-            src="/imagenespagina/ofertacreatiana.png" 
+            src="/imagenespagina/ofertacreatiana.webp" 
             alt="Banner Cuidado de Bebé" 
             fill
             sizes="100vw"

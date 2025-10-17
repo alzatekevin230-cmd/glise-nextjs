@@ -1,9 +1,10 @@
 // components/ArticuloBlogCard.jsx
 import Link from 'next/link';
 import Image from 'next/image';
+import { processBlogImageUrl } from '@/lib/imageUtils';
 
 export default function ArticuloBlogCard({ post }) {
-  const imageUrl = post.imageUrl ? (post.imageUrl.startsWith('/') ? post.imageUrl : `/${post.imageUrl}`) : 'https://placehold.co/600x400';
+  const imageUrl = processBlogImageUrl(post.imageUrl);
 
   // Creamos una única variable para el enlace correcto
   const postLink = `/blog/${post.slug || post.id}`;

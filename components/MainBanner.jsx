@@ -31,9 +31,9 @@ export default function MainBanner() {
           {/* --- SLIDE 1 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
             <picture>
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner1.png" />
+              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner1.webp" />
               <Image 
-                src="/imagenespagina/banermovil1.png" 
+                src="/imagenespagina/banermovil1.webp" 
                 alt="Oferta en Aceites Glise"
                 fill
                 className="object-cover"
@@ -45,9 +45,9 @@ export default function MainBanner() {
           {/* --- SLIDE 2 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
             <picture>
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner2.png" />
+              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner2.webp" />
               <Image 
-                src="/imagenespagina/banermovil2.png" 
+                src="/imagenespagina/banermovil2.webp" 
                 alt="Banner Cuidado de Bebé"
                 fill
                 className="object-cover"
@@ -59,9 +59,9 @@ export default function MainBanner() {
           {/* --- SLIDE 3 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
             <picture>
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner3.png" />
+              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner3.webp" />
               <Image 
-                src="/imagenespagina/banermovil3.png" 
+                src="/imagenespagina/banermovil3.webp" 
                 alt="Banner Productos Naturales"
                 fill
                 className="object-cover"
@@ -73,9 +73,9 @@ export default function MainBanner() {
           {/* --- SLIDE 4 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
             <picture>
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner4.png" />
+              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner4.webp" />
               <Image 
-                src="/imagenespagina/banermovil4 .png" 
+                src="/imagenespagina/banermovil4 .webp" 
                 alt="Banner Adicional 1"
                 fill
                 className="object-cover"
@@ -87,9 +87,9 @@ export default function MainBanner() {
           {/* --- SLIDE 5 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
             <picture>
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner5.png" />
+              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner5.webp" />
               <Image 
-                src="/imagenespagina/banermovil5.png" 
+                src="/imagenespagina/banermovil5.webp" 
                 alt="Banner Adicional 2"
                 fill
                 className="object-cover"

@@ -155,7 +155,7 @@ export default function MisPedidosPage() {
                   <div className="tracking-info-box"> 
                     <p>
                       <span className="font-semibold">Enviado con:</span> 
-                      <img src="/imagenespagina/coordinadora.png" alt="Coordinadora" className="inline-block h-6 ml-2 align-middle"/>
+                      <img src="/imagenespagina/coordinadora.webp" alt="Coordinadora" className="inline-block h-6 ml-2 align-middle"/>
                     </p>
                     <p className="mt-1">
                       <span className="font-semibold">Nº de Seguimiento:</span> 

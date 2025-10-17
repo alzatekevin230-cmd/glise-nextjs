@@ -64,7 +64,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
            <div>
             <a href="/">
-              <img src="/imagenespagina/logodeglise.png" alt="Logo Glisé" className="h-20 md:h-24 object-contain" loading="lazy" />
+              <img src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" className="h-20 md:h-24 object-contain" loading="lazy" />
             </a>
           </div>
           <div>
@@ -110,19 +110,19 @@ export default function Footer() {
               <h4 className="font-bold mb-3 pt-3">SÍGUENOS</h4>
               <div className="flex items-center gap-2">
                 <a href="https://www.facebook.com/profile.php?id=61577239121612&locale=es_LA" target="_blank" aria-label="Facebook" className="text-gray-500 hover:opacity-75 transition-opacity">
-                  <img src="/imagenespagina/logofacebook.png" alt="Facebook" className="h-10 w-10" />
+                  <img src="/imagenespagina/logofacebook.webp" alt="Facebook" className="h-10 w-10" />
                 </a>
                 <a href="https://www.instagram.com/glisefarmer/" target="_blank" aria-label="Instagram" className="text-gray-500 hover:opacity-75 transition-opacity">
-                  <img src="/imagenespagina/logoinstagram.png" alt="Instagram" className="h-10 w-10" />
+                  <img src="/imagenespagina/logoinstagram.webp" alt="Instagram" className="h-10 w-10" />
                 </a>
                 <a href="#" target="_blank" aria-label="YouTube" className="text-gray-500 hover:opacity-75 transition-opacity">
-                  <img src="/imagenespagina/logoyoutube.png" alt="YouTube" className="h-10 w-10" />
+                  <img src="/imagenespagina/logoyoutube.webp" alt="YouTube" className="h-10 w-10" />
                 </a>
               </div>
             </div>
             <div className="mt-4">
               <h4 className="font-bold mb-3">PAGO SEGURO</h4>
-              <img src="/imagenespagina/logodewompi.png" alt="Pago seguro con Wompi" className="h-10" loading="lazy" />
+              <img src="/imagenespagina/logodewompi.webp" alt="Pago seguro con Wompi" className="h-10" loading="lazy" />
             </div>
           </div>
         </div>

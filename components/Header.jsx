@@ -63,7 +63,7 @@ export default function Header() {
       <div className="container mx-auto px-4 h-28 hidden md:flex items-center justify-between">
         <div className="flex items-center gap-x-8">
           <div className="flex-shrink-0">
-            <Link href="/"><Image src="/imagenespagina/logodeglise.png" alt="Logo Glisé" width={150} height={96} className="h-24 w-auto" priority /></Link>
+            <Link href="/"><Image src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" width={150} height={96} className="h-24 w-auto" priority /></Link>
           </div>
           <div className="relative flex-shrink-0" ref={menuRef}>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center justify-between bg-cyan-600 hover:bg-cyan-700 text-white font-semibold px-5 py-3 rounded-full transition-colors duration-200">

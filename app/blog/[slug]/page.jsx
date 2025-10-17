@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 // 1. IMPORTAMOS las funciones correctas, incluyendo la nueva y 'createSlug'
 import { getBlogPostBySlug, getRelatedProductsForBlog, getRelatedBlogPosts, createSlug, getAllBlogPosts } from '@/lib/data.js';
+import { processBlogImageUrl } from '@/lib/imageUtils';
 import { notFound } from 'next/navigation';
 import ProductosRelacionadosBlog from '@/components/ProductosRelacionadosBlog';
 import ArticulosRelacionadosBlog from '@/components/ArticulosRelacionadosBlog';
@@ -54,7 +55,7 @@ export default async function PaginaArticulo({ params }) {
     slug: createSlug(p.title)
   }));
 
-  const imageUrl = post.imageUrl.startsWith('/') ? post.imageUrl : `/${post.imageUrl}`;
+  const imageUrl = processBlogImageUrl(post.imageUrl);
 
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8">

@@ -7,21 +7,10 @@ import Pagination from '@/components/Pagination.jsx';
 import ReactSlider from "react-slider";
 import Link from 'next/link';
 import BotonVolver from '@/components/BotonVolver';
-import Swiper from 'swiper';
-import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
+import CategoryBanners from '@/components/CategoryBanners';
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
-const mainCategories = [
-    { name: 'Todos', icon: 'fa-store', colorClass: 'bg-pink-600', filter: 'all' },
-    { name: 'Natural', icon: 'fa-leaf', colorClass: 'icon-natural', filter: 'Naturales y Homeopáticos' },
-    { name: 'Dermocosmética', icon: 'fa-spa', colorClass: 'icon-dermo', filter: 'Dermocosméticos' },
-    { name: 'Milenario', icon: 'fa-yin-yang', colorClass: 'icon-milenario', filter: 'Milenario' },
-    { name: 'Infantil', icon: 'fa-baby', colorClass: 'icon-infantil', filter: 'Cuidado Infantil' },
-    { name: 'Belleza', icon: 'fa-gem', colorClass: 'icon-belleza', filter: 'Cuidado y Belleza' }
-];
 
 export default function PaginaCategoriaCliente({ initialProducts, categoryName }) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -35,8 +24,6 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 20;
 
-  // CAMBIO: Creamos una referencia para guardar la instancia de Swiper
-  const swiperRef = useRef(null);
 
   const { availableBrands, availablePresentations, availableUnits, minPrice, maxPrice } = useMemo(() => {
     // ... (lógica de useMemo sin cambios)
@@ -63,32 +50,6 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
     };
   }, [initialProducts]);
   
-  // CAMBIO: Modificamos el useEffect para controlar el carrusel
-  useEffect(() => {
-    if (swiperRef.current) {
-      swiperRef.current.destroy(true, true);
-    }
-    
-    swiperRef.current = new Swiper('.category-filter-carousel', {
-      modules: [Navigation],
-      loop: false, spaceBetween: 16, slidesPerView: 2.5,
-      navigation: { nextEl: '.category-filter-next', prevEl: '.category-filter-prev' },
-      observer: true, observeParents: true,
-      breakpoints: { 640: { slidesPerView: 4 }, 768: { slidesPerView: 5 }, 1024: { slidesPerView: 6 } }
-    });
-
-    // Lógica para deslizar a la categoría activa
-    const activeIndex = mainCategories.findIndex(cat => cat.filter === categoryName);
-    if (activeIndex > -1) {
-      setTimeout(() => {
-        if (swiperRef.current && !swiperRef.current.destroyed) {
-          swiperRef.current.slideTo(activeIndex, 300); // 300ms de animación
-        }
-      }, 100); // Pequeño delay para asegurar que Swiper esté listo
-    }
-
-    return () => { if (swiperRef.current && !swiperRef.current.destroyed) swiperRef.current.destroy(true, true); };
-  }, [categoryName]); // Se ejecuta cada vez que el nombre de la categoría cambia
 
   useEffect(() => {
     setPriceRange([minPrice, maxPrice]);
@@ -218,29 +179,9 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
 </div>
       <div>
         <h1 className="text-3xl md:text-4xl font-bold">{categoryName === 'all' ? 'Tienda' : categoryName}</h1>
-        <p className="text-gray-600">{totalFilteredProducts} producto(s) encontrado(s).</p>
       </div>
       
-      <section className="mt-8 mb-12 bg-pink-50 py-8 rounded-2xl shadow-inner">
-        <div className="container mx-auto px-4 sm:px-6 relative">
-          <div className="swiper-container category-filter-carousel overflow-hidden">
-            <div className="swiper-wrapper">
-              {mainCategories.map(cat => (
-  <div key={cat.name} className="swiper-slide">
-    <a href={`/categoria/${cat.filter}`} className={`category-filter-card ${categoryName === cat.filter ? 'active' : ''}`}>
-      <div className={`icon-container ${!cat.colorClass.startsWith('icon-') ? cat.colorClass : ''}`}>
-          <i className={`fas ${cat.icon} text-4xl ${cat.colorClass.startsWith('icon-') ? cat.colorClass : ''}`}></i>
-      </div>
-      <h3 className="font-semibold text-base mt-3 text-center">{cat.name}</h3>
-    </a>
-  </div>
-))}
-            </div>
-          </div>
-          <div className="swiper-button-next category-filter-next"></div>
-          <div className="swiper-button-prev category-filter-prev"></div>
-        </div>
-      </section>
+      <CategoryBanners categoryName={categoryName} products={initialProducts} />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className={`lg:block ${isFilterOpen ? 'block' : 'hidden'}`}>
