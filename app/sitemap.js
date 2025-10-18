@@ -63,12 +63,14 @@ export default async function sitemap() {
       priority: 0.7,
     };
 
-    // Agregar imagen principal si existe
-    if (product.images && product.images.length > 0) {
+    // Extraer la primera imagen correctamente
+    const imagen = Array.isArray(product.images) ? product.images[0] : product.images;
+    
+    // Solo agregar imagen si existe y es válida
+    if (imagen && typeof imagen === 'string' && imagen.trim() !== '') {
       productUrl.images = [{
-        loc: product.images[0], // Imagen principal
-        title: product.name,
-        caption: product.name
+        loc: imagen,
+        title: product.name
       }];
     }
 
