@@ -64,7 +64,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
            <div>
             <a href="/">
-              <img src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" className="h-20 md:h-24 object-contain" loading="lazy" />
+              <img src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" className="h-20 md:h-24 object-contain" />
             </a>
           </div>
           <div>

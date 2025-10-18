@@ -103,8 +103,10 @@ export default function Header() {
               {isUserMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border">
                   <div className="p-2" onClick={() => setUserMenuOpen(false)}>
+                    <Link href="/mi-cuenta" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Mi Dashboard</Link>
                     <Link href="/mis-pedidos" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Mis Pedidos</Link>
-                    {/* --- ENLACE AÑADIDO --- */}
+                    <Link href="/mis-favoritos" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Mis Favoritos</Link>
+                    <Link href="/mi-perfil" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Mi Perfil</Link>
                     <Link href="/rastrear-pedido" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Rastrear Pedido</Link>
                     <div className="border-t my-2"></div>
                     <button onClick={handleLogout} className="block w-full text-left px-3 py-2 text-sm text-red-600 rounded-md hover:bg-red-500 hover:text-white">Cerrar Sesión</button>

@@ -3,10 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexto/ContextoAuth';
 import { db } from '@/lib/firebaseClient'; 
-import { collectionGroup, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, collectionGroup, query, where, getDocs, orderBy } from 'firebase/firestore';
 import BotonVolver from '@/components/BotonVolver';
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
+
 
 // Componente para el tracker (no necesita cambios)
 const OrderTracker = ({ status }) => {
@@ -76,18 +77,27 @@ export default function MisPedidosPage() {
       }
       
       try {
-        const ordersRef = collectionGroup(db, 'orders');
-        const q = query(
-          ordersRef, 
-          where("userId", "==", currentUser.uid),
-          where("status", "in", ["approved", "shipped", "delivered", "rejected", "declined"]),
-          orderBy('createdAt', 'desc')
-        );
-        const querySnapshot = await getDocs(q);
-        const userOrders = querySnapshot.docs.map(doc => ({
+        // Buscar en la subcolección del usuario
+        const userOrdersRef = collection(db, 'users', currentUser.uid, 'orders');
+        const querySnapshot = await getDocs(userOrdersRef);
+        const allOrders = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
+        
+        // Filtrar pedidos procesados (no pendientes de pago)
+        const ordersWithTracking = allOrders.filter(order => 
+          order.status !== 'pending' && 
+          order.status !== 'pending_payment'
+        );
+        
+        // Ordenar por fecha
+        const userOrders = ordersWithTracking.sort((a, b) => {
+          const dateA = a.createdAt?.seconds || 0;
+          const dateB = b.createdAt?.seconds || 0;
+          return dateB - dateA;
+        });
+        
         setOrders(userOrders);
 
       } catch (error) {
@@ -120,7 +130,9 @@ export default function MisPedidosPage() {
 
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8">
-      <BotonVolver texto="Volver a la tienda" />
+      <div className="mb-8">
+        <BotonVolver texto="Volver a la tienda" />
+      </div>
       <h1 className="text-3xl font-bold mb-8">Mis Pedidos</h1>
       {orders.length === 0 ? (
         <div className="text-center py-10 bg-gray-100 rounded-lg">

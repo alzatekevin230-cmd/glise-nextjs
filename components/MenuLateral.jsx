@@ -105,7 +105,10 @@ export default function MenuLateral() {
               <>
                 <h3 className="menu-section-title">Mi Cuenta</h3>
                 <p className="px-2 py-1 text-sm text-gray-500">Hola, {currentUser.displayName || currentUser.email}</p>
+                <Link href="/mi-cuenta" onClick={closeMenu} className="menu-link"><i className="fas fa-tachometer-alt"></i>Mi Dashboard</Link>
                 <Link href="/mis-pedidos" onClick={closeMenu} className="menu-link"><i className="fas fa-box"></i>Mis Pedidos</Link>
+                <Link href="/mis-favoritos" onClick={closeMenu} className="menu-link"><i className="fas fa-heart"></i>Mis Favoritos</Link>
+                <Link href="/mi-perfil" onClick={closeMenu} className="menu-link"><i className="fas fa-user"></i>Mi Perfil</Link>
                 <Link href="/rastrear-pedido" onClick={closeMenu} className="menu-link"><i className="fas fa-truck-fast"></i>Rastrear Pedido</Link>
                 <button onClick={handleLogout} className="menu-link logout-link w-full text-left">
                   <i className="fas fa-sign-out-alt"></i>Cerrar Sesión

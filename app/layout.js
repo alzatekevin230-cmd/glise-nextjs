@@ -18,6 +18,7 @@ import BotonWhatsapp from '@/components/BotonWhatsapp';
 import BarraNavegacionMovil from '@/components/BarraNavegacionMovil';
 import Lightbox from '@/components/Lightbox';
 import SmoothScrollProvider from '@/components/SmoothScrollProvider';
+import SmoothScrollToFooter from '@/components/SmoothScrollToFooter';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -119,6 +120,7 @@ export default async function RootLayout({ children }) {
                     <Lightbox />
                     <BotonWhatsapp />
                     <BarraNavegacionMovil />
+                    <SmoothScrollToFooter />
                     
                   </ProveedorProductos>
                 </ProveedorMenuLateral>
