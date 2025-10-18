@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /checkout
+Disallow: /mis-pedidos
+Disallow: /rastrear-pedido
+Disallow: /gracias
+
+Sitemap: https://glise.com.co/sitemap.xml
