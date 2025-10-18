@@ -54,13 +54,26 @@ export default async function sitemap() {
     },
   ];
 
-  // URLs de productos
-  const productUrls = products.map((product) => ({
-    url: `${baseUrl}/producto/${createSlug(product.name)}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.7,
-  }));
+  // URLs de productos con imágenes (formato sitemap-image)
+  const productUrls = products.map((product) => {
+    const productUrl = {
+      url: `${baseUrl}/producto/${createSlug(product.name)}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    };
+
+    // Agregar imagen principal si existe
+    if (product.images && product.images.length > 0) {
+      productUrl.images = [{
+        loc: product.images[0], // Imagen principal
+        title: product.name,
+        caption: product.name
+      }];
+    }
+
+    return productUrl;
+  });
 
   // URLs de posts del blog
   const blogUrls = blogPosts.map((post) => ({
