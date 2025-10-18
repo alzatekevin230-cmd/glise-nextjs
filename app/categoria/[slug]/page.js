@@ -5,8 +5,9 @@ import { getProductsByCategory, createSlug } from '@/lib/data.js';
 import PaginaCategoriaCliente from '@/components/PaginaCategoriaCliente.jsx';
 
 export default async function PaginaCategoria({ params }) {
-  const initialProducts = await getProductsByCategory(params.slug);
-  const categoryName = decodeURIComponent(params.slug);
+  const { slug } = await params;
+  const initialProducts = await getProductsByCategory(slug);
+  const categoryName = decodeURIComponent(slug);
 
   const productsWithSlugs = initialProducts.map(product => ({
     ...product,

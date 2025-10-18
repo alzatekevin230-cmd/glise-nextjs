@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef } from 'react';
-import ProductCard from './ProductCard';
+import ProductCardSimple from './ProductCardSimple';
 import Swiper from 'swiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -54,7 +54,7 @@ export default function ProductCarousel({
         <div className="swiper-wrapper">
           {products.map(product => (
             <div key={product.id} className="swiper-slide h-full">
-              <ProductCard product={product} isSmall={isSmall} />
+              <ProductCardSimple product={product} isSmall={isSmall} />
             </div>
           ))}
         </div>

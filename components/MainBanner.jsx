@@ -30,7 +30,7 @@ export default function MainBanner() {
 
           {/* --- SLIDE 1 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture>
+            <picture className="relative block w-full h-full">
               <source media="(min-width: 768px)" srcSet="/imagenespagina/baner1.webp" />
               <Image 
                 src="/imagenespagina/banermovil1.webp" 
@@ -44,7 +44,7 @@ export default function MainBanner() {
 
           {/* --- SLIDE 2 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture>
+            <picture className="relative block w-full h-full">
               <source media="(min-width: 768px)" srcSet="/imagenespagina/baner2.webp" />
               <Image 
                 src="/imagenespagina/banermovil2.webp" 
@@ -52,13 +52,14 @@ export default function MainBanner() {
                 fill
                 className="object-cover"
                 loading="lazy"
+                priority={false}
               />
             </picture>
           </div>
           
           {/* --- SLIDE 3 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture>
+            <picture className="relative block w-full h-full">
               <source media="(min-width: 768px)" srcSet="/imagenespagina/baner3.webp" />
               <Image 
                 src="/imagenespagina/banermovil3.webp" 
@@ -66,13 +67,14 @@ export default function MainBanner() {
                 fill
                 className="object-cover"
                 loading="lazy"
+                priority={false}
               />
             </picture>
           </div>
           
           {/* --- SLIDE 4 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture>
+            <picture className="relative block w-full h-full">
               <source media="(min-width: 768px)" srcSet="/imagenespagina/baner4.webp" />
               <Image 
                 src="/imagenespagina/banermovil4 .webp" 
@@ -80,13 +82,14 @@ export default function MainBanner() {
                 fill
                 className="object-cover"
                 loading="lazy"
+                priority={false}
               />
             </picture>
           </div>
 
           {/* --- SLIDE 5 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture>
+            <picture className="relative block w-full h-full">
               <source media="(min-width: 768px)" srcSet="/imagenespagina/baner5.webp" />
               <Image 
                 src="/imagenespagina/banermovil5.webp" 
@@ -94,6 +97,7 @@ export default function MainBanner() {
                 fill
                 className="object-cover"
                 loading="lazy"
+                priority={false}
               />
             </picture>
           </div>

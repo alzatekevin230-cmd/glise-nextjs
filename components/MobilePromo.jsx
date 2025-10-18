@@ -14,13 +14,15 @@ export default function MobilePromo() {
             <h3 className="promo-card-title">Skin 10%off</h3>
             <p className="promo-card-cta">Ver ahora</p>
           </div>
-          <Image 
-            src="/imagenespagina/tarjetatopic.webp" 
-            alt="Nuevos Dermocosméticos"
-            fill
-            sizes="50vw" 
-            className="promo-card-image" 
-          />
+          <div className="absolute inset-0">
+            <Image 
+              src="/imagenespagina/tarjetatopic.webp" 
+              alt="Nuevos Dermocosméticos"
+              fill
+              sizes="50vw" 
+              className="promo-card-image" 
+            />
+          </div>
         </Link>
 
         <Link href="/producto/aceite-esencial-de-lavanda-120-ml" className="promo-card-mobile promo-card--tall bg-green-50">
@@ -28,13 +30,15 @@ export default function MobilePromo() {
             <h3 className="promo-card-title">Aceites 10%off</h3>
             <p className="promo-card-cta">Descubrir</p>
           </div>
-          <Image 
-            src="/imagenespagina/ofertalavanda.webp" 
-            alt="Ofertas Naturales" 
-            fill
-            sizes="50vw"
-            className="promo-card-image" 
-          />
+          <div className="absolute inset-0">
+            <Image 
+              src="/imagenespagina/ofertalavanda.webp" 
+              alt="Ofertas Naturales" 
+              fill
+              sizes="50vw"
+              className="promo-card-image" 
+            />
+          </div>
         </Link>
 
         <Link href="/marca/EUCERIN" className="promo-card-mobile promo-card--wide col-span-2 bg-yellow-50">
@@ -42,14 +46,16 @@ export default function MobilePromo() {
             <h3 className="promo-card-title">Eucerin</h3>
             <p className="promo-card-cta">Comprar</p>
           </div>
-          <Image 
-            src="/imagenespagina/banereucerin.webp" 
-            alt="Lo Mejor de Glisé" 
-            fill
-            sizes="100vw"
-            className="promo-card-image-full" 
-             quality={100} 
-          />
+          <div className="absolute inset-0">
+            <Image 
+              src="/imagenespagina/banereucerin.webp" 
+              alt="Lo Mejor de Glisé" 
+              fill
+              sizes="100vw"
+              className="promo-card-image-full" 
+               quality={100} 
+            />
+          </div>
         </Link>
 
         <Link href="/marca/NIVEA" className="promo-card-mobile promo-card--wide col-span-2 bg-yellow-50">
@@ -57,13 +63,15 @@ export default function MobilePromo() {
             <h3 className="promo-card-title">Nivea</h3>
             <p className="promo-card-cta">Comprar todo</p>
           </div>
-          <Image 
-            src="/imagenespagina/banerdenivea.webp" 
-            alt="Lo Mejor de Glisé" 
-            fill
-            sizes="100vw"
-            className="promo-card-image-full" 
-          />
+          <div className="absolute inset-0">
+            <Image 
+              src="/imagenespagina/banerdenivea.webp" 
+              alt="Lo Mejor de Glisé" 
+              fill
+              sizes="100vw"
+              className="promo-card-image-full" 
+            />
+          </div>
         </Link>
         
         <Link href="/producto/creatina-en-gomas-sabor-fresa" className="promo-card-mobile promo-card--wide col-span-2 bg-yellow-50">
@@ -71,13 +79,15 @@ export default function MobilePromo() {
             <h3 className="promo-card-title">Creatina</h3>
             <p className="promo-card-cta">Ver producto</p>
           </div>
-          <Image 
-            src="/imagenespagina/ofertacreatiana.webp" 
-            alt="Banner Cuidado de Bebé" 
-            fill
-            sizes="100vw"
-            className="promo-card-image-full" 
-          />
+          <div className="absolute inset-0">
+            <Image 
+              src="/imagenespagina/ofertacreatiana.webp" 
+              alt="Banner Cuidado de Bebé" 
+              fill
+              sizes="100vw"
+              className="promo-card-image-full" 
+            />
+          </div>
         </Link>
 
       </div>

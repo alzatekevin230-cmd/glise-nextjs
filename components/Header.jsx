@@ -63,7 +63,7 @@ export default function Header() {
       <div className="container mx-auto px-4 h-28 hidden md:flex items-center justify-between">
         <div className="flex items-center gap-x-8">
           <div className="flex-shrink-0">
-            <Link href="/"><Image src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" width={150} height={96} className="h-24 w-auto" priority /></Link>
+            <Link href="/"><Image src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" width={150} height={96} className="h-24 w-auto" style={{ width: 'auto' }} priority /></Link>
           </div>
           <div className="relative flex-shrink-0" ref={menuRef}>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center justify-between bg-cyan-600 hover:bg-cyan-700 text-white font-semibold px-5 py-3 rounded-full transition-colors duration-200">
@@ -86,13 +86,13 @@ export default function Header() {
           </div>
         </div>
         
-        <div className="relative w-full max-w-3xl mx-8" onFocus={() => setIsSearchFocused(true)} onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}>
-          <input type="text" placeholder="Busca tus productos, marcas y más..." className="w-full pl-5 pr-16 py-3 border-2 border-cyan-500 rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-          <button type="button" className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-600 text-white w-10 h-10 rounded-full hover:bg-cyan-700 flex items-center justify-center transition-transform duration-200 hover:scale-110" aria-label="Buscar"><i className="fas fa-search"></i></button>
-          {isSearchFocused && <SearchResults suggestions={suggestions} />}
-        </div>
+          <div className="relative w-full max-w-3xl md:max-w-sm lg:max-w-3xl mx-8 md:mx-2 lg:mx-8" onFocus={() => setIsSearchFocused(true)} onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}>
+            <input type="text" placeholder="Busca tus productos, marcas y más..." className="w-full pl-5 pr-16 py-3 border-2 border-cyan-500 rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            <button type="button" className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-600 text-white w-10 h-10 rounded-full hover:bg-cyan-700 flex items-center justify-center transition-transform duration-200 hover:scale-110" aria-label="Buscar"><i className="fas fa-search"></i></button>
+            {isSearchFocused && <SearchResults suggestions={suggestions} />}
+          </div>
 
-        <div className="flex items-center gap-x-6 flex-shrink-0">
+          <div className="flex items-center gap-x-6 flex-shrink-0">
           {currentUser ? (
             <div className="relative" ref={userMenuRef}>
               <button onClick={() => setUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-2 text-cyan-600">

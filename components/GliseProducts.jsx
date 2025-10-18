@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
-import ProductCard from './ProductCard'; // Reutilizamos la tarjeta de producto
+import ProductCardSimple from './ProductCardSimple'; // Usamos la versión sin animaciones
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -42,7 +42,7 @@ export default function GliseProducts({ products }) {
             <div className="swiper-wrapper">
               {products.map(product => (
                 <div key={product.id} className="swiper-slide h-full">
-                  <ProductCard product={product} />
+                  <ProductCardSimple product={product} />
                 </div>
               ))}
             </div>

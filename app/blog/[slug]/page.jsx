@@ -18,7 +18,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const post = await getBlogPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getBlogPostBySlug(slug);
   if (!post) return { title: 'Artículo no encontrado' };
   return { 
     title: `${post.title} - Blog Glisé`, 
@@ -33,7 +34,8 @@ export async function generateMetadata({ params }) {
 
 export default async function PaginaArticulo({ params }) {
   // 2. Buscamos el post usando el SLUG de la URL, no el ID
-  const post = await getBlogPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getBlogPostBySlug(slug);
 
   if (!post) {
     notFound();

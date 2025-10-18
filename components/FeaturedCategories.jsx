@@ -4,6 +4,7 @@
 import { useEffect } from 'react';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
+import AnimatedSection from './AnimatedSection';
 
 // NOTA: Las importaciones de CSS de Swiper ya deben estar en tu archivo layout.js principal
 // import 'swiper/css';
@@ -48,12 +49,15 @@ export default function FeaturedCategories() {
   }, []);
 
   return (
-    <section id="category-carousel-section" className="mb-16 md:mb-24">
-      <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-10">
-          Categorías Destacadas
-        </h2>
-        <div className="relative group">
+    <AnimatedSection animation="fadeIn" delay={100}>
+      <section id="category-carousel-section" className="mb-16 md:mb-24">
+        <div className="container mx-auto px-4 sm:px-6">
+          <AnimatedSection animation="slideUp" delay={200}>
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-10">
+              Categorías Destacadas
+            </h2>
+          </AnimatedSection>
+          <div className="relative group">
           <div className="swiper-container category-discovery-carousel overflow-hidden">
             <div className="swiper-wrapper">
               {categoriesData.map((cat, index) => (
@@ -70,8 +74,9 @@ export default function FeaturedCategories() {
           </div>
           <div className="swiper-button-next category-discovery-next opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="swiper-button-prev category-discovery-prev opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </AnimatedSection>
   );
 }

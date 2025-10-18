@@ -16,7 +16,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const product = await getProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
   if (!product) return { title: 'Producto no encontrado' };
   return { 
     title: `${product.name} - Glisé`, 
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function PaginaProducto({ params }) {
-  const product = await getProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();

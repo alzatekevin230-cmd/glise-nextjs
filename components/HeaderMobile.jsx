@@ -34,7 +34,7 @@ export default function HeaderMobile() {
           <i className="fas fa-bars"></i>
         </button>
         <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] z-0">
-          <Image src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" />
+          <Image src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" style={{ width: 'auto' }} />
         </Link>
         <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10">
           <i className="fas fa-shopping-cart"></i>

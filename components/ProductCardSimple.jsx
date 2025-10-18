@@ -1,18 +1,17 @@
-// components/ProductCard.jsx
+// components/ProductCardSimple.jsx
 "use client";
 
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCarrito } from '@/contexto/ContextoCarrito';
 import toast from 'react-hot-toast';
-import AnimatedSection from './AnimatedSection';
 import OptimizedImage from './OptimizedImage';
 
 function formatPrice(price) {
   return `$${Math.round(price).toLocaleString('es-CO')}`;
 }
 
-export default function ProductCard({ product, isSmall = false }) {
+export default function ProductCardSimple({ product, isSmall = false }) {
   const { agregarAlCarrito } = useCarrito();
 
   const handleAddToCart = () => {
@@ -39,20 +38,19 @@ export default function ProductCard({ product, isSmall = false }) {
   const buttonClasses = `w-full text-white font-bold rounded-lg transition flex items-center justify-center ${isSmall ? 'py-1 px-2 text-xs' : 'py-2 px-4'} ${isOutOfStock ? 'btn-disabled' : 'bg-blue-600 hover:bg-blue-700'}`;
 
   return (
-    <AnimatedSection animation="slideUp" delay={Math.random() * 200}>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden product-card flex flex-col text-center border h-full relative">
-        {isOutOfStock && <div className="out-of-stock-badge">Agotado</div>}
+    <div className="bg-white rounded-lg shadow-md overflow-hidden product-card flex flex-col text-center border h-full relative">
+      {isOutOfStock && <div className="out-of-stock-badge">Agotado</div>}
+      
+      {/* --- ENLACE CORREGIDO: AHORA USA product.slug --- */}
+      <Link href={`/producto/${product.slug}`} className={`cursor-pointer flex-grow flex flex-col ${isOutOfStock ? 'opacity-60' : ''}`}>
         
-        {/* --- ENLACE CORREGIDO: AHORA USA product.slug --- */}
-        <Link href={`/producto/${product.slug}`} className={`cursor-pointer flex-grow flex flex-col ${isOutOfStock ? 'opacity-60' : ''}`}>
-          
-          <OptimizedImage 
-            src={imageSrc} 
-            alt={product.name}
-            className="aspect-square w-full"
-            sizes="(max-width: 768px) 50vw, 25vw"
-            priority={false}
-          />
+        <OptimizedImage 
+          src={imageSrc} 
+          alt={product.name}
+          className="aspect-square w-full"
+          sizes="(max-width: 768px) 50vw, 25vw"
+          priority={false}
+        />
 
         <div className={`${cardClasses} flex-grow flex flex-col`}>
           <p className={`text-xs text-gray-400 uppercase tracking-wider ${isSmall ? 'hidden' : ''}`}>{product.category}</p>
@@ -76,7 +74,6 @@ export default function ProductCard({ product, isSmall = false }) {
           <i className={`fas fa-shopping-cart ${isSmall ? 'mr-1' : 'mr-2'}`}></i> {isOutOfStock ? 'Agotado' : 'Agregar'}
         </button>
       </div>
-      </div>
-    </AnimatedSection>
+    </div>
   );
 }

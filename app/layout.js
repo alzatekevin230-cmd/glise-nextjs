@@ -17,6 +17,7 @@ import { ProveedorMenuLateral } from '@/contexto/ContextoMenuLateral';
 import BotonWhatsapp from '@/components/BotonWhatsapp';
 import BarraNavegacionMovil from '@/components/BarraNavegacionMovil';
 import Lightbox from '@/components/Lightbox';
+import SmoothScrollProvider from '@/components/SmoothScrollProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -89,40 +90,42 @@ export default async function RootLayout({ children }) {
   const allProducts = await getAllProducts();
 
   return (
-    <html lang="es">
+    <html lang="es" data-scroll-behavior="smooth">
       <head>
          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ez-plus/1.2.2/jquery.ez-plus.min.css" />
       </head>
       <body className={inter.className}>
-        <ProveedorModal>
-          <ProveedorAuth>
-            <ProveedorCarrito>
-              <ProveedorMenuLateral>
-                <ProveedorProductos allProducts={allProducts}>
-                  <Toaster position="bottom-center" />
-                  
-                  {/* El Header y Menú Lateral se mantienen fuera del div que se mueve */}
-                  <Header />
-                  <MenuLateral />
-                  
-                  <div id="page-content-wrapper" className="relative z-0">
-                    <main className="md:pt-0 pb-20 md:pb-0">{children}</main>
-                    <Footer />
-                  </div>
+        <SmoothScrollProvider>
+          <ProveedorModal>
+            <ProveedorAuth>
+              <ProveedorCarrito>
+                <ProveedorMenuLateral>
+                  <ProveedorProductos allProducts={allProducts}>
+                    <Toaster position="bottom-center" />
+                    
+                    {/* El Header y Menú Lateral se mantienen fuera del div que se mueve */}
+                    <Header />
+                    <MenuLateral />
+                    
+                    <div id="page-content-wrapper" className="relative z-0">
+                      <main className="md:pt-0 pb-20 md:pb-0">{children}</main>
+                      <Footer />
+                    </div>
 
-                  {/* Los modales y otros elementos fijos se mantienen al final */}
-                  <CarritoModal />
-                  <ModalAutenticacion />
-                  <Lightbox />
-                  <BotonWhatsapp />
-                  <BarraNavegacionMovil />
-                  
-                </ProveedorProductos>
-              </ProveedorMenuLateral>
-            </ProveedorCarrito>
-          </ProveedorAuth>
-        </ProveedorModal>
+                    {/* Los modales y otros elementos fijos se mantienen al final */}
+                    <CarritoModal />
+                    <ModalAutenticacion />
+                    <Lightbox />
+                    <BotonWhatsapp />
+                    <BarraNavegacionMovil />
+                    
+                  </ProveedorProductos>
+                </ProveedorMenuLateral>
+              </ProveedorCarrito>
+            </ProveedorAuth>
+          </ProveedorModal>
+        </SmoothScrollProvider>
       </body>
     </html>
   );
