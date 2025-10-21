@@ -1,9 +1,71 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Reglas temporales más permisivas para debugging
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    
+    // ========================================
+    // PRODUCTOS
+    // ========================================
+    // Lectura pública, escritura solo desde Backend (Admin SDK)
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if false; // Solo Firebase Admin puede escribir
     }
+    
+    // ========================================
+    // USUARIOS
+    // ========================================
+    match /users/{userId} {
+      // Crear perfil al registrarse
+      allow create: if request.auth != null && request.auth.uid == userId;
+      
+      // Leer y actualizar solo su propio perfil
+      allow read, update: if request.auth != null && request.auth.uid == userId;
+      
+      // No se puede eliminar
+      allow delete: if false;
+      
+      // ========================================
+      // PEDIDOS (subcolección de usuarios)
+      // ========================================
+      match /orders/{orderId} {
+        // Solo el usuario puede ver sus propios pedidos
+        allow read: if request.auth != null && request.auth.uid == userId;
+        
+        // Solo puede crear pedidos en su propia colección
+        allow create: if request.auth != null && request.auth.uid == userId;
+        
+        // No puede modificar ni eliminar pedidos (solo backend)
+        allow update, delete: if false;
+      }
+    }
+    
+    // ========================================
+    // BLOG POSTS
+    // ========================================
+    match /blogPosts/{postId} {
+      allow read: if true;
+      allow write: if false; // Solo Admin SDK puede escribir
+    }
+    
+    // ========================================
+    // ÓRDENES GLOBALES (si las tienes en colección principal)
+    // ========================================
+    match /orders/{orderId} {
+      // Solo el usuario que creó la orden puede verla
+      allow read: if request.auth != null && 
+                  resource.data.userId == request.auth.uid;
+      
+      // Crear orden con su userId
+      allow create: if request.auth != null && 
+                    request.resource.data.userId == request.auth.uid;
+      
+      // No se pueden modificar ni eliminar
+      allow update, delete: if false;
+    }
+    
+    // ========================================
+    // CUALQUIER OTRA COLECCIÓN - BLOQUEAR
+    // ========================================
+    // Por seguridad, todo lo demás está bloqueado por defecto
   }
 }

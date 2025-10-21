@@ -72,7 +72,9 @@ export default function CheckoutPage() {
     useEffect(() => {
         const getCities = httpsCallable(functions, 'getCoordinadoraCities');
         getCities().then(result => setAllCities(result.data)).catch(err => {
-            console.error("Error al cargar ciudades:", err);
+            if (process.env.NODE_ENV === 'development') {
+                console.error("Error al cargar ciudades:", err);
+            }
             toast.error("No se pudieron cargar las ciudades.");
         });
     }, [functions]);

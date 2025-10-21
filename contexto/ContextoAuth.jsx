@@ -56,7 +56,10 @@ export const ProveedorAuth = ({ children }) => {
       alert(`¡Bienvenido/a, ${user.displayName}!`);
 
     } catch (error) {
-      console.error("Error al iniciar sesión con Google:", error);
+      // Solo mostrar error en producción si es necesario
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error al iniciar sesión con Google:", error);
+      }
       alert("Hubo un error al intentar iniciar sesión con Google.");
     }
   };

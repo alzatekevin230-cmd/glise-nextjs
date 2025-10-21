@@ -20,7 +20,9 @@ export const ProveedorCarrito = ({ children }) => {
         setCart(JSON.parse(cartFromStorage));
       }
     } catch (error) {
-      console.error("Error al cargar el carrito desde localStorage:", error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error al cargar el carrito desde localStorage:", error);
+      }
       localStorage.removeItem('glise_cart');
     }
   }, []);
