@@ -6,6 +6,9 @@ import DetalleProductoCliente from '@/components/DetalleProductoCliente';
 import BotonVolver from '@/components/BotonVolver';
 import { notFound } from 'next/navigation';
 
+// ISR: Revalidar cada 1 hora (3600 segundos)
+export const revalidate = 3600;
+
 // Genera todas las rutas de productos en build time
 export async function generateStaticParams() {
   const products = await getAllProducts();

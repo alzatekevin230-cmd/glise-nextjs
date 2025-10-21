@@ -57,8 +57,8 @@ export default function CarritoModal() {
   const total = subtotal - descuento;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={closeModal}>
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn" onClick={closeModal}>
+      <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 w-full max-w-lg max-h-[90vh] flex flex-col transform transition-all duration-300 ease-out scale-100" onClick={(e) => e.stopPropagation()}>
         
         <div className="flex justify-between items-center p-5 border-b">
           <h3 className="text-2xl font-bold">Tu Carrito</h3>

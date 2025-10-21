@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useCarrito } from '@/contexto/ContextoCarrito';
 import toast from 'react-hot-toast';
 import OptimizedImage from './OptimizedImage';
+import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
+import { FaRegStar } from 'react-icons/fa';
 
 function formatPrice(price) {
   return `$${Math.round(price).toLocaleString('es-CO')}`;
@@ -25,9 +27,9 @@ export default function ProductCardSimple({ product, isSmall = false }) {
   const rating = 3.5 + (product.popularity / 800) * 1.5;
   const reviewCount = Math.floor(product.popularity / 15) + 3;
   const stars = Array.from({ length: 5 }, (_, i) => {
-    if (rating >= i + 1) return <i key={i} className="fas fa-star text-amber-400"></i>;
-    if (rating >= i + 0.5) return <i key={i} className="fas fa-star-half-alt text-amber-400"></i>;
-    return <i key={i} className="far fa-star text-amber-400"></i>;
+    if (rating >= i + 1) return <FaStar key={i} className="text-amber-400" />;
+    if (rating >= i + 0.5) return <FaStarHalfAlt key={i} className="text-amber-400" />;
+    return <FaRegStar key={i} className="text-amber-400" />;
   });
 
   const cardClasses = isSmall ? "p-2" : "p-4";

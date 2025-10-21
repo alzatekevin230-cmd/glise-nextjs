@@ -55,7 +55,7 @@ export default function OptimizedImage({
   }
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className} overflow-hidden`}>
       {!imageLoaded && <SkeletonLoader type="image" className="absolute inset-0" />}
       <Image
         ref={imgRef}
@@ -63,13 +63,15 @@ export default function OptimizedImage({
         alt={alt}
         fill
         sizes={sizes}
-        className={`object-contain transition-opacity duration-300 image-optimized ${
-          imageLoaded ? 'opacity-100' : 'opacity-0'
+        className={`object-contain transition-all duration-500 ease-out image-optimized ${
+          imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
         }`}
         onLoad={handleLoad}
         onError={handleError}
         loading={priority ? 'eager' : 'lazy'}
         priority={priority}
+        placeholder="blur"
+        blurDataURL="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA="
         {...props}
       />
     </div>

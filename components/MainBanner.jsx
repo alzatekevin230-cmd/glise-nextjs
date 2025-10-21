@@ -13,14 +13,64 @@ import 'swiper/css/effect-fade';
 export default function MainBanner() {
   useEffect(() => {
     const swiper = new Swiper('.main-banner-carousel', {
-      modules: [Navigation, Pagination, Autoplay, EffectFade],
+      modules: [Navigation, Pagination, Autoplay],
       loop: true,
-      effect: 'fade',
-      fadeEffect: { crossFade: true },
-      autoplay: { delay: 5000, disableOnInteraction: false },
-      pagination: { el: '.main-banner-pagination', clickable: true },
-      navigation: { nextEl: '.main-banner-next', prevEl: '.main-banner-prev' },
+      speed: 600,
+      autoplay: { 
+        delay: 5000, 
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true
+      },
+      pagination: { 
+        el: '.main-banner-pagination', 
+        clickable: true,
+        dynamicBullets: false,
+        type: 'bullets',
+        renderBullet: function (index, className) {
+          return '<span class="' + className + '"></span>';
+        }
+      },
+      navigation: { 
+        nextEl: '.main-banner-next', 
+        prevEl: '.main-banner-prev' 
+      },
+      // Habilitar touch explícitamente
+      touchEventsTarget: 'container',
+      simulateTouch: true,
+      touchRatio: 1,
+      touchAngle: 45,
+      grabCursor: true,
+      allowTouchMove: true,
+      // Prevenir conflictos con scroll vertical
+      touchStartPreventDefault: false,
+      resistanceRatio: 0.85,
+      // Forzar actualización de paginación en cada cambio
+      watchSlidesProgress: true,
+      watchSlidesVisibility: true,
+      observer: true,
+      observeParents: true,
+      observeSlideChildren: true,
+      // Event listeners para asegurar sincronización
+      on: {
+        slideChange: function () {
+          // Forzar actualización de la paginación
+          if (this.pagination && this.pagination.render) {
+            this.pagination.render();
+            this.pagination.update();
+          }
+        },
+        touchEnd: function () {
+          // Actualizar paginación después de touch
+          if (this.pagination && this.pagination.update) {
+            this.pagination.update();
+          }
+        }
+      }
     });
+    
+    return () => {
+      if (swiper) swiper.destroy();
+    };
   }, []);
 
   return (

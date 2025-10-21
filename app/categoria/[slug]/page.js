@@ -4,6 +4,9 @@
 import { getProductsByCategory, createSlug } from '@/lib/data.js';
 import PaginaCategoriaCliente from '@/components/PaginaCategoriaCliente.jsx';
 
+// ISR: Revalidar cada 30 minutos
+export const revalidate = 1800;
+
 export default async function PaginaCategoria({ params }) {
   const { slug } = await params;
   const initialProducts = await getProductsByCategory(slug);

@@ -3,8 +3,76 @@
 @tailwind utilities;
 
 /* === INICIO DE ESTILOS PERSONALIZADOS (COPIA COMPLETA DE style.css) === */
+
+/* Respeto a preferencias de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 html {
     scroll-behavior: smooth;
+}
+
+/* ===== MEJORAS ESPECÍFICAS PARA MÓVIL ===== */
+@media (max-width: 768px) {
+    /* Smooth momentum scrolling en iOS */
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Botones más grandes para touch (mínimo 44x44px) */
+    button, .btn, a.btn {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px 20px;
+    }
+    
+    /* Links más grandes para tap fácil */
+    a {
+        padding: 4px 0;
+        display: inline-block;
+    }
+    
+    /* Inputs más grandes para facilitar escritura */
+    input, select, textarea {
+        font-size: 16px !important; /* Previene zoom en iOS */
+        min-height: 44px;
+        padding: 12px;
+    }
+    
+    /* Espaciado mayor entre elementos clickeables */
+    .product-card,
+    .brand-card,
+    .blog-post-card {
+        margin-bottom: 20px;
+    }
+    
+    /* Swipe visual feedback para carruseles */
+    .swiper-container {
+        cursor: grab;
+    }
+    
+    .swiper-container:active {
+        cursor: grabbing;
+    }
+    
+    /* Indicador visual de que es scrolleable */
+    .overflow-x-auto {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    .overflow-x-auto::-webkit-scrollbar {
+        display: none;
+    }
+    
 }
 
 body {
@@ -12,13 +80,18 @@ body {
     background-color: #f8fafc;
 }
 
+
+/* ===== MICRO-INTERACTIONS MODERNAS ===== */
 .product-card,
 .brand-card,
 .blog-post-card {
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 }
 .product-card img {
     aspect-ratio: 1 / 1;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #menu-dropdown {
@@ -34,11 +107,118 @@ body {
     transform: rotate(180deg);
 }
 
-.product-card:hover,
-.brand-card:hover,
-.blog-post-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+/* Desktop hover effects */
+@media (hover: hover) {
+    .product-card:hover,
+    .brand-card:hover,
+    .blog-post-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+    }
+
+    .product-card:hover img {
+        transform: scale(1.05);
+    }
+}
+
+/* Mobile/Touch tap feedback */
+@media (hover: none) {
+    .product-card:active,
+    .brand-card:active,
+    .blog-post-card:active {
+        transform: scale(0.96);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+        transition-duration: 0.15s;
+    }
+    
+    .product-card:active img {
+        transform: scale(0.98);
+        transition-duration: 0.15s;
+        filter: brightness(0.95);
+    }
+    
+    /* Feedback táctil en links */
+    a:active {
+        opacity: 0.7;
+        transition: opacity 0.1s;
+    }
+}
+
+/* Botones modernos con feedback táctil */
+button, .btn, a.btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Desktop hover */
+@media (hover: hover) {
+    button:not(:disabled):hover, .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* Touch/Mobile active (funciona en móvil) */
+button:not(:disabled):active, .btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+    transition-duration: 0.1s;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none !important;
+}
+
+/* Ripple effect para móvil */
+@media (hover: none) {
+    button:not(:disabled):active::after,
+    .btn:active::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        transform: translate(-50%, -50%);
+        animation: ripple 0.6s ease-out;
+    }
+    
+    @keyframes ripple {
+        to {
+            width: 200px;
+            height: 200px;
+            opacity: 0;
+        }
+    }
+}
+
+/* Focus states modernos */
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+}
+
+/* Animación fade in moderna */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fadeIn {
+    animation: modalFadeIn 0.2s ease-out;
 }
 
 .carousel-container {
@@ -990,6 +1170,7 @@ body.menu-open {
 #side-menu-content .menu-link {
     display: flex;
     align-items: center;
+    gap: 0.75rem;
     padding: 0.75rem 0.5rem;
     color: #4b5563;
     transition: color 0.2s, background-color 0.2s;
@@ -1001,11 +1182,17 @@ body.menu-open {
     background-color: #eff6ff;
 }
 
+#side-menu-content .menu-link svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+}
+
 #side-menu-content .menu-link i {
     width: 1.5rem;
-    margin-right: 0.75rem;
-    text-align: center;
+    flex-shrink: 0;
     font-size: 1.125rem;
+    text-align: center;
 }
 
 #side-menu-content .menu-divider {
@@ -1787,6 +1974,28 @@ body.menu-open {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200px 100%;
   animation: shimmer 1.5s infinite;
+}
+
+/* Carousel promo animation */
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pulse animation for checkout button */
+@keyframes pulse-subtle {
+  0%, 100% {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  50% {
+    box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.3), 0 10px 10px -5px rgba(34, 197, 94, 0.2);
+  }
 }
 
 /* Optimización de imágenes */

@@ -1,34 +1,35 @@
 // hooks/useSearch.js
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
-import Fuse from 'fuse.js';
-import { useProductos } from '@/contexto/ContextoProductos';
+import { useState, useEffect } from 'react';
 
 export function useSearch() {
-  const { allProducts } = useProductos();
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-
-  const fuse = useMemo(() => {
-    if (allProducts && allProducts.length > 0) {
-      return new Fuse(allProducts, {
-        keys: ['name', 'category', 'laboratorio'],
-        includeScore: true,
-        threshold: 0.4,
-      });
-    }
-    return null;
-  }, [allProducts]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (fuse && searchTerm.length > 2) {
-      const results = fuse.search(searchTerm).slice(0, 5).map(result => result.item);
-      setSuggestions(results);
-    } else {
-      setSuggestions([]);
-    }
-  }, [searchTerm, fuse]);
+    // Debounce search
+    const timer = setTimeout(async () => {
+      if (searchTerm.length > 2) {
+        setIsLoading(true);
+        try {
+          const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}&limit=5`);
+          const results = await response.json();
+          setSuggestions(results);
+        } catch (error) {
+          console.error('Error en búsqueda:', error);
+          setSuggestions([]);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setSuggestions([]);
+      }
+    }, 300); // Espera 300ms después de que el usuario deja de escribir
 
-  return { searchTerm, setSearchTerm, suggestions };
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  return { searchTerm, setSearchTerm, suggestions, isLoading };
 }

@@ -8,6 +8,9 @@ import { notFound } from 'next/navigation';
 import ProductosRelacionadosBlog from '@/components/ProductosRelacionadosBlog';
 import ArticulosRelacionadosBlog from '@/components/ArticulosRelacionadosBlog';
 
+// ISR: Revalidar cada 2 horas (blog)
+export const revalidate = 7200;
+
 // Genera todas las rutas de blog posts en build time
 export async function generateStaticParams() {
   const posts = await getAllBlogPosts();

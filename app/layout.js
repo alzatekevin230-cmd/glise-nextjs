@@ -2,6 +2,7 @@
 import "nouislider/dist/nouislider.css";
 import './globals.css';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CarritoModal from '@/components/CarritoModal';
@@ -12,13 +13,13 @@ import { ProveedorCarrito } from '@/contexto/ContextoCarrito.jsx';
 import { ProveedorAuth } from '@/contexto/ContextoAuth.jsx';
 import { Toaster } from 'react-hot-toast';
 import { ProveedorProductos } from '@/contexto/ContextoProductos';
-import { getAllProducts } from '@/lib/data';
 import { ProveedorMenuLateral } from '@/contexto/ContextoMenuLateral';
 import BotonWhatsapp from '@/components/BotonWhatsapp';
 import BarraNavegacionMovil from '@/components/BarraNavegacionMovil';
 import Lightbox from '@/components/Lightbox';
 import SmoothScrollProvider from '@/components/SmoothScrollProvider';
 import SmoothScrollToFooter from '@/components/SmoothScrollToFooter';
+import ScrollProgressBar from '@/components/ScrollProgressBar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -51,10 +52,11 @@ export const metadata = {
     description: '🛍️ ¡Descubre Glisé! Tu farmacia online #1 en Colombia. Productos naturales, dermocosméticos premium y cuidado personal de las mejores marcas. ✨ Envíos gratis, calidad garantizada.',
     images: [
       {
-        url: '/imagenespagina/logodeglise.webp',
+        url: 'https://glise.com.co/imagenespagina/logodeglise.webp',
         width: 1200,
         height: 630,
-        alt: 'Glisé - Farmacia y Belleza Natural en Colombia'
+        alt: 'Glisé - Farmacia y Belleza Natural en Colombia',
+        type: 'image/webp'
       }
     ]
   },
@@ -62,7 +64,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Glisé - Farmacia y Belleza Natural en Colombia',
     description: '🛍️ Tu farmacia online #1 en Colombia. Productos naturales, dermocosméticos premium. ✨ Envíos gratis, calidad garantizada.',
-    images: ['/imagenespagina/logodeglise.webp']
+    images: ['https://glise.com.co/imagenespagina/logodeglise.webp']
   },
   icons: {
     icon: [
@@ -83,27 +85,63 @@ export const metadata = {
   },
   verification: {
     google: 'google-site-verification-code', // Agrega tu código de verificación de Google aquí
+  },
+  other: {
+    'google-site-verification': 'google-site-verification-code',
   }
 };
 
 
-export default async function RootLayout({ children }) {
-  const allProducts = await getAllProducts();
+export default function RootLayout({ children }) {
+  // JSON-LD estructurado para Google
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Glisé',
+    description: 'Farmacia y Belleza Natural en Colombia',
+    url: 'https://glise.com.co',
+    logo: 'https://glise.com.co/imagenespagina/logodeglise.webp',
+    image: 'https://glise.com.co/imagenespagina/logodeglise.webp',
+    sameAs: [
+      'https://www.facebook.com/glisecolombia',
+      'https://www.instagram.com/glisecolombia'
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+57-321-797-3158',
+      contactType: 'customer service',
+      areaServed: 'CO',
+      availableLanguage: 'Spanish'
+    },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Palmira',
+      addressRegion: 'Valle del Cauca',
+      addressCountry: 'CO'
+    }
+  };
 
   return (
     <html lang="es" data-scroll-behavior="smooth">
       <head>
-         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ez-plus/1.2.2/jquery.ez-plus.min.css" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className={inter.className}>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <SmoothScrollProvider>
           <ProveedorModal>
             <ProveedorAuth>
               <ProveedorCarrito>
                 <ProveedorMenuLateral>
-                  <ProveedorProductos allProducts={allProducts}>
-                    <Toaster position="bottom-center" />
+                    <ProveedorProductos>
+                      <ScrollProgressBar />
+                      <Toaster position="bottom-center" />
                     
                     {/* El Header y Menú Lateral se mantienen fuera del div que se mueve */}
                     <Header />

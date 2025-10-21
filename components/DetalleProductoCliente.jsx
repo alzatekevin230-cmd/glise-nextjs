@@ -14,6 +14,61 @@ import ResenasProducto from './ResenasProducto';
 // Ayudante para detectar tamaño de pantalla
 import { useWindowSize } from './hooks/useWindowSize';
 
+// Componente de información de envío
+const EnvioInfoAccordion = () => (
+  <div className="my-4">
+    <details className="shipping-policy-accordion">
+      <summary className="shipping-policy-title">
+        <i className="fas fa-truck mr-3 text-cyan-600"></i>
+        <span>Información de envío y garantías</span>
+        <i className="fas fa-chevron-down icon-arrow"></i>
+      </summary>
+      <div className="shipping-policy-content">
+        <div className="space-y-4">
+          <div className="flex items-start gap-3">
+            <i className="fas fa-shipping-fast text-blue-600 mt-1 text-lg"></i>
+            <div>
+              <p className="font-semibold text-gray-800">Envíos a todo Colombia</p>
+              <p className="text-sm text-gray-600">Entrega en 2-5 días hábiles (principales ciudades)</p>
+            </div>
+          </div>
+          
+          <div className="flex items-start gap-3">
+            <i className="fas fa-gift text-green-600 mt-1 text-lg"></i>
+            <div>
+              <p className="font-semibold text-green-600">Envío GRATIS</p>
+              <p className="text-sm text-gray-600">En compras superiores a $250.000</p>
+            </div>
+          </div>
+          
+          <div className="flex items-start gap-3">
+            <i className="fas fa-shield-alt text-cyan-600 mt-1 text-lg"></i>
+            <div>
+              <p className="font-semibold text-gray-800">Compra 100% segura</p>
+              <p className="text-sm text-gray-600">Garantía de satisfacción de 30 días</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <i className="fas fa-undo text-purple-600 mt-1 text-lg"></i>
+            <div>
+              <p className="font-semibold text-gray-800">Devoluciones fáciles</p>
+              <p className="text-sm text-gray-600">Si no estás satisfecho, te devolvemos tu dinero</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <a href="/politica-devoluciones" className="text-sm text-blue-600 hover:underline inline-flex items-center">
+            Ver política completa de envíos y devoluciones
+            <i className="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </details>
+  </div>
+);
+
 // Componentes del carrusel (solo para móvil)
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -183,6 +238,9 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
             <div className="my-4">
                 <span className="text-3xl lg:text-4xl font-bold text-blue-600">{formatPrice(product.price)}</span>
             </div>
+            
+            <EnvioInfoAccordion />
+            
             <div className="flex-grow my-4 overflow-y-auto pr-2 border-t pt-4">
                 <h3 className="text-lg font-semibold mb-2 text-gray-800">Descripción</h3>
                 <p className="text-gray-700 leading-relaxed">{product.description}</p>

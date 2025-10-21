@@ -88,8 +88,8 @@ export default function ModalAutenticacion() {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 z-[60] flex items-center justify-center p-4" onClick={closeModal}>
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4 animate-fadeIn" onClick={closeModal}>
+      <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 w-full max-w-md relative overflow-hidden transform transition-all duration-300 ease-out scale-100" onClick={(e) => e.stopPropagation()}>
         <button onClick={closeModal} className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl z-10">×</button>
         
         <div className={view === 'login-register' ? '' : 'hidden'}>

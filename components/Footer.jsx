@@ -2,7 +2,8 @@
 "use client";
 
 import { useEffect, useRef } from 'react';
-import { useModal } from '@/contexto/ContextoModal'; 
+import { useModal } from '@/contexto/ContextoModal';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaChevronDown } from 'react-icons/fa'; 
 
 export default function Footer() {
   const footerRef = useRef(null);
@@ -70,35 +71,35 @@ export default function Footer() {
           <div>
             <h4 className="font-bold mb-3 pt-3">CONTÁCTANOS</h4>
             <div className="space-y-4 text-sm">
-              <p className="flex items-start"><i className="fas fa-phone-alt w-4 mr-2 text-blue-600 mt-1"></i><span>321 797 3158</span></p>
-              <p className="flex items-start"><i className="fas fa-envelope w-4 mr-2 text-blue-600 mt-1"></i><span>gliseybelleza@gmail.com</span></p>
-              <p className="flex items-start"><i className="fas fa-map-marker-alt w-4 mr-2 text-blue-600 mt-1"></i><span>Palmira, Valle del Cauca, Colombia</span></p>
+              <p className="flex items-start gap-2"><FaPhone className="w-4 text-blue-600 mt-1" /><span>321 797 3158</span></p>
+              <p className="flex items-start gap-2"><FaEnvelope className="w-4 text-blue-600 mt-1" /><span>gliseybelleza@gmail.com</span></p>
+              <p className="flex items-start gap-2"><FaMapMarkerAlt className="w-4 text-blue-600 mt-1" /><span>Palmira, Valle del Cauca, Colombia</span></p>
             </div>
           </div>
            <div className="space-y-2">
             <details className="footer-accordion">
-              <summary className="footer-accordion-toggle"><span>SOBRE GLISÉ</span><i className="fas fa-chevron-down transition-transform duration-300"></i></summary>
+              <summary className="footer-accordion-toggle"><span>SOBRE GLISÉ</span><FaChevronDown className="transition-transform duration-300" /></summary>
               <ul className="pt-2 pl-4 space-y-2 text-sm text-gray-600">
                 <li><a href="/sobre-nosotros" className="hover:text-blue-600">Nuestra Historia</a></li>
                 <li><a href="/blog" className="hover:text-blue-600">Blog de Bienestar</a></li>
               </ul>
             </details>
             <details className="footer-accordion">
-              <summary className="footer-accordion-toggle"><span>SERVICIO AL CLIENTE</span><i className="fas fa-chevron-down transition-transform duration-300"></i></summary>
+              <summary className="footer-accordion-toggle"><span>SERVICIO AL CLIENTE</span><FaChevronDown className="transition-transform duration-300" /></summary>
               <ul className="pt-2 pl-4 space-y-2 text-sm text-gray-600">
                 <li><a href="/contacto" className="hover:text-blue-600">Centro de Ayuda y Contacto</a></li>
                 <li><a href="/rastrear-pedido" className="hover:text-blue-600">Seguimiento de tu Pedido</a></li>
               </ul>
             </details>
             <details className="footer-accordion">
-              <summary className="footer-accordion-toggle"><span>POLÍTICAS</span><i className="fas fa-chevron-down transition-transform duration-300"></i></summary>
+              <summary className="footer-accordion-toggle"><span>POLÍTICAS</span><FaChevronDown className="transition-transform duration-300" /></summary>
               <ul className="pt-2 pl-4 space-y-2 text-sm text-gray-600">
                 <li><a href="/politica-devoluciones" className="hover:text-blue-600">Política de Devoluciones</a></li>
                 <li><a href="/politicas" className="hover:text-blue-600">Términos y Política de Privacidad</a></li>
               </ul>
             </details>
             <details className="footer-accordion">
-              <summary className="footer-accordion-toggle"><span>MI CUENTA</span><i className="fas fa-chevron-down transition-transform duration-300"></i></summary>
+              <summary className="footer-accordion-toggle"><span>MI CUENTA</span><FaChevronDown className="transition-transform duration-300" /></summary>
               <ul className="pt-2 pl-4 space-y-2 text-sm text-gray-600">
                 <li><a href="#" onClick={(e) => { e.preventDefault(); openModal('auth'); }} className="hover:text-blue-600">Ingresar / Registrarme</a></li>
                 <li><a href="/mis-pedidos" className="hover:text-blue-600">Mis Pedidos</a></li>

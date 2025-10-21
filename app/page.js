@@ -1,17 +1,23 @@
 // app/page.js
 import { getHomePageData } from "@/lib/data";
+import dynamic from 'next/dynamic';
 import MainBanner from "@/components/MainBanner";
 import MobilePromo from "@/components/MobilePromo";
 import FeaturedCategories from "@/components/FeaturedCategories";
 import BestOffers from "@/components/BestOffers";
-import ShopByBrand from "@/components/ShopByBrand";
 import FeaturedProductsBanner from "@/components/FeaturedProductsBanner";
-import RecommendedProducts from "@/components/RecommendedProducts";
 import GliseProductsBanner from "@/components/GliseProductsBanner";
-import GliseProducts from "@/components/GliseProducts";
-import NaturalProductsSection from "@/components/NaturalProductsSection";
-import ArticulosBlog from "@/components/ArticulosBlog";
-import ProductosVistosRecientemente from "@/components/ProductosVistosRecientemente"; 
+
+// Lazy load de componentes pesados con Swiper (sin ssr: false en Next.js 15)
+const ShopByBrand = dynamic(() => import('@/components/ShopByBrand'), { loading: () => <div className="h-64" /> });
+const RecommendedProducts = dynamic(() => import('@/components/RecommendedProducts'), { loading: () => <div className="h-64" /> });
+const GliseProducts = dynamic(() => import('@/components/GliseProducts'), { loading: () => <div className="h-64" /> });
+const NaturalProductsSection = dynamic(() => import('@/components/NaturalProductsSection'), { loading: () => <div className="h-64" /> });
+const ArticulosBlog = dynamic(() => import('@/components/ArticulosBlog'), { loading: () => <div className="h-64" /> });
+const ProductosVistosRecientemente = dynamic(() => import('@/components/ProductosVistosRecientemente'), { loading: () => <div className="h-32" /> });
+
+// ISR: Revalidar cada 10 minutos (página principal)
+export const revalidate = 600;
 
 export default async function HomePage() {
   const { products: allProducts, blogPosts } = await getHomePageData();

@@ -47,6 +47,31 @@ const PoliticasEnvioAccordion = () => (
     </div>
 );
 
+// Badges de confianza (versión compacta)
+const TrustBadges = () => (
+    <div className="my-4 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100 rounded-md">
+        <p className="text-center text-xs font-semibold text-gray-700 mb-2">Compra 100% segura</p>
+        <div className="grid grid-cols-4 gap-2">
+            <div className="flex flex-col items-center text-center">
+                <i className="fas fa-lock text-lg text-green-600 mb-1"></i>
+                <p className="text-[10px] font-medium text-gray-700">SSL</p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+                <i className="fas fa-users text-lg text-blue-600 mb-1"></i>
+                <p className="text-[10px] font-medium text-gray-700">+5K</p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+                <i className="fas fa-star text-lg text-yellow-500 mb-1"></i>
+                <p className="text-[10px] font-medium text-gray-700">4.8/5</p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+                <i className="fas fa-shield-alt text-lg text-purple-600 mb-1"></i>
+                <p className="text-[10px] font-medium text-gray-700">Seguro</p>
+            </div>
+        </div>
+    </div>
+);
+
 
 export default function CheckoutPage() {
     const functions = getFunctions(app);
@@ -240,7 +265,7 @@ export default function CheckoutPage() {
 
     return (
         <>
-            <main className="container mx-auto px-4 sm:px-6 py-8">
+            <main className="container mx-auto px-4 sm:px-6 py-8 pb-24 lg:pb-8">
                 <h1 className="text-3xl font-bold text-center mb-8">Finalizar Compra</h1>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-12" noValidate>
                     <div>
@@ -349,11 +374,34 @@ export default function CheckoutPage() {
                         <div className="mt-6 border-t pt-4 space-y-2"><div className="flex justify-between"><span>Subtotal</span><span className="font-semibold">{formatPrice(subtotal)}</span></div><div className="pb-4 border-b">{subtotal>=250000?(<div className="flex justify-between items-center shipping-cost-item"><span className="font-medium">Envío</span><span className="font-semibold text-green-600">Gratis</span></div>):formData.cityCode?(shippingCost>0?(<div className="flex justify-between items-center shipping-cost-item"><div><span className="font-medium text-gray-800">Envío con Coordinadora</span><p className="text-sm text-gray-500">{deliveryDays} días hábiles (aprox)</p></div><span className="font-semibold text-gray-900">{formatPrice(shippingCost)}</span></div>):(<div className="flex justify-between items-center text-gray-500 animate-pulse"><span><i className="fas fa-spinner fa-spin mr-2"></i>Calculando...</span></div>)):(<div className="flex justify-between items-center text-gray-500"><span>Envío</span><span>Selecciona una ciudad</span></div>)}</div><div className="flex justify-between text-xl font-bold pt-2 mt-2"><span>Total</span><span>{formatPrice(total)}</span></div></div>
                         <BarraEnvioGratis subtotal={subtotal}/>
                         <div className="mt-6 border-t pt-4"><div className="p-4 border rounded-lg bg-gray-50"><label className="font-semibold flex items-center"><input type="radio" name="payment_method" value="wompi" className="mr-2" defaultChecked/>Wompi (Tarjetas, PSE, Nequi, etc.)</label><div className="mt-3 p-4 bg-white rounded-md border"><p className="text-sm text-gray-600 mb-4">Paga con tu tarjeta de crédito, débito, PSE, Nequi, Bancolombia, Daviplata y más a través de Wompi. Tu pago es 100% seguro.</p><Image src="/imagenespagina/logodewompi.webp" alt="Métodos de pago Wompi" width={400} height={80} className="w-full max-w-sm mx-auto object-contain"/></div></div></div>
+                        <TrustBadges />
                         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg"><p className="text-sm text-gray-700">Tus datos personales se utilizarán para procesar tu pedido, mejorar tu experiencia en esta web y otros propósitos descritos en nuestra <Link href="/politicas" className="text-blue-600 font-semibold hover:underline">política de privacidad</Link>.</p></div>
                         <div className="mt-6"><label htmlFor="terms" className="flex items-center text-sm"><input type="checkbox" id="terms" checked={termsAccepted} onChange={(e)=>setTermsAccepted(e.target.checked)} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"/><span className="ml-2 text-gray-700">He leído y estoy de acuerdo con los <Link href="/politicas" className="text-blue-600 hover:underline">términos y condiciones</Link> de la web *</span></label>{errors.terms&&<span className="text-red-600 text-sm mt-1">{errors.terms}</span>}</div>
                         <button type="submit" disabled={isProcessing} className="w-full mt-4 bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition text-lg disabled:bg-gray-400 flex items-center justify-center">{isProcessing?(<><i className="fas fa-spinner fa-spin mr-2"></i><span>Procesando...</span></>):('REALIZAR EL PEDIDO')}</button>
                     </div>
                 </form>
+                
+                {/* Botón Sticky Móvil */}
+                <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                        <div>
+                            <p className="text-[10px] text-gray-500">Total</p>
+                            <p className="text-lg font-bold text-gray-900">{formatPrice(total)}</p>
+                        </div>
+                        <button 
+                            type="button" 
+                            onClick={handleSubmit}
+                            disabled={isProcessing}
+                            className="bg-green-500 text-white font-bold py-2 px-5 rounded-lg hover:bg-green-600 transition disabled:bg-gray-400 flex items-center justify-center text-sm"
+                        >
+                            {isProcessing ? (
+                                <><i className="fas fa-spinner fa-spin mr-2"></i><span>Procesando...</span></>
+                            ) : (
+                                <><i className="fas fa-lock mr-2"></i><span>PAGAR</span></>
+                            )}
+                        </button>
+                    </div>
+                </div>
             </main>
         </>
     );

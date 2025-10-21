@@ -7,13 +7,14 @@ import Link from 'next/link';
 import { useMenuLateral } from '@/contexto/ContextoMenuLateral';
 import { useAuth } from '@/contexto/ContextoAuth';
 import { useModal } from '@/contexto/ContextoModal';
+import { FaTimes, FaStore, FaTachometerAlt, FaBox, FaHeart, FaUser, FaTruck, FaSignInAlt, FaSignOutAlt, FaLeaf, FaSpa, FaYinYang, FaBaby, FaGem } from 'react-icons/fa';
 
 const mainCategories = [
-    { name: 'Natural', icon: 'fa-leaf', colorClass: 'icon-natural', filter: 'Naturales y Homeopáticos' },
-    { name: 'Dermocosmética', icon: 'fa-spa', colorClass: 'icon-dermo', filter: 'Dermocosméticos' },
-    { name: 'Milenario', icon: 'fa-yin-yang', colorClass: 'icon-milenario', filter: 'Milenario' },
-    { name: 'Infantil', icon: 'fa-baby', colorClass: 'icon-infantil', filter: 'Cuidado Infantil' },
-    { name: 'Belleza', icon: 'fa-gem', colorClass: 'icon-belleza', filter: 'Cuidado y Belleza' }
+    { name: 'Natural', Icon: FaLeaf, colorClass: 'icon-natural', filter: 'Naturales y Homeopáticos' },
+    { name: 'Dermocosmética', Icon: FaSpa, colorClass: 'icon-dermo', filter: 'Dermocosméticos' },
+    { name: 'Milenario', Icon: FaYinYang, colorClass: 'icon-milenario', filter: 'Milenario' },
+    { name: 'Infantil', Icon: FaBaby, colorClass: 'icon-infantil', filter: 'Cuidado Infantil' },
+    { name: 'Belleza', Icon: FaGem, colorClass: 'icon-belleza', filter: 'Cuidado y Belleza' }
 ];
 
 export default function MenuLateral() {
@@ -70,34 +71,40 @@ export default function MenuLateral() {
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b">
             <h2 className="text-xl font-bold text-gray-800">MENÚ</h2>
-            <button onClick={closeMenu} className="text-lg font-semibold text-gray-700">
-              <i className="fas fa-times mr-2"></i>Cerrar
+            <button onClick={closeMenu} className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+              <FaTimes />Cerrar
             </button>
           </div>
           
-          <div className="p-4 border-b bg-pink-50">
-            <div className="relative">
-              <input type="text" placeholder="Busca tus productos..." className="w-full pl-5 pr-12 py-3 border-2 border-cyan-500 rounded-full text-sm" />
-              <button type="button" className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-600 text-white w-9 h-9 rounded-full flex items-center justify-center">
-                <i className="fas fa-search"></i>
-              </button>
+          <div className="p-4 border-b bg-gradient-to-r from-cyan-50 to-blue-50">
+            <div className="bg-white rounded-xl p-4 shadow-sm border-2 border-cyan-200">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <FaTruck className="text-3xl text-cyan-600" />
+                <div className="text-center">
+                  <p className="text-lg font-bold text-gray-800">Envíos a todo Colombia</p>
+                  <p className="text-xs text-gray-600">Llevamos bienestar hasta tu puerta</p>
+                </div>
+              </div>
             </div>
           </div>
           
           <div id="side-menu-content" className="p-4 flex-grow">
             <h3 className="menu-section-title">Tienda</h3>
             <Link href="/categoria/all" onClick={closeMenu} className="menu-link">
-              <i className="fas fa-store"></i>Ver Todos los Productos
+              <FaStore />Ver Todos los Productos
             </Link>
             
             <div className="menu-divider"></div>
             
             <h3 className="menu-section-title">Categorías</h3>
-            {mainCategories.map(cat => (
-              <Link key={cat.name} href={`/categoria/${cat.filter}`} onClick={closeMenu} className="menu-link">
-                <i className={`fas ${cat.icon} ${cat.colorClass}`}></i>{cat.name}
-              </Link>
-            ))}
+            {mainCategories.map(cat => {
+              const Icon = cat.Icon;
+              return (
+                <Link key={cat.name} href={`/categoria/${cat.filter}`} onClick={closeMenu} className="menu-link">
+                  <Icon className={cat.colorClass} />{cat.name}
+                </Link>
+              );
+            })}
 
             <div className="menu-divider"></div>
 
@@ -105,22 +112,22 @@ export default function MenuLateral() {
               <>
                 <h3 className="menu-section-title">Mi Cuenta</h3>
                 <p className="px-2 py-1 text-sm text-gray-500">Hola, {currentUser.displayName || currentUser.email}</p>
-                <Link href="/mi-cuenta" onClick={closeMenu} className="menu-link"><i className="fas fa-tachometer-alt"></i>Mi Dashboard</Link>
-                <Link href="/mis-pedidos" onClick={closeMenu} className="menu-link"><i className="fas fa-box"></i>Mis Pedidos</Link>
-                <Link href="/mis-favoritos" onClick={closeMenu} className="menu-link"><i className="fas fa-heart"></i>Mis Favoritos</Link>
-                <Link href="/mi-perfil" onClick={closeMenu} className="menu-link"><i className="fas fa-user"></i>Mi Perfil</Link>
-                <Link href="/rastrear-pedido" onClick={closeMenu} className="menu-link"><i className="fas fa-truck-fast"></i>Rastrear Pedido</Link>
+                <Link href="/mi-cuenta" onClick={closeMenu} className="menu-link"><FaTachometerAlt />Mi Dashboard</Link>
+                <Link href="/mis-pedidos" onClick={closeMenu} className="menu-link"><FaBox />Mis Pedidos</Link>
+                <Link href="/mis-favoritos" onClick={closeMenu} className="menu-link"><FaHeart />Mis Favoritos</Link>
+                <Link href="/mi-perfil" onClick={closeMenu} className="menu-link"><FaUser />Mi Perfil</Link>
+                <Link href="/rastrear-pedido" onClick={closeMenu} className="menu-link"><FaTruck />Rastrear Pedido</Link>
                 <button onClick={handleLogout} className="menu-link logout-link w-full text-left">
-                  <i className="fas fa-sign-out-alt"></i>Cerrar Sesión
+                  <FaSignOutAlt />Cerrar Sesión
                 </button>
               </>
             ) : (
               <>
                 <button onClick={handleLoginClick} className="menu-link w-full text-left">
-                  <i className="fas fa-sign-in-alt"></i>Ingresar / Registrarse
+                  <FaSignInAlt />Ingresar / Registrarse
                 </button>
                 <div className="menu-divider"></div>
-                <Link href="/rastrear-pedido" onClick={closeMenu} className="menu-link"><i className="fas fa-truck-fast"></i>Rastrear Pedido</Link>
+                <Link href="/rastrear-pedido" onClick={closeMenu} className="menu-link"><FaTruck />Rastrear Pedido</Link>
               </>
             )}
           </div>
