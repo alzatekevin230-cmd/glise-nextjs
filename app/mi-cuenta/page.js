@@ -6,6 +6,7 @@ import { db } from '@/lib/firebaseClient';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import Link from 'next/link';
+import Image from 'next/image';
 
 
 export default function MiCuentaPage() {
@@ -24,6 +25,7 @@ export default function MiCuentaPage() {
     if (currentUser) {
       loadUserStats();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const loadUserStats = async () => {
@@ -275,8 +277,8 @@ export default function MiCuentaPage() {
                           <p className="text-xs font-medium text-gray-500 mb-2">Productos:</p>
                           {order.items.slice(0, 2).map((item, index) => (
                             <div key={index} className="flex items-center gap-3 text-sm">
-                              <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
-                                <img src={item.images?.[0] || item.image} alt={item.name} className="w-full h-full object-contain rounded" />
+                              <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center flex-shrink-0 relative">
+                                <Image src={item.images?.[0] || item.image} alt={item.name} fill className="object-contain rounded" sizes="32px" />
                               </div>
                               <div className="flex-grow min-w-0">
                                 <p className="font-medium text-gray-700 truncate">{item.name}</p>

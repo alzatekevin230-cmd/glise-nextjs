@@ -35,6 +35,7 @@ export default function MiPerfilPage() {
     if (currentUser) {
       loadUserProfile();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const loadUserProfile = async () => {

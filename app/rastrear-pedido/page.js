@@ -159,7 +159,7 @@ export default function RastrearPedidoPage() {
                 <div className="space-y-3">
                   <div className="flex items-center">
                     <span className="font-semibold text-gray-700 mr-2">Enviado con:</span>
-                    <img src="/imagenespagina/coordinadora.webp" alt="Coordinadora" className="h-6" />
+                    <Image src="/imagenespagina/coordinadora.webp" alt="Coordinadora" width={60} height={24} />
                   </div>
                   <div className="flex items-center flex-wrap gap-2">
                     <span className="font-semibold text-gray-700">Nº de Seguimiento:</span>

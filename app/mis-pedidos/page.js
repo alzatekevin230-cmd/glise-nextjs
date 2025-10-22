@@ -5,6 +5,7 @@ import { useAuth } from '@/contexto/ContextoAuth';
 import { db } from '@/lib/firebaseClient'; 
 import { collection, collectionGroup, query, where, getDocs, orderBy } from 'firebase/firestore';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import Image from 'next/image';
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
@@ -171,9 +172,9 @@ export default function MisPedidosPage() {
 
                 {(order.status === 'shipped' || order.status === 'delivered') && trackingNumberValue && (
                   <div className="tracking-info-box"> 
-                    <p>
+                    <p className="flex items-center gap-2">
                       <span className="font-semibold">Enviado con:</span> 
-                      <img src="/imagenespagina/coordinadora.webp" alt="Coordinadora" className="inline-block h-6 ml-2 align-middle"/>
+                      <Image src="/imagenespagina/coordinadora.webp" alt="Coordinadora" width={60} height={24} className="inline-block" />
                     </p>
                     <p className="mt-1">
                       <span className="font-semibold">Nº de Seguimiento:</span> 
@@ -195,8 +196,8 @@ export default function MisPedidosPage() {
                 <div className="order-card-body">
                   {order.items.map(item => (
                     <div key={item.id} className="order-item">
-                      <div className="aspect-square w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                        <img src={item.images?.[0] || item.image} alt={item.name} className="w-full h-full object-contain" />
+                      <div className="aspect-square w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 relative">
+                        <Image src={item.images?.[0] || item.image} alt={item.name} fill className="object-contain" sizes="64px" />
                       </div>
                       <div className="flex-grow">
                         <p className="font-semibold text-gray-800">{item.name}</p>
