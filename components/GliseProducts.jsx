@@ -10,6 +10,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 export default function GliseProducts({ products }) {
+  // ✅ Optimización DOM: Limitar a 12 productos para reducir elementos DOM
+  const limitedProducts = products.slice(0, 12);
+
   useEffect(() => {
     // Configuración del carrusel 'glise-carousel' de tu main.js
     new Swiper('.glise-carousel', {
@@ -40,7 +43,7 @@ export default function GliseProducts({ products }) {
         <div className="relative">
           <div className="swiper-container glise-carousel overflow-hidden">
             <div className="swiper-wrapper">
-              {products.map(product => (
+              {limitedProducts.map(product => (
                 <div key={product.id} className="swiper-slide h-full">
                   <ProductCardSimple product={product} />
                 </div>

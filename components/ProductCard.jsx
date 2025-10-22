@@ -18,8 +18,21 @@ export default function ProductCard({ product, isSmall = false }) {
   const { agregarAlCarrito } = useCarrito();
 
   const handleAddToCart = () => {
-    agregarAlCarrito(product);
-    toast.success(`${product.name} añadido al carrito!`);
+    const result = agregarAlCarrito(product);
+    
+    if (result.success) {
+      toast.success(result.isNew ? `🛒 ${product.name} añadido al carrito!` : `✅ Cantidad actualizada en el carrito`, {
+        duration: 2000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
+      });
+    } else if (result.reason === 'max_limit') {
+      toast.error(`⚠️ Máximo ${result.max} unidades por producto`, {
+        duration: 2000,
+      });
+    }
   };
 
   const imageSrc = (product.images && product.images.length > 0) ? product.images[0] : (product.image || 'https://placehold.co/300x300');

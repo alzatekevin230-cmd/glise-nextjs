@@ -1,4 +1,4 @@
-import { getAllProducts } from '@/lib/data';
+import { getAllProducts, createSlug } from '@/lib/data';
 import { NextResponse } from 'next/server';
 
 // Caché en memoria simple
@@ -20,11 +20,17 @@ export async function GET() {
     // Si no hay caché, cargar de Firestore
     const products = await getAllProducts();
     
+    // Agregar slug a cada producto si no lo tiene
+    const productsWithSlug = products.map(product => ({
+      ...product,
+      slug: product.slug || createSlug(product.name)
+    }));
+    
     // Guardar en caché
-    cachedProducts = products;
+    cachedProducts = productsWithSlug;
     cacheTime = Date.now();
 
-    return NextResponse.json(products, {
+    return NextResponse.json(productsWithSlug, {
       headers: {
         'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600'
       }

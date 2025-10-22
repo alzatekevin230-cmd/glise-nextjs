@@ -19,8 +19,10 @@ export default function MobilePromo() {
               src="/imagenespagina/tarjetatopic.webp" 
               alt="Nuevos Dermocosméticos"
               fill
-              sizes="50vw" 
-              className="promo-card-image" 
+              sizes="(max-width: 768px) 50vw, 0vw" 
+              className="promo-card-image"
+              quality={80}
+              loading="lazy"
             />
           </div>
         </Link>
@@ -35,8 +37,10 @@ export default function MobilePromo() {
               src="/imagenespagina/ofertalavanda.webp" 
               alt="Ofertas Naturales" 
               fill
-              sizes="50vw"
-              className="promo-card-image" 
+              sizes="(max-width: 768px) 50vw, 0vw"
+              className="promo-card-image"
+              quality={80}
+              loading="lazy"
             />
           </div>
         </Link>
@@ -51,9 +55,10 @@ export default function MobilePromo() {
               src="/imagenespagina/banereucerin.webp" 
               alt="Lo Mejor de Glisé" 
               fill
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, 0vw"
               className="promo-card-image-full" 
-               quality={100} 
+              quality={80}
+              loading="lazy"
             />
           </div>
         </Link>
@@ -68,8 +73,10 @@ export default function MobilePromo() {
               src="/imagenespagina/banerdenivea.webp" 
               alt="Lo Mejor de Glisé" 
               fill
-              sizes="100vw"
-              className="promo-card-image-full" 
+              sizes="(max-width: 768px) 100vw, 0vw"
+              className="promo-card-image-full"
+              quality={80}
+              loading="lazy"
             />
           </div>
         </Link>
@@ -84,8 +91,10 @@ export default function MobilePromo() {
               src="/imagenespagina/ofertacreatiana.webp" 
               alt="Banner Cuidado de Bebé" 
               fill
-              sizes="100vw"
-              className="promo-card-image-full" 
+              sizes="(max-width: 768px) 100vw, 0vw"
+              className="promo-card-image-full"
+              quality={80}
+              loading="lazy"
             />
           </div>
         </Link>

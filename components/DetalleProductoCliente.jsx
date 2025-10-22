@@ -4,12 +4,14 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useCarrito } from '@/contexto/ContextoCarrito';
+import { useProductos } from '@/contexto/ContextoProductos';
 import toast from 'react-hot-toast';
 import ProductosRelacionados from './ProductosRelacionados';
-import VistosRecientemente from './ProductosVistosRecientemente';
+import ProductosVistosRecientemente from './ProductosVistosRecientemente';
 import { useModal } from '@/contexto/ContextoModal';
 import ImageWithZoom from './ImageWithZoom';
 import ResenasProducto from './ResenasProducto';
+import Breadcrumbs from './Breadcrumbs';
 
 // Ayudante para detectar tamaño de pantalla
 import { useWindowSize } from './hooks/useWindowSize';
@@ -90,8 +92,9 @@ const Thumbnail = ({ src, isActive, onClick }) => (
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
 export default function DetalleProductoCliente({ product, relatedProducts }) {
-  const { agregarAlCarrito } = useCarrito();
+  const { agregarAlCarrito, MAX_QUANTITY_PER_ITEM } = useCarrito();
   const { openLightbox } = useModal();
+  const { allProducts, loadProducts } = useProductos();
   const { width } = useWindowSize();
   const isDesktop = width >= 768;
 
@@ -105,6 +108,11 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   const [activeImage, setActiveImage] = useState(allImages.length > 0 ? allImages[0] : 'https://placehold.co/600x600');
   const [quantity, setQuantity] = useState(1);
   const [swiperInstance, setSwiperInstance] = useState(null);
+
+  // Cargar productos para el carrusel de vistos recientemente
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   useEffect(() => {
     if (product && product.id) {
@@ -126,19 +134,48 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
     }
   }, [activeImage, allImages, swiperInstance, isDesktop]);
 
+  // Helper para abrir lightbox con todas las imágenes
+  const handleOpenLightbox = (imageUrl) => {
+    openLightbox(imageUrl, allImages);
+  };
+
   // ================================================================
   // === LÓGICA DE CARRITO Y CANTIDAD (AHORA COMPLETA) ===
   // ================================================================
   const handleAddToCart = () => {
-    agregarAlCarrito({ ...product, quantity });
-    toast.success(`${product.name} añadido al carrito`);
+    const result = agregarAlCarrito({ ...product }, quantity);
+    
+    if (result.success) {
+      toast.success(result.isNew ? `🛒 ${quantity}x ${product.name} añadido al carrito!` : `✅ Cantidad actualizada en el carrito`, {
+        duration: 2500,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+          fontWeight: 'bold',
+        },
+      });
+      // Resetear cantidad a 1 después de agregar
+      setQuantity(1);
+    } else if (result.reason === 'max_limit') {
+      toast.error(`⚠️ Máximo ${result.max} unidades por producto en el carrito`, {
+        duration: 3000,
+      });
+    }
   };
 
   const increaseQuantity = () => {
-      if(quantity < product.stock) {
+      const maxLimit = Math.min(product.stock, MAX_QUANTITY_PER_ITEM);
+      
+      if(quantity < maxLimit) {
           setQuantity(q => q + 1);
+      } else if (quantity >= MAX_QUANTITY_PER_ITEM) {
+          toast.error(`⚠️ Máximo ${MAX_QUANTITY_PER_ITEM} unidades por producto`, {
+            duration: 2000,
+          });
       } else {
-          toast.error(`Solo quedan ${product.stock} unidades en stock.`);
+          toast.error(`Solo quedan ${product.stock} unidades en stock`, {
+            duration: 2000,
+          });
       }
   };
   const decreaseQuantity = () => setQuantity(q => (q > 1 ? q - 1 : 1));
@@ -171,7 +208,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       return (
         <div className="flex-grow flex flex-col">
           <div className="relative w-full group">
-            <ImageWithZoom src={activeImage} alt={product.name} openLightbox={openLightbox} />
+            <ImageWithZoom src={activeImage} alt={product.name} openLightbox={handleOpenLightbox} priority />
             
             {/* --- INICIO DEL CÓDIGO PARA LOS PUNTOS --- */}
             {allImages.length > 1 && (
@@ -206,7 +243,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
           <div className="relative w-full aspect-square group">
             <Swiper modules={[Pagination]} pagination={{ clickable: true }} loop={allImages.length > 1} onSwiper={setSwiperInstance} onSlideChange={(swiper) => { if (allImages.length > 0) setActiveImage(allImages[swiper.realIndex]); }} allowTouchMove={allImages.length > 1} className="product-gallery-carousel h-full">
               {allImages.map((imgSrc) => (
-                <SwiperSlide key={imgSrc} className="h-full"><ImageWithZoom src={imgSrc} alt={`${product.name}`} openLightbox={openLightbox} /></SwiperSlide>
+                <SwiperSlide key={imgSrc} className="h-full"><ImageWithZoom src={imgSrc} alt={`${product.name}`} openLightbox={handleOpenLightbox} priority={imgSrc === allImages[0]} /></SwiperSlide>
               ))}
             </Swiper>
           </div>
@@ -215,8 +252,19 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
     }
   };
 
+  // Generar breadcrumbs para la página de producto
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Tienda', href: '/categoria/all' },
+    { label: product.category || 'Productos', href: `/categoria/${product.category || 'all'}` },
+    { label: product.name, href: `/producto/${product.slug}` }
+  ];
+
   return (
     <>
+      {/* Breadcrumbs */}
+      <Breadcrumbs items={breadcrumbItems} />
+      
       <div className="grid grid-cols-1 md:flex md:gap-12 md:items-start">
         <div className="md:w-1/2 flex flex-col md:flex-row gap-4"> 
           {allImages.length > 1 && (
@@ -278,7 +326,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       </div>
       <div className="mt-16">
         <ProductosRelacionados products={relatedProducts} />
-        <VistosRecientemente currentProductId={product.id} />
+        <ProductosVistosRecientemente currentProductId={product.id} allProducts={allProducts} />
       </div>
       <ResenasProducto productId={product.id} />
     </>

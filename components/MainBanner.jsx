@@ -44,26 +44,33 @@ export default function MainBanner() {
       // Prevenir conflictos con scroll vertical
       touchStartPreventDefault: false,
       resistanceRatio: 0.85,
-      // Forzar actualización de paginación en cada cambio
-      watchSlidesProgress: true,
-      watchSlidesVisibility: true,
-      observer: true,
-      observeParents: true,
-      observeSlideChildren: true,
-      // Event listeners para asegurar sincronización
+      // Optimizaciones de rendimiento - evitar forced reflows
+      watchSlidesProgress: false, // ✅ Desactivar para mejor rendimiento
+      watchSlidesVisibility: false, // ✅ Desactivar para mejor rendimiento
+      observer: false, // ✅ No observar cambios DOM innecesarios
+      observeParents: false, // ✅ Mejora rendimiento
+      observeSlideChildren: false, // ✅ Mejora rendimiento
+      resizeObserver: false, // ✅ Usar resize event simple
+      updateOnWindowResize: true,
+      preventInteractionOnTransition: true,
+      // Event listeners optimizados
       on: {
         slideChange: function () {
-          // Forzar actualización de la paginación
-          if (this.pagination && this.pagination.render) {
-            this.pagination.render();
-            this.pagination.update();
-          }
+          // Usar requestAnimationFrame para evitar forced reflow
+          requestAnimationFrame(() => {
+            if (this.pagination && this.pagination.render) {
+              this.pagination.render();
+              this.pagination.update();
+            }
+          });
         },
         touchEnd: function () {
-          // Actualizar paginación después de touch
-          if (this.pagination && this.pagination.update) {
-            this.pagination.update();
-          }
+          // Usar requestAnimationFrame para evitar forced reflow
+          requestAnimationFrame(() => {
+            if (this.pagination && this.pagination.update) {
+              this.pagination.update();
+            }
+          });
         }
       }
     });
@@ -80,76 +87,118 @@ export default function MainBanner() {
 
           {/* --- SLIDE 1 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture className="relative block w-full h-full">
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner1.webp" />
-              <Image 
-                src="/imagenespagina/banermovil1.webp" 
-                alt="Oferta en Aceites Glise"
-                fill
-                className="object-cover"
-                priority
-              />
-            </picture>
+            {/* Imagen Mobile - LCP optimizado */}
+            <Image 
+              src="/imagenespagina/banermovil1.webp" 
+              alt="Oferta en Aceites Glise"
+              fill
+              className="object-cover md:hidden"
+              priority
+              fetchPriority="high"
+              quality={90}
+              sizes="100vw"
+            />
+            {/* Imagen Desktop - LCP optimizado */}
+            <Image 
+              src="/imagenespagina/baner1.webp" 
+              alt="Oferta en Aceites Glise"
+              fill
+              className="object-cover hidden md:block"
+              priority
+              fetchPriority="high"
+              quality={90}
+              sizes="100vw"
+            />
           </div>
 
           {/* --- SLIDE 2 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture className="relative block w-full h-full">
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner2.webp" />
-              <Image 
-                src="/imagenespagina/banermovil2.webp" 
-                alt="Banner Cuidado de Bebé"
-                fill
-                className="object-cover"
-                loading="lazy"
-                priority={false}
-              />
-            </picture>
+            {/* Imagen Mobile */}
+            <Image 
+              src="/imagenespagina/banermovil2.webp" 
+              alt="Banner Cuidado de Bebé"
+              fill
+              className="object-cover md:hidden"
+              loading="lazy"
+              quality={75}
+              sizes="(max-width: 768px) 100vw, 0vw"
+            />
+            {/* Imagen Desktop */}
+            <Image 
+              src="/imagenespagina/baner2.webp" 
+              alt="Banner Cuidado de Bebé"
+              fill
+              className="object-cover hidden md:block"
+              loading="lazy"
+              quality={75}
+              sizes="(min-width: 768px) 100vw, 0vw"
+            />
           </div>
           
           {/* --- SLIDE 3 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture className="relative block w-full h-full">
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner3.webp" />
-              <Image 
-                src="/imagenespagina/banermovil3.webp" 
-                alt="Banner Productos Naturales"
-                fill
-                className="object-cover"
-                loading="lazy"
-                priority={false}
-              />
-            </picture>
+            <Image 
+              src="/imagenespagina/banermovil3.webp" 
+              alt="Banner Productos Naturales"
+              fill
+              className="object-cover md:hidden"
+              loading="lazy"
+              quality={75}
+              sizes="(max-width: 768px) 100vw, 0vw"
+            />
+            <Image 
+              src="/imagenespagina/baner3.webp" 
+              alt="Banner Productos Naturales"
+              fill
+              className="object-cover hidden md:block"
+              loading="lazy"
+              quality={75}
+              sizes="(min-width: 768px) 100vw, 0vw"
+            />
           </div>
           
           {/* --- SLIDE 4 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture className="relative block w-full h-full">
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner4.webp" />
-              <Image 
-                src="/imagenespagina/banermovil4 .webp" 
-                alt="Banner Adicional 1"
-                fill
-                className="object-cover"
-                loading="lazy"
-                priority={false}
-              />
-            </picture>
+            <Image 
+              src="/imagenespagina/banermovil4 .webp" 
+              alt="Banner Adicional 1"
+              fill
+              className="object-cover md:hidden"
+              loading="lazy"
+              quality={75}
+              sizes="(max-width: 768px) 100vw, 0vw"
+            />
+            <Image 
+              src="/imagenespagina/baner4.webp" 
+              alt="Banner Adicional 1"
+              fill
+              className="object-cover hidden md:block"
+              loading="lazy"
+              quality={75}
+              sizes="(min-width: 768px) 100vw, 0vw"
+            />
           </div>
 
           {/* --- SLIDE 5 --- */}
           <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
-            <picture className="relative block w-full h-full">
-              <source media="(min-width: 768px)" srcSet="/imagenespagina/baner5.webp" />
-              <Image 
-                src="/imagenespagina/banermovil5.webp" 
-                alt="Banner Adicional 2"
-                fill
-                className="object-cover"
-                loading="lazy"
-                priority={false}
-              />
-            </picture>
+            <Image 
+              src="/imagenespagina/banermovil5.webp" 
+              alt="Banner Adicional 2"
+              fill
+              className="object-cover md:hidden"
+              loading="lazy"
+              quality={75}
+              sizes="(max-width: 768px) 100vw, 0vw"
+            />
+            <Image 
+              src="/imagenespagina/baner5.webp" 
+              alt="Banner Adicional 2"
+              fill
+              className="object-cover hidden md:block"
+              loading="lazy"
+              quality={75}
+              sizes="(min-width: 768px) 100vw, 0vw"
+            />
           </div>
 
         </div>

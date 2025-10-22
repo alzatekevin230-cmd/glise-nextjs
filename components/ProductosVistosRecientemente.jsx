@@ -3,31 +3,35 @@
 
 import { useState, useEffect } from 'react';
 import ProductCarousel from "./ProductCarousel";
-// 1. Importa el hook para usar el contexto de productos
-import { useProductos } from '@/contexto/ContextoProductos';
 
-// 3. Quita 'allProducts' de los props, ya no lo necesitamos aquí
-export default function VistosRecientemente({ currentProductId }) {
+// ✅ Componente para página principal - acepta allProducts como prop
+export default function ProductosVistosRecientemente({ allProducts, currentProductId }) {
   const [viewedProducts, setViewedProducts] = useState([]);
-  
-  // 2. Consume el contexto para obtener la lista completa de productos
-  const { allProducts } = useProductos();
 
   useEffect(() => {
-    // 4. Agrega una comprobación para asegurarte de que allProducts existe antes de usarlo
-    if (!allProducts) {
+    // Verificar que allProducts existe
+    if (!allProducts || allProducts.length === 0) {
       return;
     }
 
-    const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
-    const productsToShow = recentlyViewedIds
-      .map(id => allProducts.find(p => p.id === id)) // Ahora 'allProducts' no será undefined
-      .filter(p => p && p.id !== currentProductId);
+    try {
+      const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
+      
+      // Limitar a los últimos 12 productos vistos
+      const limitedIds = recentlyViewedIds.slice(0, 12);
+      
+      const productsToShow = limitedIds
+        .map(id => allProducts.find(p => p.id === id))
+        .filter(p => p && (!currentProductId || p.id !== currentProductId));
 
-    setViewedProducts(productsToShow);
-  }, [currentProductId, allProducts]); // Mantenemos allProducts como dependencia
+      setViewedProducts(productsToShow);
+    } catch (error) {
+      console.error('Error cargando productos vistos:', error);
+    }
+  }, [currentProductId, allProducts]);
 
-  if (viewedProducts.length === 0) {
+  // No mostrar si no hay productos vistos
+  if (!viewedProducts || viewedProducts.length === 0) {
     return null;
   }
 
@@ -39,7 +43,6 @@ export default function VistosRecientemente({ currentProductId }) {
         carouselClassName="detail-recently-viewed-carousel"
         nextButtonClassName="detail-recently-viewed-next"
         prevButtonClassName="detail-recently-viewed-prev"
-      
       />
     </section>
   );

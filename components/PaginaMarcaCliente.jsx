@@ -1,11 +1,23 @@
+// components/PaginaMarcaCliente.jsx
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import TarjetaProducto from '@/components/ProductCard.jsx';
 import Pagination from '@/components/Pagination.jsx';
-import ReactSlider from "react-slider";
-import Image from 'next/image';
-import BotonVolver from '@/components/BotonVolver';
+import dynamic from 'next/dynamic';
+import BrandHero from '@/components/BrandHero';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import ProductCarousel from '@/components/ProductCarousel';
+
+// Cargar PriceFilter solo en el cliente
+const PriceFilter = dynamic(() => import('@/components/PriceFilter'), {
+  ssr: false,
+  loading: () => (
+    <div className="p-4 text-center text-gray-500 text-sm">
+      <div className="animate-pulse">Cargando filtro...</div>
+    </div>
+  )
+});
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
@@ -14,7 +26,6 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
   const getBannerImages = (brand) => {
     const brandLower = brand.toLowerCase();
     
-    // Banners específicos por marca
     if (brandLower.includes('nivea')) {
       return {
         desktop: '/imagenespagina/banerdemarcaniveaescritorio.webp',
@@ -72,7 +83,6 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
       };
     }
     
-    // Banner por defecto
     return {
       desktop: '/imagenespagina/baner1.webp',
       mobile: '/imagenespagina/banermovil1.webp'
@@ -81,11 +91,12 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
 
   const bannerImages = getBannerImages(brandName);
 
-  // Estados para filtros (igual que en PaginaCategoriaCliente)
+  // Estados para filtros
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [activeBrands, setActiveBrands] = useState([]);
   const [activePresentations, setActivePresentations] = useState([]);
   const [activeUnits, setActiveUnits] = useState([]);
+  const [activeCategories, setActiveCategories] = useState([]); // NUEVO: filtro por categorías
   const [priceRange, setPriceRange] = useState([0, 0]);
   const [brandSearchTerm, setBrandSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('popularity');
@@ -93,7 +104,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
   const productsPerPage = 20;
 
   // Calcular filtros disponibles
-  const { availableBrands, availablePresentations, availableUnits, minPrice, maxPrice } = useMemo(() => {
+  const { availableBrands, availablePresentations, availableUnits, availableCategories, minPrice, maxPrice } = useMemo(() => {
     const unitRegex = /\b(\d+[\.,]?\d*\s*(?:g|gr|G|GR|mg|MG|mcg|MCG|ml|mL|ML|l|L|cápsulas|capsulas|cap|cáps|caps|tabletas|tabs|comprimidos|perlas|sobres|unidades|und|uds))\b/i;
     const productsWithUnits = initialProducts.map(p => {
         const match = p.name.match(unitRegex);
@@ -107,11 +118,13 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
         if (numA !== numB) return numA - numB;
         return a.localeCompare(b);
     });
+    const categories = [...new Set(productsWithUnits.map(p => p.category).filter(Boolean))].sort();
     const prices = productsWithUnits.map(p => p.price);
     return {
       availableBrands: brands,
       availablePresentations: presentations,
       availableUnits: units,
+      availableCategories: categories,
       minPrice: prices.length > 0 ? Math.floor(Math.min(...prices)) : 0,
       maxPrice: prices.length > 0 ? Math.ceil(Math.max(...prices)) : 100000,
     };
@@ -136,11 +149,22 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
     setCurrentPage(1); 
     setActiveUnits(prev => prev.includes(unitName) ? prev.filter(u => u !== unitName) : [...prev, unitName]); 
   };
+
+  const handleCategoryChange = (categoryName) => {
+    setCurrentPage(1);
+    setActiveCategories(prev => prev.includes(categoryName) ? prev.filter(c => c !== categoryName) : [...prev, categoryName]);
+  };
+
+  const handlePriceChange = useCallback((newRange) => {
+    setCurrentPage(1);
+    setPriceRange(newRange);
+  }, []);
   
   const clearFilters = () => {
     setActiveBrands([]);
     setActivePresentations([]);
     setActiveUnits([]);
+    setActiveCategories([]);
     setPriceRange([minPrice, maxPrice]);
     setBrandSearchTerm('');
     setSortBy('popularity');
@@ -154,6 +178,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
     let filtered = [...initialProducts];
     if (activeBrands.length > 0) { filtered = filtered.filter(p => activeBrands.includes(p.laboratorio)); }
     if (activePresentations.length > 0) { filtered = filtered.filter(p => activePresentations.includes(p.presentacionFarmaceutica)); }
+    if (activeCategories.length > 0) { filtered = filtered.filter(p => activeCategories.includes(p.category)); }
     if (activeUnits.length > 0) {
         const productsWithUnits = initialProducts.map(p => {
             const unitRegex = /\b(\d+[\.,]?\d*\s*(?:g|gr|G|GR|mg|MG|mcg|MCG|ml|mL|ML|l|L|cápsulas|capsulas|cap|cáps|caps|tabletas|tabs|comprimidos|perlas|sobres|unidades|und|uds))\b/i;
@@ -170,13 +195,27 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
       default: filtered.sort((a, b) => (b.popularity || 0) - (a.popularity || 0)); break;
     }
     return filtered;
-  }, [initialProducts, activeBrands, activePresentations, activeUnits, priceRange, sortBy]);
+  }, [initialProducts, activeBrands, activePresentations, activeUnits, activeCategories, priceRange, sortBy]);
+
+  // Productos destacados (los más populares)
+  const featuredProducts = useMemo(() => {
+    return [...initialProducts]
+      .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
+      .slice(0, 12);
+  }, [initialProducts]);
 
   const totalFilteredProducts = sortedAndFilteredProducts.length;
   const totalPages = Math.ceil(totalFilteredProducts / productsPerPage);
   const paginatedProducts = sortedAndFilteredProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
 
-  // Componente Sidebar (igual que en PaginaCategoriaCliente)
+  // Breadcrumbs
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Marcas', href: '/' }, // Podrías crear una página de listado de marcas
+    { label: brandName, active: true }
+  ];
+
+  // Componente Sidebar
   const Sidebar = () => (
     <aside className="lg:col-span-1 bg-white p-4 rounded-lg shadow h-fit sticky top-32">
       <div className="space-y-2">
@@ -184,63 +223,103 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
           <h3 className="text-xl font-semibold">Filtros</h3>
           <button onClick={clearFilters} className="text-sm text-blue-600 hover:underline font-semibold">Limpiar todo</button>
         </div>
+
+        {/* Filtro de Precio con el nuevo PriceFilter */}
         <details className="filter-accordion" open>
           <summary>Precio</summary>
           <div className="p-4">
             {maxPrice > minPrice && (
-              <>
-                <ReactSlider
-                  className="slider"
-                  thumbClassName="thumb"
-                  trackClassName="track"
-                  defaultValue={[minPrice, maxPrice]}
-                  value={priceRange}
-                  min={minPrice}
-                  max={maxPrice}
-                  ariaLabel={['Manija inferior', 'Manija superior']}
-                  renderThumb={(props) => <div {...props} key={props.key}></div>}
-                  pearling
-                  minDistance={1000}
-                  onChange={(value) => {
-                    setCurrentPage(1);
-                    setPriceRange(value);
-                  }}
-                />
-                <div className="flex justify-between items-center text-sm text-gray-600 mt-2">
-                    <span>{formatPrice(priceRange[0])}</span>
-                    <span>{formatPrice(priceRange[1])}</span>
-                </div>
-              </>
+              <PriceFilter
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                value={priceRange}
+                onChange={handlePriceChange}
+                productsCount={totalFilteredProducts}
+                totalProducts={initialProducts.length}
+                allProducts={initialProducts}
+              />
             )}
           </div>
         </details>
-         <details className="filter-accordion" open>
+
+        {/* NUEVO: Filtro rápido por categorías de la marca */}
+        {availableCategories.length > 1 && (
+          <details className="filter-accordion" open>
+            <summary>
+              <i className="fas fa-th-large mr-2"></i>
+              Categorías
+            </summary>
+            <div className="p-4">
+              <div className="filter-options-container space-y-2">
+                {availableCategories.map(category => {
+                  const categoryCount = initialProducts.filter(p => p.category === category).length;
+                  return (
+                    <label key={category} className="filter-checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={activeCategories.includes(category)} 
+                        onChange={() => handleCategoryChange(category)} 
+                      />
+                      <span className="filter-checkbox-span">
+                        <i className="fas fa-check"></i>
+                      </span>
+                      <span className="flex-1">{category}</span>
+                      <span className="text-xs text-gray-500">({categoryCount})</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          </details>
+        )}
+
+        <details className="filter-accordion">
           <summary>Marca / Laboratorio</summary>
           <div className="p-4">
-            <input id="brand-search-input" type="text" value={brandSearchTerm} onChange={e => setBrandSearchTerm(e.target.value)} placeholder="Buscar marca..." />
+            <input 
+              id="brand-search-input" 
+              type="text" 
+              value={brandSearchTerm} 
+              onChange={e => setBrandSearchTerm(e.target.value)} 
+              placeholder="Buscar marca..." 
+            />
             <div className="filter-options-container space-y-2 mt-3">
               {filteredBrands.map(brand => (
-                <label key={brand} className="filter-checkbox-label"><input type="checkbox" checked={activeBrands.includes(brand)} onChange={() => handleBrandChange(brand)} /><span className="filter-checkbox-span"><i className="fas fa-check"></i></span>{brand}</label>
+                <label key={brand} className="filter-checkbox-label">
+                  <input type="checkbox" checked={activeBrands.includes(brand)} onChange={() => handleBrandChange(brand)} />
+                  <span className="filter-checkbox-span"><i className="fas fa-check"></i></span>
+                  {brand}
+                </label>
               ))}
             </div>
           </div>
         </details>
+
         <details className="filter-accordion">
           <summary>Presentación</summary>
           <div className="p-4">
             <div className="filter-options-container space-y-2">
               {availablePresentations.map(pres => (
-                <label key={pres} className="filter-checkbox-label"><input type="checkbox" checked={activePresentations.includes(pres)} onChange={() => handlePresentationChange(pres)} /><span className="filter-checkbox-span"><i className="fas fa-check"></i></span>{pres}</label>
+                <label key={pres} className="filter-checkbox-label">
+                  <input type="checkbox" checked={activePresentations.includes(pres)} onChange={() => handlePresentationChange(pres)} />
+                  <span className="filter-checkbox-span"><i className="fas fa-check"></i></span>
+                  {pres}
+                </label>
               ))}
             </div>
           </div>
         </details>
+
         <details className="filter-accordion">
           <summary>Contenido</summary>
           <div className="p-4">
             <div className="filter-options-container space-y-2">
               {availableUnits.map(unit => (
-                <label key={unit} className="filter-checkbox-label"><input type="checkbox" checked={activeUnits.includes(unit)} onChange={() => handleUnitChange(unit)} /><span className="filter-checkbox-span"><i className="fas fa-check"></i></span>{unit}</label>
+                <label key={unit} className="filter-checkbox-label">
+                  <input type="checkbox" checked={activeUnits.includes(unit)} onChange={() => handleUnitChange(unit)} />
+                  <span className="filter-checkbox-span"><i className="fas fa-check"></i></span>
+                  {unit}
+                </label>
               ))}
             </div>
           </div>
@@ -251,48 +330,51 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
 
   return (
     <>
-      {/* Botón de volver y filtros móviles */}
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-        <BotonVolver />
-        <div className="lg:hidden">
-          <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
-            <i className="fas fa-filter"></i>
-            <span>{isFilterOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'}</span>
-          </button>
-        </div>
-      </div>
-
+      {/* Breadcrumbs */}
       <div className="mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold">{brandName}</h1>
+        <Breadcrumbs items={breadcrumbItems} />
       </div>
-      
-      {/* Banner compacto responsive */}
-      <div className="w-full mb-8">
-        {/* Banner para móvil */}
-        <div className="block md:hidden">
-          <Image
-            src={bannerImages.mobile}
-            alt={`Banner ${brandName} - Móvil`}
-            width={400}
-            height={150}
-            className="w-full h-32 object-cover rounded-lg"
-            priority
-          />
-        </div>
 
-        {/* Banner para escritorio - Ancho completo */}
-        <div className="hidden md:block w-full">
-          <Image
-            src={bannerImages.desktop}
-            alt={`Banner ${brandName} - Escritorio`}
-            width={1200}
-            height={200}
-            className="w-full h-[200px] object-cover rounded-lg"
-            priority
-            quality={100}
-            unoptimized={false}
+      {/* Botón de filtros móviles */}
+      <div className="flex items-center justify-end mb-6 lg:hidden">
+        <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
+          <i className="fas fa-filter"></i>
+          <span>{isFilterOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'}</span>
+        </button>
+      </div>
+
+      {/* Hero Section con logo, stats y descripción */}
+      <BrandHero 
+        brandName={brandName}
+        productsCount={initialProducts.length}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        bannerImages={bannerImages}
+      />
+
+      {/* Sección de productos destacados de la marca */}
+      {featuredProducts.length > 0 && (
+        <div className="mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 flex items-center gap-2">
+            <i className="fas fa-fire text-orange-500"></i>
+            Los Más Vendidos de {brandName}
+          </h2>
+          <ProductCarousel 
+            products={featuredProducts}
+            carouselClassName="featured-brand-carousel"
+            nextButtonClassName="featured-brand-next"
+            prevButtonClassName="featured-brand-prev"
           />
         </div>
+      )}
+
+      {/* Título de todos los productos */}
+      <div className="mb-6">
+        <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+          <i className="fas fa-boxes text-blue-600"></i>
+          Todos los Productos {brandName}
+          <span className="text-lg font-normal text-gray-600">({initialProducts.length})</span>
+        </h2>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -301,20 +383,52 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
         </div>
         
         <div className="lg:col-span-3">
-          <div className="flex justify-end mb-6">
-            <select value={sortBy} onChange={(e) => { setCurrentPage(1); setSortBy(e.target.value); }} className="border-gray-300 rounded-md shadow-sm text-sm">
+          <div className="flex justify-between items-center mb-6">
+            <span className="text-sm text-gray-600">
+              Mostrando <span className="font-bold">{totalFilteredProducts}</span> productos
+            </span>
+            <select 
+              value={sortBy} 
+              onChange={(e) => { setCurrentPage(1); setSortBy(e.target.value); }} 
+              className="border-gray-300 rounded-md shadow-sm text-sm"
+            >
               <option value="popularity">Más populares</option>
               <option value="price-asc">Precio: más bajo a más alto</option>
               <option value="price-desc">Precio: más alto a más bajo</option>
               <option value="name-az">Nombre: A-Z</option>
             </select>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-2">
-            {paginatedProducts.map(product => (
-              <TarjetaProducto key={product.id} product={product} />
-            ))}
-          </div>
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(page) => setCurrentPage(page)} />
+
+          {paginatedProducts.length > 0 ? (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-2">
+                {paginatedProducts.map(product => (
+                  <TarjetaProducto key={product.id} product={product} />
+                ))}
+              </div>
+              <Pagination 
+                currentPage={currentPage} 
+                totalPages={totalPages} 
+                onPageChange={(page) => setCurrentPage(page)} 
+              />
+            </>
+          ) : (
+            <div className="text-center py-12 bg-gray-50 rounded-lg">
+              <i className="fas fa-search text-6xl text-gray-300 mb-4"></i>
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                No se encontraron productos
+              </h3>
+              <p className="text-gray-500 mb-4">
+                Intenta ajustar los filtros para ver más resultados
+              </p>
+              <button 
+                onClick={clearFilters}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Limpiar filtros
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -1,0 +1,28 @@
+# Navegadores modernos que soportan ES2020+
+# Esto elimina polyfills innecesarios y reduce el tamaño del bundle
+
+# Últimas 2 versiones de cada navegador principal
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+
+# Navegadores con más de 0.5% de uso global
+> 0.5%
+
+# Excluir navegadores muertos y antiguos
+not dead
+not IE 11
+not IE_Mob 11
+not op_mini all
+not op_mob > 0
+not and_qq > 0
+not android < 5
+not ios < 12
+
+# Específicamente incluir navegadores modernos
+Chrome >= 88
+Firefox >= 85
+Safari >= 14
+Edge >= 88
+

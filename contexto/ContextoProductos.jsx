@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 
 const ProductosContext = createContext();
 
@@ -15,7 +15,7 @@ export const ProveedorProductos = ({ children }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Función para cargar productos solo cuando se necesiten
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     if (isLoaded || isLoading) return; // Evita cargas duplicadas
     
     setIsLoading(true);
@@ -29,7 +29,7 @@ export const ProveedorProductos = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isLoaded, isLoading]);
 
   const value = {
     allProducts,

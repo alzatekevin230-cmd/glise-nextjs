@@ -1,13 +1,13 @@
 // components/PaginaCategoriaCliente.jsx
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from 'react'; // CAMBIO: Añadimos useRef
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import TarjetaProducto from '@/components/ProductCard.jsx';
 import Pagination from '@/components/Pagination.jsx';
-import ReactSlider from "react-slider";
 import Link from 'next/link';
-import BotonVolver from '@/components/BotonVolver';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import CategoryBanners from '@/components/CategoryBanners';
+import PriceFilter from '@/components/PriceFilter';
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
@@ -93,6 +93,12 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
   const totalFilteredProducts = sortedAndFilteredProducts.length;
   const totalPages = Math.ceil(totalFilteredProducts / productsPerPage);
   const paginatedProducts = sortedAndFilteredProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
+  // Handler optimizado del filtro de precio
+  const handlePriceChange = useCallback((newRange) => {
+    setCurrentPage(1);
+    setPriceRange(newRange);
+  }, []);
+
   const Sidebar = () => (
     <aside className="lg:col-span-1 bg-white p-4 rounded-lg shadow h-fit sticky top-32">
       <div className="space-y-2">
@@ -100,33 +106,21 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
           <h3 className="text-xl font-semibold">Filtros</h3>
           <button onClick={clearFilters} className="text-sm text-blue-600 hover:underline font-semibold">Limpiar todo</button>
         </div>
+        
+        {/* Nuevo Price Filter Component */}
         <details className="filter-accordion" open>
           <summary>Precio</summary>
           <div className="p-4">
             {maxPrice > minPrice && (
-              <>
-                <ReactSlider
-                  className="slider"
-                  thumbClassName="thumb"
-                  trackClassName="track"
-                  defaultValue={[minPrice, maxPrice]}
-                  value={priceRange}
-                  min={minPrice}
-                  max={maxPrice}
-                  ariaLabel={['Manija inferior', 'Manija superior']}
-                  renderThumb={(props) => <div {...props} key={props.key}></div>}
-                  pearling
-                  minDistance={1000}
-                  onChange={(value) => {
-                    setCurrentPage(1);
-                    setPriceRange(value);
-                  }}
-                />
-                <div className="flex justify-between items-center text-sm text-gray-600 mt-2">
-                    <span>{formatPrice(priceRange[0])}</span>
-                    <span>{formatPrice(priceRange[1])}</span>
-                </div>
-              </>
+              <PriceFilter
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                value={priceRange}
+                onChange={handlePriceChange}
+                productsCount={totalFilteredProducts}
+                totalProducts={initialProducts.length}
+                allProducts={initialProducts}
+              />
             )}
           </div>
         </details>
@@ -165,20 +159,28 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
     </aside>
   );
 
+  // Generar breadcrumbs basado en la categoría
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Tienda', href: '/categoria/all' },
+    { label: categoryName === 'all' ? 'Todos los Productos' : categoryName, href: `/categoria/${categoryName}` }
+  ];
+
   return (
     <>
-      {/* CAMBIO: Nueva estructura del encabezado móvil */}
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-  <BotonVolver />
-  <div className="lg:hidden">
-    <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
-      <i className="fas fa-filter"></i>
-      <span>{isFilterOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'}</span>
-    </button>
-  </div>
-</div>
+      {/* Breadcrumbs */}
+      <Breadcrumbs items={breadcrumbItems} />
+
+      {/* Botón de filtros móvil */}
+      <div className="flex items-center justify-end mb-6 lg:hidden">
+        <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
+          <i className="fas fa-filter"></i>
+          <span>{isFilterOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'}</span>
+        </button>
+      </div>
+
       <div>
-        <h1 className="text-3xl md:text-4xl font-bold">{categoryName === 'all' ? 'Tienda' : categoryName}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6">{categoryName === 'all' ? 'Tienda' : categoryName}</h1>
       </div>
       
       <CategoryBanners categoryName={categoryName} products={initialProducts} />

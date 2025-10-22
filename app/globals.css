@@ -2,7 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
+/* === OPTIMIZACIÓN DE FUENTES - Font Awesome con font-display: swap === */
+/* Esto mejora el FCP eliminando el FOIT (Flash of Invisible Text) */
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap; /* ✅ Optimización PageSpeed */
+  src: url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap; /* ✅ Optimización PageSpeed */
+  src: url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap; /* ✅ Optimización PageSpeed */
+  src: url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-regular-400.woff2) format('woff2');
+}
+
 /* === INICIO DE ESTILOS PERSONALIZADOS (COPIA COMPLETA DE style.css) === */
+
+/* === OPTIMIZACIONES DE RENDIMIENTO - Reducir Forced Reflows === */
+/* Usar will-change y contain para optimizar animaciones y evitar reflows */
+* {
+    /* Optimizar renderizado de texto */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimizar elementos que se animan frecuentemente */
+.swiper,
+.swiper-slide,
+[data-animate],
+.modal,
+.dropdown {
+    /* Promover a capa compuesta para mejor rendimiento */
+    will-change: transform;
+    /* Contener layout y paint para evitar reflows */
+    contain: layout style paint;
+}
+
+/* Optimizar transformaciones */
+.swiper-slide,
+.product-card,
+.category-card,
+.brand-card {
+    /* Usar transform en lugar de top/left para animaciones */
+    transform: translateZ(0);
+    /* Habilitar aceleración por hardware */
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
 
 /* Respeto a preferencias de accesibilidad */
 @media (prefers-reduced-motion: reduce) {
@@ -13,6 +73,7 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+        will-change: auto !important;
     }
 }
 
@@ -1864,6 +1925,9 @@ body.menu-open {
 
 .body-no-scroll {
   overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 
 /* ==================================================================
@@ -2056,5 +2120,339 @@ body.menu-open {
   background-color: #3b82f6; /* El azul principal de tu web */
   opacity: 1;
   transform: scale(1.25);
+}
+
+/* ===================================================================
+   ANIMACIONES PARA CARRITO (OPTIMIZADAS)
+   =================================================================== */
+
+/* Toast slide in desde la derecha */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Fade in staggered para items del carrito */
+@keyframes cartItemFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.cart-item-animate {
+  animation: cartItemFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+/* Bounce sutil para botones de cantidad */
+@keyframes buttonBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.btn-quantity:active {
+  animation: buttonBounce 0.2s ease-out;
+}
+
+/* Shake para indicar límite alcanzado */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.animate-shake {
+  animation: shake 0.3s ease-out;
+}
+
+/* Progress bar animada para envío gratis */
+@keyframes progressGrow {
+  from {
+    width: 0;
+  }
+}
+
+.progress-bar-animate {
+  animation: progressGrow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===================================================================
+   PRICE FILTER SLIDER CON INPUT RANGE NATIVO (SÚPER CONFIABLE)
+   =================================================================== */
+
+/* Estilos para el input range nativo */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: all !important;
+}
+
+/* Track - La línea del slider */
+input[type="range"]::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+input[type="range"]::-moz-range-track {
+  background: transparent;
+  height: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+/* Thumb - El círculo que se arrastra */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 24px;
+  width: 24px;
+  background-color: white;
+  border-radius: 50%;
+  border: 3px solid #3b82f6;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  cursor: grab;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: all;
+  margin-top: -8px; /* Centra el thumb en el track */
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 24px;
+  width: 24px;
+  background-color: white;
+  border-radius: 50%;
+  border: 3px solid #3b82f6;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  cursor: grab;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: all;
+}
+
+/* Hover effect */
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+  border-width: 4px;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+  border-width: 4px;
+}
+
+/* Active/Dragging effect */
+input[type="range"]:active::-webkit-slider-thumb {
+  cursor: grabbing !important;
+  transform: scale(1.1);
+  border-color: #2563eb;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.6);
+}
+
+input[type="range"]:active::-moz-range-thumb {
+  cursor: grabbing !important;
+  transform: scale(1.1);
+  border-color: #2563eb;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.6);
+}
+
+/* Focus para accesibilidad */
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+input[type="range"]:focus-visible::-moz-range-thumb {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Mobile: Thumbs más grandes */
+@media (max-width: 768px) {
+  input[type="range"]::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+    border-width: 4px;
+    margin-top: -10px;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-width: 4px;
+  }
+}
+
+/* ===================================================================
+   ZOOM & LIGHTBOX PROFESIONAL (ESTILO AMAZON/WALMART)
+   =================================================================== */
+
+/* Animaciones suaves para el zoom hint */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Recuadro azul que sigue el mouse (Amazon style) */
+.zoom-box-tracker {
+  border: 2px solid #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+  pointer-events: none;
+  transition: opacity 0.15s ease-out;
+}
+
+/* Ventana lateral de zoom */
+.zoom-window-side {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 2px solid #e5e7eb;
+}
+
+.zoom-window-side::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.05) 100%);
+  pointer-events: none;
+}
+
+/* Mejoras visuales para el contenedor de zoom */
+.zoom-container {
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zoom-container:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Spinner de loading mejorado */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.lightbox-loading {
+  animation: spin 1s linear infinite;
+}
+
+/* Mejoras para los controles del lightbox */
+.lightbox-control {
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lightbox-control:hover {
+  transform: scale(1.1);
+  backdrop-filter: blur(12px);
+}
+
+.lightbox-control:active {
+  transform: scale(0.95);
+}
+
+/* Smooth fade para el lightbox overlay */
+.lightbox-overlay {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mejoras para gestures táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .zoom-container {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  
+  .lightbox-control {
+    min-width: 48px;
+    min-height: 48px;
+  }
+}
+
+/* Smooth transitions para cambio de imágenes */
+.image-transition-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.image-transition-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-transition-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.image-transition-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estilos para el indicador de zoom level */
+.zoom-level-badge {
+  backdrop-filter: blur(8px);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .zoom-container,
+  .lightbox-control,
+  .image-transition-enter-active,
+  .image-transition-exit-active {
+    transition: none;
+    animation: none;
+  }
 }
 

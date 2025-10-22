@@ -21,7 +21,13 @@ import SmoothScrollProvider from '@/components/SmoothScrollProvider';
 import SmoothScrollToFooter from '@/components/SmoothScrollToFooter';
 import ScrollProgressBar from '@/components/ScrollProgressBar';
 
-const inter = Inter({ subsets: ['latin'] });
+// Optimización de fuente con font-display: swap
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap', // ✅ Mejora FCP - muestra texto mientras carga la fuente
+  preload: true,
+  fallback: ['system-ui', 'arial']
+});
 
 export const metadata = {
   metadataBase: new URL('https://glise.com.co'),
@@ -131,9 +137,60 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        
+        {/* Preconnect a dominios críticos - Mejora Network Waterfall */}
+        {/* Firebase - El más crítico (1148ms de ahorro potencial) */}
+        <link rel="preconnect" href="https://glise-58e2b.firebaseapp.com" />
+        <link rel="dns-prefetch" href="https://glise-58e2b.firebaseapp.com" />
+        
+        {/* Google APIs para Firebase Auth */}
+        <link rel="preconnect" href="https://apis.google.com" />
+        <link rel="dns-prefetch" href="https://apis.google.com" />
+        
+        <link rel="preconnect" href="https://www.googleapis.com" />
+        <link rel="dns-prefetch" href="https://www.googleapis.com" />
+        
+        {/* Firebase Storage para imágenes de productos */}
+        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
+        <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
+        
+        {/* Font Awesome CDN */}
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+        
+        {/* Preload de fuentes Font Awesome críticas con font-display: swap */}
+        {/* Estas fuentes se cargan en paralelo gracias al preload, no en cadena */}
+        <link 
+          rel="preload" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2" 
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+          fetchPriority="low"
+        />
+        <link 
+          rel="preload" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.woff2" 
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+          fetchPriority="low"
+        />
+        
+        {/* Font Awesome CSS con preload para optimizar carga */}
+        <link 
+          rel="preload" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+          as="style"
+          crossOrigin="anonymous"
+        />
+        <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={inter.className}>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <SmoothScrollProvider>
           <ProveedorModal>
             <ProveedorAuth>

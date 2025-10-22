@@ -14,8 +14,17 @@ export const ProveedorModal = ({ children }) => {
   const [authTab, setAuthTab] = useState('login');
   
   const [lightboxImage, setLightboxImage] = useState(null);
-  const openLightbox = (imageUrl) => setLightboxImage(imageUrl);
-  const closeLightbox = () => setLightboxImage(null);
+  const [lightboxImages, setLightboxImages] = useState([]);
+  
+  const openLightbox = (imageUrl, allImages = []) => {
+    setLightboxImage(imageUrl);
+    setLightboxImages(allImages.length > 0 ? allImages : [imageUrl]);
+  };
+  
+  const closeLightbox = () => {
+    setLightboxImage(null);
+    setLightboxImages([]);
+  };
 
   const openModal = (nombreModal) => setModalActivo(nombreModal);
   const closeModal = () => setModalActivo(null);
@@ -49,6 +58,7 @@ export const ProveedorModal = ({ children }) => {
     authTab,
     setAuthTab,
     lightboxImage,
+    lightboxImages,
     openLightbox,
     closeLightbox,
   };

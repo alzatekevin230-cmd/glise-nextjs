@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    unoptimized: true, // ✅ Desactiva el optimizador de imágenes de Vercel
+    // ✅ DESACTIVADO - No usar optimizador para evitar costos de Vercel
+    unoptimized: true,
+    
     remotePatterns: [
       {
         protocol: 'https',
@@ -12,6 +14,14 @@ const nextConfig = {
     ],
     formats: ['image/webp', 'image/avif'],
   },
+  
+  // Optimizaciones de rendimiento
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  
+  // Optimizar compilación
+  reactStrictMode: true,
 };
 
 export default nextConfig;

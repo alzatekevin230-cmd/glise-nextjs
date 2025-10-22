@@ -21,11 +21,40 @@ export const ProveedorAuth = ({ children }) => {
   const { closeModal } = useModal(); // Obtenemos closeModal para usarlo después del login
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    // Optimización: Lazy load Firebase Auth después de que la página cargue
+    // Esto evita que el iframe de Firebase bloquee el LCP inicial (ahorro de ~1148ms)
+    let unsubscribe = null;
+    let idleCallbackId = null;
+    let timeoutId = null;
+
+    const initAuth = () => {
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        setCurrentUser(user);
+        setLoading(false);
+      });
+    };
+
+    // Usar requestIdleCallback para inicializar cuando el navegador esté inactivo
+    // Fallback a setTimeout si requestIdleCallback no está disponible
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      idleCallbackId = requestIdleCallback(
+        () => {
+          initAuth();
+        },
+        { timeout: 3000 } // Máximo 3 segundos de espera
+      );
+    } else {
+      timeoutId = setTimeout(initAuth, 2000);
+    }
+    
+    // Permitir renderizado inmediato sin esperar Auth
+    setLoading(false);
+
+    return () => {
+      if (idleCallbackId) cancelIdleCallback(idleCallbackId);
+      if (timeoutId) clearTimeout(timeoutId);
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   const logout = () => {

@@ -12,6 +12,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 export default function NaturalProductsSection({ products }) {
+  // ✅ Optimización DOM: Limitar a 12 productos para reducir elementos DOM
+  const limitedProducts = products.slice(0, 12);
+
   useEffect(() => {
     new Swiper('.natural-products-carousel', {
       modules: [Navigation, Autoplay],
@@ -38,7 +41,9 @@ export default function NaturalProductsSection({ products }) {
             alt="Ofertas Especiales en Naturales" 
             width={1000}
             height={750}
-            className="w-full h-auto rounded-lg shadow-md" 
+            className="w-full h-auto rounded-lg shadow-md"
+            loading="lazy"
+            quality={80}
           />
         </Link>
         <div className="hidden md:grid grid-cols-2 gap-6 mb-8">
@@ -48,7 +53,9 @@ export default function NaturalProductsSection({ products }) {
               alt="Ofertas en Cuidado Natural" 
               width={1000}
               height={750}
-              className="w-full h-full object-cover rounded-lg shadow-md" 
+              className="w-full h-full object-cover rounded-lg shadow-md"
+              loading="lazy"
+              quality={80}
             />
           </Link>
           <Link href="/categoria/Naturales y Homeopáticos" className="block">
@@ -57,7 +64,9 @@ export default function NaturalProductsSection({ products }) {
               alt="Descubre Productos Naturales" 
               width={1000}
               height={750}
-              className="w-full h-full object-cover rounded-lg shadow-md" 
+              className="w-full h-full object-cover rounded-lg shadow-md"
+              loading="lazy"
+              quality={80}
             />
           </Link>
         </div>
@@ -72,7 +81,7 @@ export default function NaturalProductsSection({ products }) {
         <div className="relative">
           <div className="swiper-container natural-products-carousel overflow-hidden">
             <div className="swiper-wrapper">
-              {products.map(product => (
+              {limitedProducts.map(product => (
                 <div key={product.id} className="swiper-slide h-full">
                   <ProductCardSimple product={product} />
                 </div>

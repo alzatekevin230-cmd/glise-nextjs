@@ -10,6 +10,7 @@ export default function OptimizedImage({
   className = '', 
   priority = false,
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+  quality = 80, // ✅ Calidad por defecto optimizada
   ...props 
 }) {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -63,6 +64,7 @@ export default function OptimizedImage({
         alt={alt}
         fill
         sizes={sizes}
+        quality={quality}
         className={`object-contain transition-all duration-500 ease-out image-optimized ${
           imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
         }`}

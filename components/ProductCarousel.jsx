@@ -32,7 +32,17 @@ export default function ProductCarousel({
         768: { slidesPerView: 3 },
         1024: { slidesPerView: 4 },
         1280: { slidesPerView: 5 }
-      }
+      },
+      // Optimizaciones de rendimiento para evitar forced reflows
+      watchOverflow: true,
+      observer: false, // Desactivar observer si no es necesario
+      observeParents: false,
+      observeSlideChildren: false,
+      updateOnWindowResize: true,
+      resizeObserver: false, // Usar resize event en lugar de ResizeObserver
+      // Usar CSS transforms para mejor rendimiento
+      cssMode: false, // Mantener false para mejor control
+      preventInteractionOnTransition: true
     });
     swiperRef.current = swiper;
 

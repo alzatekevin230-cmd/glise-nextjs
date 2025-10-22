@@ -402,16 +402,16 @@ export default function CategoryBanners({ categoryName, products = [] }) {
           <div className="swiper-wrapper">
             {banners.map((banner) => (
               <div key={banner.id} className="swiper-slide">
-                <div className={`${categoryColor.bg} rounded-lg px-0 py-3 sm:px-6 sm:py-6 md:px-4 md:py-4 shadow-lg hover:shadow-xl transition-shadow duration-300 min-h-[200px] sm:min-h-[180px] md:min-h-[160px] flex flex-col justify-between border ${categoryColor.border}`}>
+                <div className={`${categoryColor.bg} rounded-lg px-0 py-3 sm:px-6 sm:py-6 md:px-4 md:py-4 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 min-h-[200px] sm:min-h-[180px] md:min-h-[160px] flex flex-col justify-between border ${categoryColor.border}`}>
                   {/* Contenido superior - producto e información */}
                   <div className="flex items-center gap-2 sm:gap-6">
                     {/* Imagen del producto - GRANDE a un lado */}
                     <div className="flex-shrink-0">
-                      <div className="relative w-40 h-40 md:w-32 md:h-32 flex items-center justify-center">
+                      <div className="relative w-48 h-48 sm:w-52 sm:h-52 md:w-44 md:h-44 flex items-center justify-center">
                         <img 
                           src={banner.image} 
                           alt={banner.subtitle}
-                          className="max-w-full max-h-full object-contain drop-shadow-lg"
+                          className="max-w-full max-h-full object-contain drop-shadow-2xl hover:scale-110 transition-transform duration-300"
                         />
                       </div>
                     </div>
@@ -420,22 +420,24 @@ export default function CategoryBanners({ categoryName, products = [] }) {
                     <div className="flex-grow flex flex-col justify-start">
                       {/* Badge de descuento */}
                       <div className="mb-3 sm:mb-3">
-                        <span className={`${categoryColor.badge} text-white px-3 py-2 sm:px-6 sm:py-3 md:px-4 md:py-2 rounded-full text-sm sm:text-lg md:text-sm font-bold`}>
-                          {banner.title}
+                        <span className={`${categoryColor.badge} text-white px-5 py-2.5 sm:px-8 sm:py-4 md:px-6 md:py-3 rounded-full text-base sm:text-xl md:text-lg font-black shadow-2xl border-2 border-white/30 backdrop-blur-sm inline-flex items-center gap-2 animate-pulse hover:scale-110 transition-transform`}>
+                          <i className="fas fa-star text-yellow-300"></i>
+                          <span>{banner.title}</span>
+                          <i className="fas fa-fire text-yellow-300"></i>
                         </span>
                       </div>
                       
                       {/* Nombre del producto */}
-                      <h3 className="text-base sm:text-xl md:text-sm font-semibold text-gray-800 mb-2 sm:mb-3 md:mb-2 leading-tight line-clamp-2">
+                      <h3 className="text-base sm:text-xl md:text-base font-bold text-gray-900 mb-2 sm:mb-3 md:mb-2 leading-tight line-clamp-2">
                         {banner.subtitle}
                       </h3>
                       
                       {/* Precios */}
                       {banner.originalPrice && banner.discountedPrice && (
                         <div className="mb-2 sm:mb-4">
-                          <div className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-sm sm:text-base md:text-xs text-gray-500 line-through">${Math.round(banner.originalPrice).toLocaleString('es-CO')}</span>
-                            <span className="text-base sm:text-xl md:text-sm font-bold text-gray-900">${Math.round(banner.discountedPrice).toLocaleString('es-CO')}</span>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-xs sm:text-sm md:text-xs text-gray-500 line-through">Antes: ${Math.round(banner.originalPrice).toLocaleString('es-CO')}</span>
+                            <span className="text-xl sm:text-2xl md:text-xl font-black text-gray-900">Ahora: ${Math.round(banner.discountedPrice).toLocaleString('es-CO')}</span>
                           </div>
                         </div>
                       )}
@@ -446,9 +448,11 @@ export default function CategoryBanners({ categoryName, products = [] }) {
                   <div className="flex justify-center mt-3">
                     <a 
                       href={banner.link}
-                      className={`${categoryColor.button} text-white px-4 py-2 sm:px-6 sm:py-3 md:px-4 md:py-2 rounded-md font-semibold transition-colors duration-300 text-center text-xs sm:text-sm md:text-xs`}
+                      className={`${categoryColor.button} text-white px-6 py-3 sm:px-10 sm:py-4 md:px-6 md:py-3 rounded-xl font-black transition-all duration-300 text-center text-sm sm:text-base md:text-sm shadow-2xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:scale-110 hover:-translate-y-1 border-2 border-white/20 backdrop-blur-sm inline-flex items-center gap-2 group`}
                     >
-                      Ver Producto
+                      <i className="fas fa-eye"></i>
+                      <span>Ver Producto</span>
+                      <i className="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                     </a>
                   </div>
                 </div>

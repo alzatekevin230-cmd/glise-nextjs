@@ -9,13 +9,16 @@
     "start": "next start",
     "lint": "next lint",
     "deploy-firestore-rules": "node scripts/deploy-firestore-rules.js",
-    "generar-sitemap": "node scripts/generar-sitemap.js"
+    "generar-sitemap": "node scripts/generar-sitemap.js",
+    "update-cache": "node scripts/update-storage-cache.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.28.3",
     "autoprefixer": "^10.4.21",
+    "dotenv": "^16.4.7",
     "firebase": "^12.0.0",
     "firebase-admin": "^13.5.0",
+    "framer-motion": "^12.23.24",
     "fuse.js": "^7.1.0",
     "next": "15.4.5",
     "nouislider": "^15.8.1",

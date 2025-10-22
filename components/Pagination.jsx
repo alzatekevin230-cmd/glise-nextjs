@@ -6,7 +6,10 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
 
   const handlePageChange = (page) => {
     onPageChange(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Usar requestAnimationFrame para evitar forced reflow
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   };
 
   const getPaginationItems = () => {
