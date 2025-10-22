@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexto/ContextoAuth';
 import { db } from '@/lib/firebaseClient'; 
 import { collection, collectionGroup, query, where, getDocs, orderBy } from 'firebase/firestore';
-import BotonVolver from '@/components/BotonVolver';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
@@ -118,22 +118,28 @@ export default function MisPedidosPage() {
     return <div className="text-center py-20"><i className="fas fa-spinner fa-spin text-3xl text-blue-600"></i><p className="mt-2 text-gray-600">Cargando tus pedidos...</p></div>;
   }
 
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Mi Cuenta', href: '/mi-cuenta' },
+    { label: 'Mis Pedidos', href: '/mis-pedidos' }
+  ];
+
   if (!currentUser) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-16 text-center">
-        <BotonVolver />
-        <h1 className="text-2xl font-bold mt-8">Inicia sesión para ver tus pedidos</h1>
-        <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu historial de compras.</p>
+      <main className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
+        <div className="text-center py-16">
+          <h1 className="text-2xl font-bold">Inicia sesión para ver tus pedidos</h1>
+          <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu historial de compras.</p>
+        </div>
       </main>
     );
   }
 
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-8">
-        <BotonVolver texto="Volver a la tienda" />
-      </div>
-      <h1 className="text-3xl font-bold mb-8">Mis Pedidos</h1>
+      <Breadcrumbs items={breadcrumbItems} />
+      <h1 className="text-3xl font-bold mb-8 mt-6">Mis Pedidos</h1>
       {orders.length === 0 ? (
         <div className="text-center py-10 bg-gray-100 rounded-lg">
             <p className="font-semibold">Aún no has realizado ningún pedido.</p>

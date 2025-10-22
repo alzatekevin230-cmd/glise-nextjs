@@ -3,7 +3,6 @@
 // CAMBIO: Importamos las funciones necesarias desde lib/data.js
 import { getProductBySlug, getRelatedProducts, createSlug, getAllProducts } from '@/lib/data.js';
 import DetalleProductoCliente from '@/components/DetalleProductoCliente';
-import BotonVolver from '@/components/BotonVolver';
 import { notFound } from 'next/navigation';
 
 // ISR: Revalidar cada 1 hora (3600 segundos)
@@ -51,10 +50,7 @@ export default async function PaginaProducto({ params }) {
   
   return (
     <main className="container mx-auto px-2 sm:px-6 py-8">
-      <BotonVolver texto="Volver a la tienda" className="mt-4" />
-      <div className="mt-8">
-        <DetalleProductoCliente product={product} relatedProducts={relatedProducts} />
-      </div>
+      <DetalleProductoCliente product={product} relatedProducts={relatedProducts} />
     </main>
   );
 }

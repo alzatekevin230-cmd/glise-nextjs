@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexto/ContextoAuth';
 import { db } from '@/lib/firebaseClient';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
-import BotonVolver from '@/components/BotonVolver';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import Link from 'next/link';
 
 
@@ -107,21 +107,26 @@ export default function MiCuentaPage() {
     );
   }
 
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Mi Cuenta', href: '/mi-cuenta' }
+  ];
+
   if (!currentUser) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-16 text-center">
-        <BotonVolver />
-        <h1 className="text-2xl font-bold mt-8">Inicia sesión para acceder a tu cuenta</h1>
-        <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu dashboard.</p>
+      <main className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
+        <div className="text-center py-16">
+          <h1 className="text-2xl font-bold">Inicia sesión para acceder a tu cuenta</h1>
+          <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu dashboard.</p>
+        </div>
       </main>
     );
   }
 
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-8">
-        <BotonVolver texto="Volver a la tienda" />
-      </div>
+      <Breadcrumbs items={breadcrumbItems} />
       
       <div className="max-w-6xl mx-auto">
         {/* Header de bienvenida */}

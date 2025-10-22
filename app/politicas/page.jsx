@@ -1,19 +1,16 @@
 // app/politicas/page.jsx
 
-// --- CAMBIO 1: Eliminamos importaciones innecesarias e importamos el botón ---
-import BotonVolver from '@/components/BotonVolver';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
-// --- CAMBIO 2: Ya no necesitamos que sea 'async' ni que reciba props ---
 export default function PaginaPoliticas() {
-
-  // --- CAMBIO 3: Eliminamos la carga de datos que no se usa en esta página ---
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Políticas de Privacidad', href: '/politicas' }
+  ];
 
   return (
-    // --- CAMBIO 4: Eliminamos <Header />, <Footer /> y el Fragment <>...</> ---
     <main className="container mx-auto px-4 sm:px-6 py-8">
-      
-      {/* --- CAMBIO 5: Reemplazamos <a> por nuestro componente <BotonVolver> --- */}
-      <BotonVolver texto="Volver a la tienda" />
+      <Breadcrumbs items={breadcrumbItems} />
 
       <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg static-page-content mt-8">
         <h2>Políticas de Privacidad y Términos de Uso - Glisé</h2>

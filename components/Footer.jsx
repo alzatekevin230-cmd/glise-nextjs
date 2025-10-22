@@ -34,7 +34,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer ref={footerRef} className="bg-white pb-24 md:pb-0">
+    <footer ref={footerRef} className="bg-white pb-24 md:pb-0 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] border-t border-gray-100">
       <div className="bg-pink-50 py-3 px-6">
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-center gap-6">
           <h3 className="text-xl font-bold text-cyan-700 text-center md:text-left flex-shrink-0">

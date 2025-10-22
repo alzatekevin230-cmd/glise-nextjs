@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '@/lib/firebaseClient';
-import BotonVolver from '@/components/BotonVolver';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import OrderStatusTracker from '@/components/OrderStatusTracker';
 import Image from 'next/image';
 
@@ -53,9 +53,14 @@ export default function RastrearPedidoPage() {
     }
   };
 
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Rastrear Pedido', href: '/rastrear-pedido' }
+  ];
+
   return (
     <main className="container mx-auto px-4 sm-px-6 py-8">
-      <BotonVolver texto="Volver"/>
+      <Breadcrumbs items={breadcrumbItems} />
 
       {/* Si no se ha buscado, muestra el formulario */}
       {!orderData && (

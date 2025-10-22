@@ -1,18 +1,16 @@
 // app/sobre-nosotros/page.jsx
 
-// --- CAMBIO 1: Eliminamos las importaciones de Header y Footer ---
-// --- e importamos nuestro nuevo botón ---
-import BotonVolver from '@/components/BotonVolver';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function SobreNosotros() {
-  // --- CAMBIO 2: Ya no necesitamos pasar 'allProducts' desde aquí ---
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Sobre Nosotros', href: '/sobre-nosotros' }
+  ];
 
   return (
-    // --- CAMBIO 3: Eliminamos <Header /> y <Footer /> que ya están en layout.js ---
     <main className="container mx-auto px-4 sm:px-6 py-8">
-      
-      {/* --- CAMBIO 4: Reemplazamos <a> por nuestro componente BotonVolver --- */}
-      <BotonVolver texto="Volver a la tienda" />
+      <Breadcrumbs items={breadcrumbItems} />
 
       <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg static-page-content mt-8">
         <h2>¿Quiénes Somos?</h2>

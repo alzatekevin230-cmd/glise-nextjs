@@ -12,21 +12,10 @@ import { getFunctions, httpsCallable } from "firebase/functions";
 import { doc, getDoc } from "firebase/firestore";
 import { app, db } from '@/lib/firebaseClient';
 import toast from 'react-hot-toast';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 // (El resto de tus componentes auxiliares no cambian)
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
-const BotonVolver = () => {
-    const router = useRouter();
-    const handleBackNavigation = () => {
-        sessionStorage.setItem('isNavigatingBack', 'true');
-        router.back();
-    };
-    return (
-        <button type="button" onClick={handleBackNavigation} className="mb-8 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-            <i className="fas fa-arrow-left mr-2"></i> Volver
-        </button>
-    );
-};
 const BarraEnvioGratis = ({ subtotal }) => {
     const envioGratisDesde = 250000;
     if (subtotal >= envioGratisDesde) {
@@ -263,13 +252,19 @@ export default function CheckoutPage() {
         placeholder: (provided) => ({ ...provided, color: '#6b7280' }),
     };
 
+    const breadcrumbItems = [
+        { label: 'Inicio', href: '/' },
+        { label: 'Tienda', href: '/categoria/all' },
+        { label: 'Checkout', href: '/checkout' }
+    ];
+
     return (
         <>
             <main className="container mx-auto px-4 sm:px-6 py-8 pb-24 lg:pb-8">
-                <h1 className="text-3xl font-bold text-center mb-8">Finalizar Compra</h1>
+                <Breadcrumbs items={breadcrumbItems} />
+                <h1 className="text-3xl font-bold text-center mb-8 mt-6">Finalizar Compra</h1>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-12" noValidate>
                     <div>
-                        <BotonVolver />
                         {/* ... Tu JSX de bienvenida no cambia ... */}
                         {!currentUser || currentUser.isAnonymous ? (
                             <div className="p-4 mb-6 bg-blue-50 border border-blue-200 rounded-lg text-center">

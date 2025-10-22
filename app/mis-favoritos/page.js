@@ -5,7 +5,7 @@ import { useAuth } from '@/contexto/ContextoAuth';
 import { db } from '@/lib/firebaseClient';
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { useCarrito } from '@/contexto/ContextoCarrito';
-import BotonVolver from '@/components/BotonVolver';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import Link from 'next/link';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
@@ -82,21 +82,27 @@ export default function MisFavoritosPage() {
     );
   }
 
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Mi Cuenta', href: '/mi-cuenta' },
+    { label: 'Mis Favoritos', href: '/mis-favoritos' }
+  ];
+
   if (!currentUser) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-16 text-center">
-        <BotonVolver />
-        <h1 className="text-2xl font-bold mt-8">Inicia sesión para ver tus favoritos</h1>
-        <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu lista de productos favoritos.</p>
+      <main className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
+        <div className="text-center py-16">
+          <h1 className="text-2xl font-bold">Inicia sesión para ver tus favoritos</h1>
+          <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu lista de productos favoritos.</p>
+        </div>
       </main>
     );
   }
 
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-8">
-        <BotonVolver texto="Volver a la tienda" />
-      </div>
+      <Breadcrumbs items={breadcrumbItems} />
       
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">

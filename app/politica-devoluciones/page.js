@@ -1,13 +1,16 @@
 // app/politica-devoluciones/page.js
 
-import BotonVolver from '@/components/BotonVolver'; // --- CAMBIO 1: Importamos el botón ---
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function PoliticaDevolucionesPage() {
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Política de Devoluciones', href: '/politica-devoluciones' }
+  ];
+
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8">
-      
-      {/* --- CAMBIO 2: Añadimos el botón aquí --- */}
-      <BotonVolver texto="Volver a la tienda" />
+      <Breadcrumbs items={breadcrumbItems} />
 
       <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-4xl mx-auto mt-8 static-page-content">
         <h2>Política de Devoluciones y Reembolsos - Glisé</h2>

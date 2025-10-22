@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import BotonVolver from '@/components/BotonVolver';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function ContactoClient() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -38,11 +38,16 @@ export default function ContactoClient() {
     }
   };
 
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Contacto', href: '/contacto' }
+  ];
+
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8">
-      <BotonVolver texto="Volver a la tienda" />
+      <Breadcrumbs items={breadcrumbItems} />
 
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-4xl mx-auto mt-8">
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-4xl mx-auto mt-6">
         <h1 className="text-3xl font-bold mb-2">Contáctanos</h1>
         <p className="text-gray-600 mb-8">Estamos aquí para ayudarte. Completa el formulario y te responderemos lo antes posible.</p>
         
