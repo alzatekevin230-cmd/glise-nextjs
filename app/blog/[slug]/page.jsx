@@ -1,6 +1,5 @@
 // app/blog/[slug]/page.jsx
 import Image from 'next/image';
-import Link from 'next/link';
 import { getBlogPostBySlug, getRelatedProductsForBlog, getRelatedBlogPosts, createSlug, getAllBlogPosts } from '@/lib/data.js';
 import { processBlogImageUrl } from '@/lib/imageUtils';
 import { processContentWithIds, generateBlogPostSchema, calculateReadingTime, formatDate } from '@/lib/blogUtils';
@@ -11,6 +10,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import ShareButtons from '@/components/ShareButtons';
 import TableOfContents from '@/components/TableOfContents';
 import NewsletterSignup from '@/components/NewsletterSignup';
+import { FaUserCircle, FaCalendar, FaClock } from 'react-icons/fa';
 
 // ISR: Revalidar cada 2 horas (blog)
 export const revalidate = 7200;
@@ -100,17 +100,7 @@ export default async function PaginaArticulo({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
 
-      <main className="container mx-auto px-4 sm:px-6 py-8">
-        
-        {/* Botón volver */}
-        <Link 
-          href="/blog" 
-          className="mb-6 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl inline-flex items-center transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-        >
-          <i className="fas fa-arrow-left mr-2"></i>
-          Volver al Blog
-        </Link>
-
+      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
         {/* Breadcrumbs */}
         <Breadcrumbs items={breadcrumbItems} />
 
@@ -149,17 +139,17 @@ export default async function PaginaArticulo({ params }) {
                 {/* Meta info */}
                 <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-8 pb-6 border-b">
                   <div className="flex items-center gap-2">
-                    <i className="fas fa-user-circle text-blue-600"></i>
+                    <FaUserCircle className="text-blue-600" />
                     <span className="font-medium">Equipo Glisé</span>
                   </div>
                   <span className="text-gray-300">•</span>
                   <div className="flex items-center gap-2">
-                    <i className="far fa-calendar text-blue-600"></i>
+                    <FaCalendar className="text-blue-600" />
                     <span>{formattedDate}</span>
                   </div>
                   <span className="text-gray-300">•</span>
                   <div className="flex items-center gap-2">
-                    <i className="far fa-clock text-blue-600"></i>
+                    <FaClock className="text-blue-600" />
                     <span>{readingTime} de lectura</span>
                   </div>
                 </div>

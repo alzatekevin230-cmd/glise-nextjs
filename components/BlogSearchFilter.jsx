@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { FaSearch, FaTimes } from 'react-icons/fa';
 
 export default function BlogSearchFilter({ posts, onFilteredPostsChange }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,7 +46,7 @@ export default function BlogSearchFilter({ posts, onFilteredPostsChange }) {
       {/* Barra de búsqueda */}
       <div className="relative max-w-2xl mx-auto">
         <div className="relative">
-          <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             placeholder="Buscar artículos por título o tema..."
@@ -59,7 +60,7 @@ export default function BlogSearchFilter({ posts, onFilteredPostsChange }) {
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
               aria-label="Limpiar búsqueda"
             >
-              <i className="fas fa-times"></i>
+              <FaTimes />
             </button>
           )}
         </div>

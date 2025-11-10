@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { useCarrito } from '@/contexto/ContextoCarrito';
+import { FaCheckCircle } from 'react-icons/fa';
 
 export default function GraciasPage() {
   const { clearCart } = useCarrito();
@@ -16,7 +17,7 @@ export default function GraciasPage() {
   return (
     <main className="container mx-auto px-4 sm:px-6 py-16 text-center">
       <div className="max-w-2xl mx-auto">
-        <i className="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
+        <FaCheckCircle className="text-6xl text-green-500 mb-6 mx-auto" />
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800">¡Gracias por tu compra!</h1>
         <p className="mt-4 text-lg text-gray-600">
           Hemos recibido tu pedido y lo estamos procesando. Recibirás un correo electrónico de confirmación en breve con los detalles de tu compra y la guía de envío.

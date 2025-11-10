@@ -13,6 +13,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { app, db } from '@/lib/firebaseClient';
 import toast from 'react-hot-toast';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import { FaShippingFast, FaChevronDown, FaLock, FaUsers, FaStar, FaShieldAlt, FaCheckCircle, FaTrashAlt, FaSpinner } from 'react-icons/fa';
 
 // (El resto de tus componentes auxiliares no cambian)
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
@@ -32,7 +33,7 @@ const BarraEnvioGratis = ({ subtotal }) => {
 };
 const PoliticasEnvioAccordion = () => (
     <div className="mt-4">
-        <details className="shipping-policy-accordion"><summary className="shipping-policy-title"><i className="fas fa-shipping-fast mr-3 text-blue-600"></i><span>Ver nuestra Política de Envío</span><i className="fas fa-chevron-down icon-arrow"></i></summary><div className="shipping-policy-content"><p><strong>¡Queremos que recibas tu pedido lo antes posible!</strong> A continuación, te presentamos nuestros tiempos de entrega estimados una vez que tu pago ha sido aprobado.</p><ul><li><strong>Envío Local (Palmira):</strong> 1-2 días hábiles.</li><li><strong>Envío Regional (Valle del Cauca):</strong> 2-3 días hábiles.</li><li><strong>Envío Nacional (Ciudades Principales):</strong> 3-5 días hábiles.</li><li><strong>Envío Zonal (Ciudades Intermedias):</strong> 4-7 días hábiles.</li><li><strong>Otras Ciudades:</strong> 5-10 días hábiles.</li><li><strong>Destinos Especiales:</strong> 8-15 días hábiles.</li></ul><p className="mt-4"><strong>Recuerda:</strong></p><ul><li>Los tiempos son estimados y pueden variar por factores externos a Glisé.</li><li>Los días hábiles no incluyen sábados, domingos ni festivos.</li><li>Las compras realizadas después de las 2:00 PM serán procesadas al siguiente día hábil.</li></ul><p className="mt-4 font-semibold">¡Obtén <strong>envío GRATIS</strong> en compras superiores a $250,000!</p></div></details>
+        <details className="shipping-policy-accordion"><summary className="shipping-policy-title"><FaShippingFast className="mr-3 text-blue-600" /><span>Ver nuestra Política de Envío</span><FaChevronDown className="icon-arrow" /></summary><div className="shipping-policy-content"><p><strong>¡Queremos que recibas tu pedido lo antes posible!</strong> A continuación, te presentamos nuestros tiempos de entrega estimados una vez que tu pago ha sido aprobado.</p><ul><li><strong>Envío Local (Palmira):</strong> 1-2 días hábiles.</li><li><strong>Envío Regional (Valle del Cauca):</strong> 2-3 días hábiles.</li><li><strong>Envío Nacional (Ciudades Principales):</strong> 3-5 días hábiles.</li><li><strong>Envío Zonal (Ciudades Intermedias):</strong> 4-7 días hábiles.</li><li><strong>Otras Ciudades:</strong> 5-10 días hábiles.</li><li><strong>Destinos Especiales:</strong> 8-15 días hábiles.</li></ul><p className="mt-4"><strong>Recuerda:</strong></p><ul><li>Los tiempos son estimados y pueden variar por factores externos a Glisé.</li><li>Los días hábiles no incluyen sábados, domingos ni festivos.</li><li>Las compras realizadas después de las 2:00 PM serán procesadas al siguiente día hábil.</li></ul><p className="mt-4 font-semibold">¡Obtén <strong>envío GRATIS</strong> en compras superiores a $250,000!</p></div></details>
     </div>
 );
 
@@ -42,19 +43,19 @@ const TrustBadges = () => (
         <p className="text-center text-xs font-semibold text-gray-700 mb-2">Compra 100% segura</p>
         <div className="grid grid-cols-4 gap-2">
             <div className="flex flex-col items-center text-center">
-                <i className="fas fa-lock text-lg text-green-600 mb-1"></i>
+                <FaLock className="text-lg text-green-600 mb-1" />
                 <p className="text-[10px] font-medium text-gray-700">SSL</p>
             </div>
             <div className="flex flex-col items-center text-center">
-                <i className="fas fa-users text-lg text-blue-600 mb-1"></i>
+                <FaUsers className="text-lg text-blue-600 mb-1" />
                 <p className="text-[10px] font-medium text-gray-700">+5K</p>
             </div>
             <div className="flex flex-col items-center text-center">
-                <i className="fas fa-star text-lg text-yellow-500 mb-1"></i>
+                <FaStar className="text-lg text-yellow-500 mb-1" />
                 <p className="text-[10px] font-medium text-gray-700">4.8/5</p>
             </div>
             <div className="flex flex-col items-center text-center">
-                <i className="fas fa-shield-alt text-lg text-purple-600 mb-1"></i>
+                <FaShieldAlt className="text-lg text-purple-600 mb-1" />
                 <p className="text-[10px] font-medium text-gray-700">Seguro</p>
             </div>
         </div>
@@ -77,6 +78,8 @@ export default function CheckoutPage() {
     const [shippingCost, setShippingCost] = useState(0);
     const [deliveryDays, setDeliveryDays] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
+    const [shippingCalculated, setShippingCalculated] = useState(false);
     const [errors, setErrors] = useState({});
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [allCities, setAllCities] = useState([]);
@@ -112,17 +115,26 @@ export default function CheckoutPage() {
         if (!cityCode || cart.length === 0) {
             setShippingCost(0);
             setDeliveryDays(null);
+            setShippingCalculated(false);
+            setIsCalculatingShipping(false);
             return;
         }
+        setIsCalculatingShipping(true);
+        setShippingCalculated(false);
         const getQuote = httpsCallable(functions, 'getCoordinadoraQuote');
         try {
             const result = await getQuote({ destinationCityCode: cityCode, cartItems: cart });
             setShippingCost(result.data.shippingCost);
             setDeliveryDays(result.data.deliveryDays);
+            setShippingCalculated(true);
         } catch (error) {
             console.error("Error al calcular envío:", error);
-            toast.error("No se pudo calcular el costo de envío.");
+            toast.error("No se pudo calcular el costo de envío. Por favor, intenta de nuevo.");
             setShippingCost(0);
+            setDeliveryDays(null);
+            setShippingCalculated(false);
+        } finally {
+            setIsCalculatingShipping(false);
         }
     }, [cart, functions]);
 
@@ -169,6 +181,7 @@ export default function CheckoutPage() {
             }));
             setShippingCost(0);
             setDeliveryDays(null);
+            setShippingCalculated(false);
         }
         if (fieldName === 'city') {
             setFormData(prev => ({
@@ -206,14 +219,36 @@ export default function CheckoutPage() {
         return Object.keys(newErrors).length === 0;
     };
     
-    const handleSubmit = async (e) => { /* ... tu función de submit no cambia ... */ 
+    const handleSubmit = async (e) => { 
         e.preventDefault();
         if (!validateForm()) {
             toast.error(errors.terms || 'Por favor, completa todos los campos obligatorios.');
             return;
         }
-        setIsProcessing(true);
+        
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        
+        // Validación crítica: Si el subtotal es menor a 250000, el envío DEBE estar calculado
+        if (subtotal < 250000) {
+            if (!formData.cityCode) {
+                toast.error('Por favor, selecciona una ciudad para calcular el costo de envío.');
+                return;
+            }
+            if (isCalculatingShipping) {
+                toast.error('Espera mientras calculamos el costo de envío...');
+                return;
+            }
+            if (!shippingCalculated) {
+                toast.error('El costo de envío aún no se ha calculado. Por favor, espera unos segundos o selecciona otra ciudad.');
+                return;
+            }
+            if (shippingCost <= 0) {
+                toast.error('El costo de envío no es válido. Por favor, intenta seleccionar otra ciudad o contacta a soporte.');
+                return;
+            }
+        }
+        
+        setIsProcessing(true);
         const finalShippingCost = subtotal >= 250000 ? 0 : shippingCost;
         const total = subtotal + finalShippingCost;
         const totalInCents = Math.round(total * 100);
@@ -237,6 +272,13 @@ export default function CheckoutPage() {
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const finalShippingCost = subtotal >= 250000 ? 0 : shippingCost;
     const total = subtotal + finalShippingCost;
+    
+    // Determinar si el botón debe estar deshabilitado
+    // Si subtotal >= 250000, envío es gratis, no necesita calcularse
+    // Si subtotal < 250000, DEBE tener ciudad seleccionada Y envío calculado Y shippingCost > 0
+    const canSubmit = !isProcessing && 
+                      !isCalculatingShipping && 
+                      (subtotal >= 250000 || (formData.cityCode && shippingCalculated && shippingCost > 0));
 
     if (cart.length === 0 && !isProcessing) return null;
 
@@ -260,7 +302,7 @@ export default function CheckoutPage() {
 
     return (
         <>
-            <main className="container mx-auto px-4 sm:px-6 py-8 pb-24 lg:pb-8">
+            <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 pb-24 lg:pb-8">
                 <Breadcrumbs items={breadcrumbItems} />
                 <h1 className="text-3xl font-bold text-center mb-8 mt-6">Finalizar Compra</h1>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-12" noValidate>
@@ -276,8 +318,8 @@ export default function CheckoutPage() {
                             </div>
                         ) : (
                             <div className="p-4 mb-6 bg-green-50 border border-green-200 rounded-lg text-center">
-                                <p className="text-sm text-green-800 font-semibold">
-                                    <i className="fas fa-check-circle mr-2"></i>
+                                <p className="text-sm text-green-800 font-semibold flex items-center justify-center gap-2">
+                                    <FaCheckCircle />
                                     ¡Bienvenido de nuevo, {currentUser.displayName?.split(' ')[0]}!
                                 </p>
                             </div>
@@ -365,14 +407,34 @@ export default function CheckoutPage() {
                     {/* La columna de la derecha (resumen de pedido) no necesita cambios */}
                     <div className="bg-white p-6 rounded-lg shadow-lg border">
                         <h3 className="text-2xl font-semibold mb-6">Tu pedido</h3>
-                        <div className="space-y-4">{cart.map(item=>(<div key={item.id} className="py-4 border-b"><div className="flex items-start justify-between gap-4"><div className="flex items-start gap-4 flex-grow"><div className="relative aspect-square w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0"><Image src={item.image||item.images?.[0]} alt={item.name} fill className="object-contain"/></div><div className="flex-grow"><p className="font-semibold text-gray-800 leading-tight text-sm">{item.name}</p><p className="text-sm text-gray-600 mt-1">{formatPrice(item.price)}</p></div></div><button type="button" onClick={()=>removeFromCart(item.id)} className="text-gray-400 hover:text-red-600 text-lg transition-colors flex-shrink-0 ml-2"><i className="fas fa-trash-alt"></i></button></div><div className="flex items-center justify-between mt-4"><div className="flex items-center border rounded-md"><button type="button" onClick={()=>updateQuantity(item.id,item.quantity-1)} disabled={item.quantity<=1} className="px-3 py-1 text-lg font-semibold text-gray-600 hover:bg-gray-100 rounded-l-md disabled:opacity-50">-</button><span className="px-3 py-1 font-semibold text-center w-10">{item.quantity}</span><button type="button" onClick={()=>updateQuantity(item.id,item.quantity+1)} className="px-3 py-1 text-lg font-semibold text-gray-600 hover:bg-gray-100 rounded-r-md">+</button></div><p className="font-semibold text-right">{formatPrice(item.price*item.quantity)}</p></div></div>))}</div>
-                        <div className="mt-6 border-t pt-4 space-y-2"><div className="flex justify-between"><span>Subtotal</span><span className="font-semibold">{formatPrice(subtotal)}</span></div><div className="pb-4 border-b">{subtotal>=250000?(<div className="flex justify-between items-center shipping-cost-item"><span className="font-medium">Envío</span><span className="font-semibold text-green-600">Gratis</span></div>):formData.cityCode?(shippingCost>0?(<div className="flex justify-between items-center shipping-cost-item"><div><span className="font-medium text-gray-800">Envío con Coordinadora</span><p className="text-sm text-gray-500">{deliveryDays} días hábiles (aprox)</p></div><span className="font-semibold text-gray-900">{formatPrice(shippingCost)}</span></div>):(<div className="flex justify-between items-center text-gray-500 animate-pulse"><span><i className="fas fa-spinner fa-spin mr-2"></i>Calculando...</span></div>)):(<div className="flex justify-between items-center text-gray-500"><span>Envío</span><span>Selecciona una ciudad</span></div>)}</div><div className="flex justify-between text-xl font-bold pt-2 mt-2"><span>Total</span><span>{formatPrice(total)}</span></div></div>
+                        <div className="space-y-4">{cart.map(item=>(<div key={item.id} className="py-4 border-b"><div className="flex items-start justify-between gap-4"><div className="flex items-start gap-4 flex-grow"><div className="relative aspect-square w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0"><Image src={item.image||item.images?.[0]} alt={item.name} fill className="object-contain"/></div><div className="flex-grow"><p className="font-semibold text-gray-800 leading-tight text-sm">{item.name}</p><p className="text-sm text-gray-600 mt-1">{formatPrice(item.price)}</p></div></div><button type="button" onClick={()=>removeFromCart(item.id)} className="text-gray-400 hover:text-red-600 text-lg transition-colors flex-shrink-0 ml-2"><FaTrashAlt /></button></div><div className="flex items-center justify-between mt-4"><div className="flex items-center border rounded-md"><button type="button" onClick={()=>updateQuantity(item.id,item.quantity-1)} disabled={item.quantity<=1} className="px-3 py-1 text-lg font-semibold text-gray-600 hover:bg-gray-100 rounded-l-md disabled:opacity-50">-</button><span className="px-3 py-1 font-semibold text-center w-10">{item.quantity}</span><button type="button" onClick={()=>updateQuantity(item.id,item.quantity+1)} className="px-3 py-1 text-lg font-semibold text-gray-600 hover:bg-gray-100 rounded-r-md">+</button></div><p className="font-semibold text-right">{formatPrice(item.price*item.quantity)}</p></div></div>))}</div>
+                        <div className="mt-6 border-t pt-4 space-y-2"><div className="flex justify-between"><span>Subtotal</span><span className="font-semibold">{formatPrice(subtotal)}</span></div><div className="pb-4 border-b">{subtotal>=250000?(<div className="flex justify-between items-center shipping-cost-item"><span className="font-medium">Envío</span><span className="font-semibold text-green-600">Gratis</span></div>):formData.cityCode?(shippingCost>0?(<div className="flex justify-between items-center shipping-cost-item"><div><span className="font-medium text-gray-800">Envío con Coordinadora</span><p className="text-sm text-gray-500">{deliveryDays} días hábiles (aprox)</p></div><span className="font-semibold text-gray-900">{formatPrice(shippingCost)}</span></div>):(<div className="flex justify-between items-center text-gray-500 animate-pulse"><span className="flex items-center gap-2"><FaSpinner className="animate-spin" />Calculando...</span></div>)):(<div className="flex justify-between items-center text-gray-500"><span>Envío</span><span>Selecciona una ciudad</span></div>)}</div><div className="flex justify-between text-xl font-bold pt-2 mt-2"><span>Total</span><span>{formatPrice(total)}</span></div></div>
                         <BarraEnvioGratis subtotal={subtotal}/>
                         <div className="mt-6 border-t pt-4"><div className="p-4 border rounded-lg bg-gray-50"><label className="font-semibold flex items-center"><input type="radio" name="payment_method" value="wompi" className="mr-2" defaultChecked/>Wompi (Tarjetas, PSE, Nequi, etc.)</label><div className="mt-3 p-4 bg-white rounded-md border"><p className="text-sm text-gray-600 mb-4">Paga con tu tarjeta de crédito, débito, PSE, Nequi, Bancolombia, Daviplata y más a través de Wompi. Tu pago es 100% seguro.</p><Image src="/imagenespagina/logodewompi.webp" alt="Métodos de pago Wompi" width={400} height={80} className="w-full max-w-sm mx-auto object-contain"/></div></div></div>
                         <TrustBadges />
                         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg"><p className="text-sm text-gray-700">Tus datos personales se utilizarán para procesar tu pedido, mejorar tu experiencia en esta web y otros propósitos descritos en nuestra <Link href="/politicas" className="text-blue-600 font-semibold hover:underline">política de privacidad</Link>.</p></div>
                         <div className="mt-6"><label htmlFor="terms" className="flex items-center text-sm"><input type="checkbox" id="terms" checked={termsAccepted} onChange={(e)=>setTermsAccepted(e.target.checked)} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"/><span className="ml-2 text-gray-700">He leído y estoy de acuerdo con los <Link href="/politicas" className="text-blue-600 hover:underline">términos y condiciones</Link> de la web *</span></label>{errors.terms&&<span className="text-red-600 text-sm mt-1">{errors.terms}</span>}</div>
-                        <button type="submit" disabled={isProcessing} className="w-full mt-4 bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition text-lg disabled:bg-gray-400 flex items-center justify-center">{isProcessing?(<><i className="fas fa-spinner fa-spin mr-2"></i><span>Procesando...</span></>):('REALIZAR EL PEDIDO')}</button>
+                        <button 
+                            type="submit" 
+                            disabled={!canSubmit} 
+                            className="w-full mt-4 bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition text-lg disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            title={!canSubmit && subtotal < 250000 && !shippingCalculated ? 'Espera mientras se calcula el costo de envío' : ''}
+                        >
+                            {isProcessing ? (
+                                <><FaSpinner className="animate-spin" /><span>Procesando...</span></>
+                            ) : isCalculatingShipping ? (
+                                <><FaSpinner className="animate-spin" /><span>Calculando envío...</span></>
+                            ) : !canSubmit && subtotal < 250000 ? (
+                                <><FaSpinner className="animate-spin" /><span>Espera el cálculo de envío...</span></>
+                            ) : (
+                                'REALIZAR EL PEDIDO'
+                            )}
+                        </button>
+                        {subtotal < 250000 && !shippingCalculated && formData.cityCode && (
+                            <p className="text-sm text-amber-600 mt-2 text-center">
+                                ⏳ Calculando el costo de envío. Por favor espera...
+                            </p>
+                        )}
                     </div>
                 </form>
                 
@@ -386,13 +448,17 @@ export default function CheckoutPage() {
                         <button 
                             type="button" 
                             onClick={handleSubmit}
-                            disabled={isProcessing}
-                            className="bg-green-500 text-white font-bold py-2 px-5 rounded-lg hover:bg-green-600 transition disabled:bg-gray-400 flex items-center justify-center text-sm"
+                            disabled={!canSubmit}
+                            className="bg-green-500 text-white font-bold py-2 px-5 rounded-lg hover:bg-green-600 transition disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center text-sm"
                         >
                             {isProcessing ? (
-                                <><i className="fas fa-spinner fa-spin mr-2"></i><span>Procesando...</span></>
+                                <><FaSpinner className="animate-spin mr-2" /><span>Procesando...</span></>
+                            ) : isCalculatingShipping ? (
+                                <><FaSpinner className="animate-spin mr-2" /><span>Calculando...</span></>
+                            ) : !canSubmit && subtotal < 250000 ? (
+                                <><FaSpinner className="animate-spin mr-2" /><span>Espera...</span></>
                             ) : (
-                                <><i className="fas fa-lock mr-2"></i><span>PAGAR</span></>
+                                <><FaLock className="mr-2" /><span>PAGAR</span></>
                             )}
                         </button>
                     </div>

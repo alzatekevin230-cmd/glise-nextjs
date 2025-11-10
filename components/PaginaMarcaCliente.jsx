@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import BrandHero from '@/components/BrandHero';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import ProductCarousel from '@/components/ProductCarousel';
+import { FaThLarge, FaCheck, FaFilter, FaFire, FaBoxes, FaSearch } from 'react-icons/fa';
 
 // Cargar PriceFilter solo en el cliente
 const PriceFilter = dynamic(() => import('@/components/PriceFilter'), {
@@ -245,8 +246,8 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
         {/* NUEVO: Filtro rápido por categorías de la marca */}
         {availableCategories.length > 1 && (
           <details className="filter-accordion" open>
-            <summary>
-              <i className="fas fa-th-large mr-2"></i>
+            <summary className="flex items-center gap-2">
+              <FaThLarge />
               Categorías
             </summary>
             <div className="p-4">
@@ -261,7 +262,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
                         onChange={() => handleCategoryChange(category)} 
                       />
                       <span className="filter-checkbox-span">
-                        <i className="fas fa-check"></i>
+                        <FaCheck />
                       </span>
                       <span className="flex-1">{category}</span>
                       <span className="text-xs text-gray-500">({categoryCount})</span>
@@ -287,7 +288,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
               {filteredBrands.map(brand => (
                 <label key={brand} className="filter-checkbox-label">
                   <input type="checkbox" checked={activeBrands.includes(brand)} onChange={() => handleBrandChange(brand)} />
-                  <span className="filter-checkbox-span"><i className="fas fa-check"></i></span>
+                  <span className="filter-checkbox-span"><FaCheck /></span>
                   {brand}
                 </label>
               ))}
@@ -302,7 +303,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
               {availablePresentations.map(pres => (
                 <label key={pres} className="filter-checkbox-label">
                   <input type="checkbox" checked={activePresentations.includes(pres)} onChange={() => handlePresentationChange(pres)} />
-                  <span className="filter-checkbox-span"><i className="fas fa-check"></i></span>
+                  <span className="filter-checkbox-span"><FaCheck /></span>
                   {pres}
                 </label>
               ))}
@@ -317,7 +318,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
               {availableUnits.map(unit => (
                 <label key={unit} className="filter-checkbox-label">
                   <input type="checkbox" checked={activeUnits.includes(unit)} onChange={() => handleUnitChange(unit)} />
-                  <span className="filter-checkbox-span"><i className="fas fa-check"></i></span>
+                  <span className="filter-checkbox-span"><FaCheck /></span>
                   {unit}
                 </label>
               ))}
@@ -338,7 +339,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
       {/* Botón de filtros móviles */}
       <div className="flex items-center justify-end mb-6 lg:hidden">
         <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
-          <i className="fas fa-filter"></i>
+          <FaFilter />
           <span>{isFilterOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'}</span>
         </button>
       </div>
@@ -356,7 +357,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
       {featuredProducts.length > 0 && (
         <div className="mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 flex items-center gap-2">
-            <i className="fas fa-fire text-orange-500"></i>
+            <FaFire className="text-orange-500" />
             Los Más Vendidos de {brandName}
           </h2>
           <ProductCarousel 
@@ -371,7 +372,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
       {/* Título de todos los productos */}
       <div className="mb-6">
         <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-          <i className="fas fa-boxes text-blue-600"></i>
+          <FaBoxes className="text-blue-600" />
           Todos los Productos {brandName}
           <span className="text-lg font-normal text-gray-600">({initialProducts.length})</span>
         </h2>
@@ -414,7 +415,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
             </>
           ) : (
             <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <i className="fas fa-search text-6xl text-gray-300 mb-4"></i>
+              <FaSearch className="text-6xl text-gray-300 mb-4 mx-auto" />
               <h3 className="text-xl font-semibold text-gray-700 mb-2">
                 No se encontraron productos
               </h3>

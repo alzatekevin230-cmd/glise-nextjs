@@ -1,5 +1,4 @@
 // EN: app/layout.js
-import "nouislider/dist/nouislider.css";
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
@@ -154,41 +153,6 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
         <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
         
-        {/* Font Awesome CDN */}
-        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
-        
-        {/* Preload de fuentes Font Awesome críticas con font-display: swap */}
-        {/* Estas fuentes se cargan en paralelo gracias al preload, no en cadena */}
-        <link 
-          rel="preload" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2" 
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-          fetchPriority="low"
-        />
-        <link 
-          rel="preload" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.woff2" 
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-          fetchPriority="low"
-        />
-        
-        {/* Font Awesome CSS con preload para optimizar carga */}
-        <link 
-          rel="preload" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
-          as="style"
-          crossOrigin="anonymous"
-        />
-        <link 
-          rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          crossOrigin="anonymous"
-        />
       </head>
       <body className={inter.className}>
         <SmoothScrollProvider>

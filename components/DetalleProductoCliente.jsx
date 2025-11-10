@@ -9,26 +9,28 @@ import toast from 'react-hot-toast';
 import ProductosRelacionados from './ProductosRelacionados';
 import ProductosVistosRecientemente from './ProductosVistosRecientemente';
 import { useModal } from '@/contexto/ContextoModal';
+import { useFavorites } from '@/hooks/useFavorites';
 import ImageWithZoom from './ImageWithZoom';
 import ResenasProducto from './ResenasProducto';
 import Breadcrumbs from './Breadcrumbs';
 
 // Ayudante para detectar tamaño de pantalla
 import { useWindowSize } from './hooks/useWindowSize';
+import { FaTruck, FaChevronDown, FaShippingFast, FaGift, FaShieldAlt, FaUndo, FaArrowRight, FaChevronLeft, FaChevronRight, FaShoppingCart, FaHeart, FaRegHeart } from 'react-icons/fa';
 
 // Componente de información de envío
 const EnvioInfoAccordion = () => (
   <div className="my-4">
     <details className="shipping-policy-accordion">
       <summary className="shipping-policy-title">
-        <i className="fas fa-truck mr-3 text-cyan-600"></i>
+        <FaTruck className="mr-3 text-cyan-600" />
         <span>Información de envío y garantías</span>
-        <i className="fas fa-chevron-down icon-arrow"></i>
+        <FaChevronDown className="icon-arrow" />
       </summary>
       <div className="shipping-policy-content">
         <div className="space-y-4">
           <div className="flex items-start gap-3">
-            <i className="fas fa-shipping-fast text-blue-600 mt-1 text-lg"></i>
+            <FaShippingFast className="text-blue-600 mt-1 text-lg" />
             <div>
               <p className="font-semibold text-gray-800">Envíos a todo Colombia</p>
               <p className="text-sm text-gray-600">Entrega en 2-5 días hábiles (principales ciudades)</p>
@@ -36,7 +38,7 @@ const EnvioInfoAccordion = () => (
           </div>
           
           <div className="flex items-start gap-3">
-            <i className="fas fa-gift text-green-600 mt-1 text-lg"></i>
+            <FaGift className="text-green-600 mt-1 text-lg" />
             <div>
               <p className="font-semibold text-green-600">Envío GRATIS</p>
               <p className="text-sm text-gray-600">En compras superiores a $250.000</p>
@@ -44,7 +46,7 @@ const EnvioInfoAccordion = () => (
           </div>
           
           <div className="flex items-start gap-3">
-            <i className="fas fa-shield-alt text-cyan-600 mt-1 text-lg"></i>
+            <FaShieldAlt className="text-cyan-600 mt-1 text-lg" />
             <div>
               <p className="font-semibold text-gray-800">Compra 100% segura</p>
               <p className="text-sm text-gray-600">Garantía de satisfacción de 30 días</p>
@@ -52,7 +54,7 @@ const EnvioInfoAccordion = () => (
           </div>
 
           <div className="flex items-start gap-3">
-            <i className="fas fa-undo text-purple-600 mt-1 text-lg"></i>
+            <FaUndo className="text-purple-600 mt-1 text-lg" />
             <div>
               <p className="font-semibold text-gray-800">Devoluciones fáciles</p>
               <p className="text-sm text-gray-600">Si no estás satisfecho, te devolvemos tu dinero</p>
@@ -61,9 +63,9 @@ const EnvioInfoAccordion = () => (
         </div>
         
         <div className="mt-4 pt-4 border-t border-gray-200">
-          <a href="/politica-devoluciones" className="text-sm text-blue-600 hover:underline inline-flex items-center">
+          <a href="/politica-devoluciones" className="text-sm text-blue-600 hover:underline inline-flex items-center gap-2">
             Ver política completa de envíos y devoluciones
-            <i className="fas fa-arrow-right ml-2"></i>
+            <FaArrowRight />
           </a>
         </div>
       </div>
@@ -95,8 +97,11 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   const { agregarAlCarrito, MAX_QUANTITY_PER_ITEM } = useCarrito();
   const { openLightbox } = useModal();
   const { allProducts, loadProducts } = useProductos();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const { width } = useWindowSize();
   const isDesktop = width >= 768;
+  
+  const favorite = isFavorite(product.id);
 
   const getInitialImages = () => {
     if (!product) return { all: [] };
@@ -227,8 +232,8 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
             {allImages.length > 1 && (
               <>
-                <button onClick={handlePrevImage} className="absolute top-1/2 left-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Imagen anterior"><i className="fas fa-chevron-left"></i></button>
-                <button onClick={handleNextImage} className="absolute top-1/2 right-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Siguiente imagen"><i className="fas fa-chevron-right"></i></button>
+                <button onClick={handlePrevImage} className="absolute top-1/2 left-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Imagen anterior"><FaChevronLeft /></button>
+                <button onClick={handleNextImage} className="absolute top-1/2 right-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Siguiente imagen"><FaChevronRight /></button>
               </>
             )}
           </div>
@@ -253,18 +258,11 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   };
 
   // Generar breadcrumbs para la página de producto
-  const breadcrumbItems = [
-    { label: 'Inicio', href: '/' },
-    { label: 'Tienda', href: '/categoria/all' },
-    { label: product.category || 'Productos', href: `/categoria/${product.category || 'all'}` },
-    { label: product.name, href: `/producto/${product.slug}` }
-  ];
+  // Elimina todo el código relacionado con Breadcrumbs y breadcrumbItems
+  // El render retorna ahora desde <div className="grid grid-cols-1 md:flex ..."> en adelante, sin el <Breadcrumbs ... />
 
   return (
     <>
-      {/* Breadcrumbs */}
-      <Breadcrumbs items={breadcrumbItems} />
-      
       <div className="grid grid-cols-1 md:flex md:gap-12 md:items-start">
         <div className="md:w-1/2 flex flex-col md:flex-row gap-4"> 
           {allImages.length > 1 && (
@@ -309,15 +307,27 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
                     ) : ( <p className="font-semibold text-red-600">Agotado</p> )}
                 </div>
                 {product.stock > 0 && (
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                         <div className="quantity-selector">
                             <button onClick={decreaseQuantity} className="quantity-btn">-</button>
                             <span className="quantity-input">{quantity}</span>
                             <button onClick={increaseQuantity} className="quantity-btn">+</button>
                         </div>
-                        <button onClick={handleAddToCart} className="flex-grow bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition flex items-center justify-center text-lg">
-                            <i className="fas fa-shopping-cart mr-3"></i>
+                        <button onClick={handleAddToCart} className="flex-grow bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition flex items-center justify-center text-lg gap-3">
+                            <FaShoppingCart />
                             Agregar al Carrito
+                        </button>
+                        <button
+                            onClick={() => toggleFavorite(product.id)}
+                            className="flex-shrink-0 w-14 h-14 rounded-lg font-bold transition-all duration-200 flex items-center justify-center hover:scale-110"
+                            aria-label={favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                            title={favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                        >
+                            {favorite ? (
+                                <FaHeart className="text-red-500" style={{width: '28px', height: '28px', minWidth: '28px', minHeight: '28px'}} />
+                            ) : (
+                                <FaRegHeart className="text-gray-600 hover:text-red-500 transition-colors" style={{width: '28px', height: '28px', minWidth: '28px', minHeight: '28px'}} />
+                            )}
                         </button>
                     </div>
                 )}

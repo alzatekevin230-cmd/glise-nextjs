@@ -10,6 +10,7 @@ import { useSearch } from '@/hooks/useSearch';
 import SearchResults from './SearchResults';
 import { useSmartHeader } from './hooks/useSmartHeader';
 import { FaBars, FaShoppingCart, FaTruck, FaGift, FaStar, FaFire } from 'react-icons/fa';
+import { HiSearch } from 'react-icons/hi';
 
 const promoMessages = [
   { icon: FaTruck, text: "Envíos a todo Colombia", color: "bg-teal-400" },
@@ -33,18 +34,32 @@ export default function HeaderMobile() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPromoIndex((prevIndex) => (prevIndex + 1) % promoMessages.length);
-    }, 3500); // Cambia cada 3.5 segundos
-
+    }, 3500);
     return () => clearInterval(interval);
   }, []);
 
   const currentMessage = promoMessages[currentPromoIndex];
   const Icon = currentMessage.icon;
 
+  // Agregar/quitar clase al body cuando el header está oculto/visible
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (!isVisible) {
+        document.body.classList.add('header-mobile-hidden');
+      } else {
+        document.body.classList.remove('header-mobile-hidden');
+      }
+    }
+  }, [isVisible]);
+
   return (
     <div
       id="mobile-header"
-      className="md:hidden w-full"
+      className={
+        `md:hidden w-full fixed top-0 left-0 z-40 transition-all duration-400 ease-in-out ` +
+        (isVisible ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-14 pointer-events-none')
+      }
+      style={{willChange:'transform,opacity'}}
     >
       <div className={`${currentMessage.color} text-white text-center text-sm font-semibold py-2 w-full flex items-center justify-center gap-2 transition-colors duration-500 overflow-hidden`}>
         <Icon className="animate-bounce" />
@@ -54,7 +69,6 @@ export default function HeaderMobile() {
         >
           {currentMessage.text}
         </span>
-        {/* Indicadores de paginación */}
         <div className="absolute right-2 flex gap-1">
           {promoMessages.map((_, index) => (
             <div
@@ -84,7 +98,7 @@ export default function HeaderMobile() {
       </div>
       <div className="bg-pink-50 py-2 w-full border-t border-b border-pink-100">
         <div
-          className="relative px-4"
+          className="relative px-4 overflow-visible"
           onFocus={() => setIsSearchFocused(true)}
           onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
         >
@@ -95,8 +109,8 @@ export default function HeaderMobile() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button type="button" className="absolute right-6 top-1/2 -translate-y-1/2 bg-cyan-600 text-white w-10 h-10 rounded-full hover:bg-cyan-700 flex items-center justify-center transition-transform duration-200 hover:scale-110" aria-label="Buscar">
-            <i className="fas fa-search"></i>
+          <button type="button" className="absolute right-5 bg-cyan-600 text-white w-10 h-10 rounded-full hover:bg-cyan-700 flex items-center justify-center transition-colors border-0 shadow-none outline-none" style={{top: '50%', transform: 'translateY(-50%)', boxShadow: 'none', border: 'none'}} aria-label="Buscar">
+            <HiSearch style={{width: '28px', height: '28px', minWidth: '28px', minHeight: '28px'}} />
           </button>
           {isSearchFocused && <SearchResults suggestions={suggestions} />}
         </div>

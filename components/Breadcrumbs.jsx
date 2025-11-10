@@ -1,5 +1,6 @@
 // components/Breadcrumbs.jsx
 import Link from 'next/link';
+import { FaChevronRight } from 'react-icons/fa';
 
 export default function Breadcrumbs({ items }) {
   return (
@@ -18,7 +19,7 @@ export default function Breadcrumbs({ items }) {
                   >
                     {item.label}
                   </Link>
-                  <i className="fas fa-chevron-right text-gray-400 text-xs"></i>
+                  <FaChevronRight className="text-gray-400 text-xs" />
                 </>
               ) : (
                 <span className="text-gray-600 font-semibold" aria-current="page">

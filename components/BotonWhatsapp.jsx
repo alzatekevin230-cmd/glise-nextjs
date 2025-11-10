@@ -1,5 +1,6 @@
 // app/components/BotonWhatsapp.jsx
 import Link from 'next/link';
+import { FaWhatsapp } from 'react-icons/fa';
 
 export default function BotonWhatsapp() {
   return (
@@ -9,7 +10,7 @@ export default function BotonWhatsapp() {
       className="whatsapp-button" 
       aria-label="Chat en WhatsApp"
     >
-      <i className="fab fa-whatsapp"></i>
+      <FaWhatsapp />
     </Link>
   );
 }

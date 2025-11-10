@@ -1,23 +1,32 @@
 // app/sobre-nosotros/page.jsx
-
 import Breadcrumbs from '@/components/Breadcrumbs';
+import SobreNosotrosClient from './SobreNosotrosClient';
 
-export default function SobreNosotros() {
+export const metadata = {
+  title: 'Sobre Nosotros',
+  description: 'Conoce la historia y filosofía de Glisé. Descubre nuestra pasión por fusionar ciencia y naturaleza para ofrecerte los mejores productos de bienestar y belleza en Colombia.',
+  openGraph: {
+    title: 'Sobre Nosotros | Glisé',
+    description: 'Nuestra historia, nuestra misión y nuestro compromiso con tu bienestar.',
+    url: 'https://glise.com.co/sobre-nosotros',
+  },
+  alternates: {
+    canonical: 'https://glise.com.co/sobre-nosotros',
+  },
+};
+
+export default function SobreNosotrosPage() {
   const breadcrumbItems = [
     { label: 'Inicio', href: '/' },
-    { label: 'Sobre Nosotros', href: '/sobre-nosotros' }
+    { label: 'Sobre Nosotros' }
   ];
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8">
+    <div className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
       <Breadcrumbs items={breadcrumbItems} />
-
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg static-page-content mt-8">
-        <h2>¿Quiénes Somos?</h2>
-        <h3>Tu Bienestar es Nuestra Esencia</h3>
-        <p>En <strong>Glisé</strong>, creemos que la verdadera belleza y el bienestar nacen de un equilibrio perfecto entre la ciencia y la naturaleza. Somos más que una farmacia o una tienda de belleza; somos un espacio dedicado a tu cuidado integral, donde cada producto ha sido seleccionado con rigor profesional y un profundo respeto por los ingredientes naturales.</p>
-        <p>Nacimos en el corazón de <strong>Palmira, Valle del Cauca</strong>, con la misión de ofrecer a nuestras comunidades soluciones confiables y efectivas para la salud y la belleza. Glisé es el resultado de una pasión familiar por combinar el conocimiento farmacéutico con la sabiduría ancestral de los remedios naturales, creando una propuesta única que te acompaña en cada etapa de tu vida.</p>
-      </div>
-    </main>
+      <main className="mt-8 mt-4">{/* mt-4 para el margen visual bajo header mobile */}
+        <SobreNosotrosClient />
+      </main>
+    </div>
   );
 }

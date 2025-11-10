@@ -7,6 +7,7 @@ import FeaturedCategories from "@/components/FeaturedCategories";
 import BestOffers from "@/components/BestOffers";
 import FeaturedProductsBanner from "@/components/FeaturedProductsBanner";
 import GliseProductsBanner from "@/components/GliseProductsBanner";
+import { FaCommentDots, FaWhatsapp } from 'react-icons/fa';
 
 // Lazy load de componentes pesados con Swiper (sin ssr: false en Next.js 15)
 const ShopByBrand = dynamic(() => import('@/components/ShopByBrand'), { loading: () => <div className="h-64" /> });
@@ -27,43 +28,40 @@ export default async function HomePage() {
   const naturalProductsData = allProducts.filter(p => p.category === 'Naturales y Homeopáticos');
 
   return (
-    <>
-      <main>
-        {/* --- INICIO DE LA CORRECCIÓN DE ESPACIADO --- */}
-        {/* Cambiamos py-8 (padding arriba y abajo) por pt-8 (solo padding arriba) y mb-8 (margen abajo) */}
-        <div className="container mx-auto px-2 sm:px-6 pt-8 mb-8">
-          
-          {/* Barra de Contacto para Escritorio */}
-          <div className="hidden md:flex bg-cyan-600 text-white text-sm mb-4 rounded-lg shadow-md items-center justify-center text-center p-2">
-            <div className="flex items-center gap-2">
-              <i className="fas fa-comment-dots"></i>
-              <span className="font-medium">¿Tienes dudas? Escríbenos y estaremos encantados de ayudarte</span>
-              <a href="https://wa.me/573217973158" target="_blank" rel="noopener noreferrer" className="hidden sm:flex items-center gap-2 ml-4 font-bold hover:underline">
-                <i className="fab fa-whatsapp"></i>
-                ¡Chatea ahora!
-              </a>
-            </div>
+    <main>
+      {/* Breadcrumbs puede ir aquí si se usa en home en el futuro */}
+      <div className="container mx-auto px-2 sm:px-6 pt-[180px] md:pt-8 mb-8">
+
+        {/* Barra de Contacto para Escritorio */}
+        <div className="hidden md:flex bg-cyan-600 text-white text-sm mb-4 rounded-lg shadow-md items-center justify-center text-center p-2">
+          <div className="flex items-center gap-2">
+            <FaCommentDots />
+            <span className="font-medium">¿Tienes dudas? Escríbenos y estaremos encantados de ayudarte</span>
+            <a href="https://wa.me/573217973158" target="_blank" rel="noopener noreferrer" className="hidden sm:flex items-center gap-2 ml-4 font-bold hover:underline">
+              <FaWhatsapp />
+              ¡Chatea ahora!
+            </a>
           </div>
-          
-          <MainBanner />
-
         </div>
-        {/* --- FIN DE LA CORRECCIÓN --- */}
 
-        <MobilePromo />
-        <FeaturedCategories />
-        <BestOffers />
-        <ShopByBrand />
-        <FeaturedProductsBanner />
-        <RecommendedProducts products={featuredProductsData} />
-        <GliseProductsBanner />
-        <GliseProducts products={gliseProductsData} />
-        <NaturalProductsSection products={naturalProductsData} />
-        <div className="container mx-auto px-2 sm:px-6">
-  <ProductosVistosRecientemente allProducts={allProducts} />
-</div>
-        <ArticulosBlog posts={blogPosts} />
-      </main>
-    </>
+        <div className="mt-4">
+          <MainBanner />
+        </div>
+
+      </div>
+      <MobilePromo />
+      <FeaturedCategories />
+      <BestOffers />
+      <ShopByBrand />
+      <FeaturedProductsBanner />
+      <RecommendedProducts products={featuredProductsData} />
+      <GliseProductsBanner />
+      <GliseProducts products={gliseProductsData} />
+      <NaturalProductsSection products={naturalProductsData} />
+      <div className="container mx-auto px-2 sm:px-6">
+        <ProductosVistosRecientemente allProducts={allProducts} />
+      </div>
+      <ArticulosBlog posts={blogPosts} />
+    </main>
   );
 }

@@ -4,10 +4,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCarrito } from '@/contexto/ContextoCarrito';
+import { useFavorites } from '@/hooks/useFavorites';
 import toast from 'react-hot-toast';
 import OptimizedImage from './OptimizedImage';
-import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
-import { FaRegStar } from 'react-icons/fa';
+import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingCart, FaHeart, FaRegHeart } from 'react-icons/fa';
 
 function formatPrice(price) {
   return `$${Math.round(price).toLocaleString('es-CO')}`;
@@ -15,8 +15,13 @@ function formatPrice(price) {
 
 export default function ProductCardSimple({ product, isSmall = false }) {
   const { agregarAlCarrito } = useCarrito();
+  const { toggleFavorite, isFavorite } = useFavorites();
+  
+  const favorite = isFavorite(product.id);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const result = agregarAlCarrito(product);
     
     if (result.success) {
@@ -52,8 +57,15 @@ export default function ProductCardSimple({ product, isSmall = false }) {
   const priceClasses = isSmall ? "text-lg font-bold text-blue-600 mb-2" : "text-xl font-bold text-blue-600 mb-3";
   const buttonClasses = `w-full text-white font-bold rounded-lg transition flex items-center justify-center ${isSmall ? 'py-1 px-2 text-xs' : 'py-2 px-4'} ${isOutOfStock ? 'btn-disabled' : 'bg-blue-600 hover:bg-blue-700'}`;
 
+  const handleToggleFavorite = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    toggleFavorite(product.id);
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden product-card flex flex-col text-center border h-full relative">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden product-card flex flex-col text-center border h-full relative group">
       {isOutOfStock && <div className="out-of-stock-badge">Agotado</div>}
       
       {/* --- ENLACE CORREGIDO: AHORA USA product.slug --- */}
@@ -63,7 +75,7 @@ export default function ProductCardSimple({ product, isSmall = false }) {
           src={imageSrc} 
           alt={product.name}
           className="aspect-square w-full"
-          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+          sizes="(max-width: 768px) 50vw, 25vw"
           quality={75}
           priority={false}
         />
@@ -75,7 +87,18 @@ export default function ProductCardSimple({ product, isSmall = false }) {
           </h3>
           <div className={`flex items-center justify-center mt-2 ${isSmall ? 'hidden' : ''}`}>
             {stars}
-            <span className="text-gray-600 text-sm ml-2">({reviewCount})</span>
+            <button
+              onClick={handleToggleFavorite}
+              className="flex items-center justify-center transition-all duration-200 hover:scale-110 ml-1"
+              aria-label={favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+              onMouseDown={(e) => e.preventDefault()}
+            >
+              {favorite ? (
+                <FaHeart className="text-red-500" style={{width: '18px', height: '18px', minWidth: '18px', minHeight: '18px'}} />
+              ) : (
+                <FaRegHeart className="text-gray-600 hover:text-red-500 transition-colors" style={{width: '18px', height: '18px', minWidth: '18px', minHeight: '18px'}} />
+              )}
+            </button>
           </div>
         </div>
       </Link>
@@ -86,8 +109,9 @@ export default function ProductCardSimple({ product, isSmall = false }) {
           onClick={handleAddToCart}
           className={buttonClasses}
           disabled={isOutOfStock}
+          aria-label="Agregar al carrito"
         >
-          <i className={`fas fa-shopping-cart ${isSmall ? 'mr-1' : 'mr-2'}`}></i> {isOutOfStock ? 'Agotado' : 'Agregar'}
+          <FaShoppingCart className={isSmall ? 'mr-1' : 'mr-2'} /> {isOutOfStock ? 'Agotado' : 'Agregar'}
         </button>
       </div>
     </div>

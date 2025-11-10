@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Fuse from 'fuse.js';
+import { HiSearch } from 'react-icons/hi';
 
 export default function Buscador({ products }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -43,8 +44,8 @@ export default function Buscador({ products }) {
         placeholder="Busca tus productos, marcas y más..."
         className="w-full pl-5 pr-16 py-3 border-2 border-cyan-500 rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
-      <button type="button" className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-600 text-white w-10 h-10 rounded-full" aria-label="Buscar">
-        <i className="fas fa-search"></i>
+      <button type="button" className="absolute right-2 bg-cyan-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-cyan-700 transition-colors" style={{top: '50%', transform: 'translateY(-50%)'}} aria-label="Buscar">
+        <HiSearch style={{width: '24px', height: '24px'}} />
       </button>
 
       {results.length > 0 && (

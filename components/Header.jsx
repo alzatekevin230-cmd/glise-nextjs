@@ -9,7 +9,8 @@ import { useAuth } from '@/contexto/ContextoAuth';
 import HeaderMobile from './HeaderMobile';
 import { useSearch } from '@/hooks/useSearch';
 import SearchResults from './SearchResults';
-import { FaHome, FaStore, FaLeaf, FaSpa, FaYinYang, FaBaby, FaGem, FaSearch, FaChevronDown } from 'react-icons/fa';
+import { FaHome, FaStore, FaLeaf, FaSpa, FaYinYang, FaBaby, FaGem, FaChevronDown, FaUserCircle, FaShoppingCart, FaHeart, FaSignOutAlt, FaBox, FaTruck, FaTachometerAlt } from 'react-icons/fa';
+import { HiSearch } from 'react-icons/hi';
 
 export default function Header() {
   const { openModal, setAuthTab } = useModal();
@@ -74,22 +75,22 @@ export default function Header() {
             {isMenuOpen && (
               <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50 border" onClick={() => setIsMenuOpen(false)}>
                 <div className="p-2">
-                  <Link href="/" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaHome className="w-4" />Inicio</Link>
-                  <Link href="/categoria/all" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaStore className="w-4" />Tienda</Link>
-                  <Link href="/categoria/Naturales y Homeopáticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaLeaf className="w-4" />Natural</Link>
-                  <Link href="/categoria/Dermocosméticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaSpa className="w-4" />Dermocosmética</Link>
-                  <Link href="/categoria/Milenario" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaYinYang className="w-4" />Milenario</Link>
-                  <Link href="/categoria/Cuidado Infantil" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaBaby className="w-4" />Infantil</Link>
-                  <Link href="/categoria/Cuidado y Belleza" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaGem className="w-4" />Belleza</Link>
+                  <Link href="/" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaHome className="w-4 text-cyan-600" />Inicio</Link>
+                  <Link href="/categoria/all" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaStore className="w-4 text-blue-600" />Tienda</Link>
+                  <Link href="/categoria/Naturales y Homeopáticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaLeaf className="w-4 text-green-600" />Natural</Link>
+                  <Link href="/categoria/Dermocosméticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaSpa className="w-4 text-pink-600" />Dermocosmética</Link>
+                  <Link href="/categoria/Milenario" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaYinYang className="w-4 text-purple-600" />Milenario</Link>
+                  <Link href="/categoria/Cuidado Infantil" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaBaby className="w-4 text-yellow-500" />Infantil</Link>
+                  <Link href="/categoria/Cuidado y Belleza" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaGem className="w-4 text-rose-600" />Belleza</Link>
                 </div>
               </div>
             )}
           </div>
         </div>
         
-          <div className="relative w-full max-w-3xl md:max-w-sm lg:max-w-3xl mx-8 md:mx-2 lg:mx-8" onFocus={() => setIsSearchFocused(true)} onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}>
+          <div className="relative w-full max-w-3xl md:max-w-sm lg:max-w-3xl mx-8 md:mx-2 lg:mx-8 overflow-visible" onFocus={() => setIsSearchFocused(true)} onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}>
             <input type="text" placeholder="Busca tus productos, marcas y más..." className="w-full pl-5 pr-16 py-3 border-2 border-cyan-500 rounded-full focus:outline-none focus:rounded-full focus:border-cyan-600 transition-colors" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-            <button type="button" className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-600 text-white w-10 h-10 rounded-full hover:bg-cyan-700 flex items-center justify-center transition-transform duration-200 hover:scale-110" aria-label="Buscar"><FaSearch /></button>
+            <button type="button" className="absolute right-2 top-1/2 bg-cyan-600 text-white w-10 h-10 rounded-full hover:bg-cyan-700 flex items-center justify-center transition-colors" style={{transform: 'translateY(-50%)'}} aria-label="Buscar"><HiSearch style={{width: '24px', height: '24px'}} /></button>
             {isSearchFocused && <SearchResults suggestions={suggestions} />}
           </div>
 
@@ -97,20 +98,32 @@ export default function Header() {
           {currentUser ? (
             <div className="relative" ref={userMenuRef}>
               <button onClick={() => setUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 transition-colors">
-                <i className="fas fa-user-circle fa-2x"></i>
+                <FaUserCircle className="text-3xl" />
                 <span className="text-sm font-medium">Hola, {currentUser.displayName?.split(' ')[0] || currentUser.email?.split('@')[0] || 'Usuario'}</span>
-                <i className={`fas fa-chevron-down text-xs transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`}></i>
+                <FaChevronDown className={`text-xs transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
               </button>
               {isUserMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border">
                   <div className="p-2" onClick={() => setUserMenuOpen(false)}>
-                    <Link href="/mi-cuenta" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Mi Dashboard</Link>
-                    <Link href="/mis-pedidos" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Mis Pedidos</Link>
-                    <Link href="/mis-favoritos" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Mis Favoritos</Link>
-                    <Link href="/mi-perfil" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Mi Perfil</Link>
-                    <Link href="/rastrear-pedido" className="block px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">Rastrear Pedido</Link>
+                    <Link href="/mi-cuenta" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
+                      <FaTachometerAlt className="text-cyan-600" />Mi Dashboard
+                    </Link>
+                    <Link href="/mis-pedidos" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
+                      <FaBox className="text-blue-600" />Mis Pedidos
+                    </Link>
+                    <Link href="/mis-favoritos" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
+                      <FaHeart className="text-pink-600" />Mis Favoritos
+                    </Link>
+                    <Link href="/mi-perfil" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
+                      <FaUserCircle className="text-purple-600" />Mi Perfil
+                    </Link>
+                    <Link href="/rastrear-pedido" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
+                      <FaTruck className="text-green-600" />Rastrear Pedido
+                    </Link>
                     <div className="border-t my-2"></div>
-                    <button onClick={handleLogout} className="block w-full text-left px-3 py-2 text-sm text-red-600 rounded-md hover:bg-red-500 hover:text-white">Cerrar Sesión</button>
+                    <button onClick={handleLogout} className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-red-600 rounded-md hover:bg-red-500 hover:text-white">
+                      <FaSignOutAlt className="text-red-600" />Cerrar Sesión
+                    </button>
                   </div>
                 </div>
               )}
@@ -118,9 +131,9 @@ export default function Header() {
           ) : ( 
             <div className="relative" ref={guestMenuRef}>
               <button onClick={() => setGuestMenuOpen(!isGuestMenuOpen)} className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 transition-colors">
-                <i className="fas fa-user-circle fa-2x"></i>
+                <FaUserCircle className="text-3xl" />
                 <span className="text-sm font-medium">Mi Cuenta</span>
-                <i className={`fas fa-chevron-down text-xs transition-transform duration-300 ${isGuestMenuOpen ? 'rotate-180' : ''}`}></i>
+                <FaChevronDown className={`text-xs transition-transform duration-300 ${isGuestMenuOpen ? 'rotate-180' : ''}`} />
               </button>
               {isGuestMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-md shadow-xl p-2 z-20 border">
@@ -133,7 +146,7 @@ export default function Header() {
             </div>
           )}
           <button onClick={() => openModal('carrito')} className="relative text-cyan-600 hover:text-cyan-700 transition-colors p-3">
-            <i className="fas fa-shopping-cart fa-2x"></i>
+            <FaShoppingCart className="text-3xl" />
             {cartItemCount > 0 && ( <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{cartItemCount}</span> )}
           </button>
         </div>

@@ -3,6 +3,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { FaCrown, FaStar, FaGlobe, FaBoxOpen, FaTags, FaInfoCircle } from 'react-icons/fa';
 
 export default function BrandHero({ brandName, productsCount, minPrice, maxPrice, bannerImages }) {
   // Información específica de cada marca
@@ -179,13 +180,13 @@ export default function BrandHero({ brandName, productsCount, minPrice, maxPrice
               >
                 {info.isPremium && (
                   <span className="bg-yellow-400 text-black px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2 shadow-lg">
-                    <i className="fas fa-crown text-xs sm:text-sm"></i>
+                    <FaCrown className="text-xs sm:text-sm" />
                     <span className="hidden xs:inline">Marca </span>Premium
                   </span>
                 )}
                 {info.isBestSeller && (
                   <span className="bg-white text-gray-900 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2 shadow-lg">
-                    <i className="fas fa-star text-yellow-500 text-xs sm:text-sm"></i>
+                    <FaStar className="text-yellow-500 text-xs sm:text-sm" />
                     Más Vendida
                   </span>
                 )}
@@ -196,7 +197,7 @@ export default function BrandHero({ brandName, productsCount, minPrice, maxPrice
                 )}
                 {info.country && (
                   <span className="bg-white/20 backdrop-blur-sm text-white px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2 border-2 border-white/30">
-                    <i className="fas fa-globe text-xs sm:text-sm"></i>
+                    <FaGlobe className="text-xs sm:text-sm" />
                     {info.country}
                   </span>
                 )}
@@ -213,7 +214,7 @@ export default function BrandHero({ brandName, productsCount, minPrice, maxPrice
                 <div className="bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/20">
                   <div className="flex items-center gap-2.5 sm:gap-3">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <i className="fas fa-box-open text-lg sm:text-2xl text-white"></i>
+                      <FaBoxOpen className="text-lg sm:text-2xl text-white" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-white/80 text-xs sm:text-sm">Total Productos</p>
@@ -227,7 +228,7 @@ export default function BrandHero({ brandName, productsCount, minPrice, maxPrice
                   <div className="bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/20">
                     <div className="flex items-center gap-2.5 sm:gap-3">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i className="fas fa-tags text-lg sm:text-2xl text-white"></i>
+                        <FaTags className="text-lg sm:text-2xl text-white" />
                       </div>
                       <div className="min-w-0">
                         <p className="text-white/80 text-xs sm:text-sm">Rango de Precios</p>
@@ -253,7 +254,7 @@ export default function BrandHero({ brandName, productsCount, minPrice, maxPrice
       >
         <div className="flex items-start gap-3 sm:gap-4">
           <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${info.gradient} rounded-lg flex items-center justify-center flex-shrink-0 shadow-md`}>
-            <i className="fas fa-info-circle text-lg sm:text-2xl text-white"></i>
+            <FaInfoCircle className="text-lg sm:text-2xl text-white" />
           </div>
           <div className="flex-1 min-w-0">
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">

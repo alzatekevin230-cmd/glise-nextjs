@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { FaListUl } from 'react-icons/fa';
 
 export default function TableOfContents({ content }) {
   const [headings, setHeadings] = useState([]);
@@ -63,7 +64,7 @@ export default function TableOfContents({ content }) {
   return (
     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 shadow-lg border border-blue-100 sticky top-24">
       <div className="flex items-center gap-2 mb-4">
-        <i className="fas fa-list-ul text-blue-600"></i>
+        <FaListUl className="text-blue-600" />
         <h3 className="text-lg font-bold text-gray-900">Contenido del artículo</h3>
       </div>
       

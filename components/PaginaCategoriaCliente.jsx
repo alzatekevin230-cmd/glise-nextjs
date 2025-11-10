@@ -5,9 +5,9 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import TarjetaProducto from '@/components/ProductCard.jsx';
 import Pagination from '@/components/Pagination.jsx';
 import Link from 'next/link';
-import Breadcrumbs from '@/components/Breadcrumbs';
 import CategoryBanners from '@/components/CategoryBanners';
 import PriceFilter from '@/components/PriceFilter';
+import { FaCheck, FaFilter } from 'react-icons/fa';
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
@@ -130,7 +130,7 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
             <input id="brand-search-input" type="text" value={brandSearchTerm} onChange={e => setBrandSearchTerm(e.target.value)} placeholder="Buscar marca..." />
             <div className="filter-options-container space-y-2 mt-3">
               {filteredBrands.map(brand => (
-                <label key={brand} className="filter-checkbox-label"><input type="checkbox" checked={activeBrands.includes(brand)} onChange={() => handleBrandChange(brand)} /><span className="filter-checkbox-span"><i className="fas fa-check"></i></span>{brand}</label>
+                <label key={brand} className="filter-checkbox-label"><input type="checkbox" checked={activeBrands.includes(brand)} onChange={() => handleBrandChange(brand)} /><span className="filter-checkbox-span"><FaCheck /></span>{brand}</label>
               ))}
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
           <div className="p-4">
             <div className="filter-options-container space-y-2">
               {availablePresentations.map(pres => (
-                <label key={pres} className="filter-checkbox-label"><input type="checkbox" checked={activePresentations.includes(pres)} onChange={() => handlePresentationChange(pres)} /><span className="filter-checkbox-span"><i className="fas fa-check"></i></span>{pres}</label>
+                <label key={pres} className="filter-checkbox-label"><input type="checkbox" checked={activePresentations.includes(pres)} onChange={() => handlePresentationChange(pres)} /><span className="filter-checkbox-span"><FaCheck /></span>{pres}</label>
               ))}
             </div>
           </div>
@@ -150,7 +150,7 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
           <div className="p-4">
             <div className="filter-options-container space-y-2">
               {availableUnits.map(unit => (
-                <label key={unit} className="filter-checkbox-label"><input type="checkbox" checked={activeUnits.includes(unit)} onChange={() => handleUnitChange(unit)} /><span className="filter-checkbox-span"><i className="fas fa-check"></i></span>{unit}</label>
+                <label key={unit} className="filter-checkbox-label"><input type="checkbox" checked={activeUnits.includes(unit)} onChange={() => handleUnitChange(unit)} /><span className="filter-checkbox-span"><FaCheck /></span>{unit}</label>
               ))}
             </div>
           </div>
@@ -159,22 +159,12 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
     </aside>
   );
 
-  // Generar breadcrumbs basado en la categoría
-  const breadcrumbItems = [
-    { label: 'Inicio', href: '/' },
-    { label: 'Tienda', href: '/categoria/all' },
-    { label: categoryName === 'all' ? 'Todos los Productos' : categoryName, href: `/categoria/${categoryName}` }
-  ];
-
   return (
     <>
-      {/* Breadcrumbs */}
-      <Breadcrumbs items={breadcrumbItems} />
-
       {/* Botón de filtros móvil */}
       <div className="flex items-center justify-end mb-6 lg:hidden">
         <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
-          <i className="fas fa-filter"></i>
+          <FaFilter />
           <span>{isFilterOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'}</span>
         </button>
       </div>

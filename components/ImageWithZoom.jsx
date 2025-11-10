@@ -4,6 +4,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaSearchPlus, FaExpand } from 'react-icons/fa';
 
 export default function ImageWithZoom({ src, alt, openLightbox, priority = false }) {
     // Estados para DESKTOP (zoom lateral)
@@ -204,9 +205,9 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.3 }}
-                                className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/75 text-white text-xs px-3 py-2 rounded-full whitespace-nowrap pointer-events-none z-10"
+                                className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/75 text-white text-xs px-3 py-2 rounded-full whitespace-nowrap pointer-events-none z-10 flex items-center gap-2"
                             >
-                                <i className="fas fa-search-plus mr-2"></i>
+                                <FaSearchPlus style={{width: '16px', height: '16px'}} />
                                 Toca para zoom
                             </motion.div>
                         )}
@@ -241,7 +242,7 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
                                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                 className="absolute bottom-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-blue-600 pointer-events-none z-10 shadow-lg"
                             >
-                                <i className="fas fa-search-plus text-xl"></i>
+                                <FaSearchPlus style={{width: '24px', height: '24px'}} />
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -257,21 +258,21 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <i className="fas fa-expand"></i>
+                    <FaExpand style={{width: '18px', height: '18px', minWidth: '18px', minHeight: '18px'}} />
                 </motion.button>
 
                 {/* ====== DESKTOP: Hint en la parte superior ====== */}
                 {!isMobile && (
-                    <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/75 text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
-                        <i className="fas fa-search-plus mr-2"></i>
+                    <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/75 text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap flex items-center gap-2">
+                        <FaSearchPlus style={{width: '14px', height: '14px'}} />
                         Pasa el mouse para ampliar
                     </div>
                 )}
 
                 {/* ====== MÓVIL: Hint de "toca para pantalla completa" ====== */}
                 {isMobile && (
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/75 text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
-                        Toca en <i className="fas fa-expand mx-1"></i> para pantalla completa
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/75 text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap flex items-center gap-1">
+                        Toca en <FaExpand className="mx-1" style={{width: '14px', height: '14px'}} /> para pantalla completa
                     </div>
                 )}
             </div>

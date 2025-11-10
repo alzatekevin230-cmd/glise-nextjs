@@ -4,6 +4,7 @@
 import { getProductBySlug, getRelatedProducts, createSlug, getAllProducts } from '@/lib/data.js';
 import DetalleProductoCliente from '@/components/DetalleProductoCliente';
 import { notFound } from 'next/navigation';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 // ISR: Revalidar cada 1 hora (3600 segundos)
 export const revalidate = 3600;
@@ -49,8 +50,11 @@ export default async function PaginaProducto({ params }) {
   }));
   
   return (
-    <main className="container mx-auto px-2 sm:px-6 py-8">
-      <DetalleProductoCliente product={product} relatedProducts={relatedProducts} />
+    <main className="pt-[190px] md:pt-8">
+      <div className="container mx-auto px-2 sm:px-6 py-8">
+        <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: product.category, href: `/categoria/${product.category}` }, { label: product.name }]} />
+        <DetalleProductoCliente product={product} relatedProducts={relatedProducts} />
+      </div>
     </main>
   );
 }

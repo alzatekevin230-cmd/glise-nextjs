@@ -2,6 +2,7 @@
 
 import { getProductsByBrand } from '@/lib/data.js';
 import PaginaMarcaCliente from '@/components/PaginaMarcaCliente.jsx';
+import Breadcrumbs from '@/components/Breadcrumbs.jsx';
 
 // Generar metadata para SEO
 export async function generateMetadata({ params }) {
@@ -45,7 +46,8 @@ export default async function PaginaMarca({ params }) {
   const decodedBrandName = decodeURIComponent(brandName);
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8">
+    <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
+      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: decodedBrandName }]} />
       <PaginaMarcaCliente 
         brandName={decodedBrandName}
         initialProducts={allProducts}

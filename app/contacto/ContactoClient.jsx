@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 
 export default function ContactoClient() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -56,9 +57,9 @@ export default function ContactoClient() {
           <div>
             <h3 className="text-xl font-semibold mb-4">Información de Contacto</h3>
             <div className="space-y-4">
-              <p className="flex items-start"><i className="fas fa-phone-alt w-6 mr-3 text-blue-600 mt-1"></i><span><strong>Teléfono / WhatsApp:</strong><br/>321 797 3158</span></p>
-              <p className="flex items-start"><i className="fas fa-envelope w-6 mr-3 text-blue-600 mt-1"></i><span><strong>Correo Electrónico:</strong><br/>gliseybelleza@gmail.com</span></p>
-              <p className="flex items-start"><i className="fas fa-map-marker-alt w-6 mr-3 text-blue-600 mt-1"></i><span><strong>Ubicación:</strong><br/>Palmira, Valle del Cauca, Colombia</span></p>
+              <p className="flex items-start"><FaPhoneAlt className="w-6 mr-3 text-blue-600 mt-1" /><span><strong>Teléfono / WhatsApp:</strong><br/>321 797 3158</span></p>
+              <p className="flex items-start"><FaEnvelope className="w-6 mr-3 text-blue-600 mt-1" /><span><strong>Correo Electrónico:</strong><br/>gliseybelleza@gmail.com</span></p>
+              <p className="flex items-start"><FaMapMarkerAlt className="w-6 mr-3 text-blue-600 mt-1" /><span><strong>Ubicación:</strong><br/>Palmira, Valle del Cauca, Colombia</span></p>
             </div>
           </div>
 

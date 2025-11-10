@@ -6,6 +6,7 @@ import { useCarrito } from '@/contexto/ContextoCarrito';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
+import { FaTrashAlt } from 'react-icons/fa';
 
 // --- Componente pequeño para la barra de envío gratis ---
 const BarraEnvioGratis = ({ subtotal }) => {
@@ -223,10 +224,11 @@ export default function CarritoModal() {
                     </div>
                     <button 
                       onClick={() => handleRemoveItem(item)} 
-                      className="text-red-500 hover:text-red-700 hover:bg-red-50 w-8 h-8 rounded-lg flex items-center justify-center text-base transition"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg flex items-center justify-center transition"
+                      style={{width: '36px', height: '36px', minWidth: '36px', minHeight: '36px'}}
                       aria-label={`Eliminar ${item.name}`}
                     >
-                      <i className="fas fa-trash-alt"></i>
+                      <FaTrashAlt style={{width: '20px', height: '20px', minWidth: '20px', minHeight: '20px'}} />
                     </button>
                   </div>
                 </div>

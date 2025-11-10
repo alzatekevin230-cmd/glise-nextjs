@@ -7,6 +7,7 @@ import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firesto
 import Breadcrumbs from '@/components/Breadcrumbs';
 import Link from 'next/link';
 import Image from 'next/image';
+import { FaSpinner, FaUserCircle, FaShoppingBag, FaDollarSign, FaStar, FaCalendar, FaHeart, FaClock, FaStore, FaBolt, FaBox, FaTruck, FaUser } from 'react-icons/fa';
 
 
 export default function MiCuentaPage() {
@@ -100,9 +101,9 @@ export default function MiCuentaPage() {
 
   if (loading) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8">
+      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
         <div className="text-center py-20">
-          <i className="fas fa-spinner fa-spin text-3xl text-blue-600"></i>
+          <FaSpinner className="animate-spin text-3xl text-blue-600 mx-auto" />
           <p className="mt-2 text-gray-600">Cargando tu cuenta...</p>
         </div>
       </main>
@@ -116,7 +117,7 @@ export default function MiCuentaPage() {
 
   if (!currentUser) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8">
+      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
         <Breadcrumbs items={breadcrumbItems} />
         <div className="text-center py-16">
           <h1 className="text-2xl font-bold">Inicia sesión para acceder a tu cuenta</h1>
@@ -127,7 +128,7 @@ export default function MiCuentaPage() {
   }
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8">
+    <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
       <Breadcrumbs items={breadcrumbItems} />
       
       <div className="max-w-6xl mx-auto">
@@ -135,7 +136,7 @@ export default function MiCuentaPage() {
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white mb-8">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <i className="fas fa-user-circle text-2xl"></i>
+              <FaUserCircle className="text-2xl" />
             </div>
             <div>
               <h1 className="text-2xl font-bold">¡Hola, {currentUser.displayName?.split(' ')[0] || 'Usuario'}!</h1>
@@ -153,7 +154,7 @@ export default function MiCuentaPage() {
                 <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <i className="fas fa-shopping-bag text-blue-600 text-xl"></i>
+                <FaShoppingBag className="text-blue-600 text-xl" />
               </div>
             </div>
           </div>
@@ -165,7 +166,7 @@ export default function MiCuentaPage() {
                 <p className="text-2xl font-bold text-gray-900">${Math.round(stats.totalSpent).toLocaleString('es-CO')}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <i className="fas fa-dollar-sign text-green-600 text-xl"></i>
+                <FaDollarSign className="text-green-600 text-xl" />
               </div>
             </div>
           </div>
@@ -177,7 +178,7 @@ export default function MiCuentaPage() {
                 <p className="text-lg font-bold text-gray-900">{stats.favoriteCategory}</p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <i className="fas fa-star text-purple-600 text-xl"></i>
+                <FaStar className="text-purple-600 text-xl" />
               </div>
             </div>
           </div>
@@ -197,7 +198,7 @@ export default function MiCuentaPage() {
                 </p>
               </div>
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <i className="fas fa-calendar text-orange-600 text-xl"></i>
+                <FaCalendar className="text-orange-600 text-xl" />
               </div>
             </div>
           </div>
@@ -209,7 +210,7 @@ export default function MiCuentaPage() {
                 <p className="text-2xl font-bold text-gray-900">{stats.totalFavorites}</p>
               </div>
               <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
-                <i className="fas fa-heart text-pink-600 text-xl"></i>
+                <FaHeart className="text-pink-600 text-xl" />
               </div>
             </div>
           </div>
@@ -220,21 +221,21 @@ export default function MiCuentaPage() {
           {/* Pedidos recientes */}
           <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-800 flex items-center">
-                <i className="fas fa-clock text-blue-600 mr-3"></i>
+              <h2 className="text-lg font-bold text-gray-800 flex items-center gap-3">
+                <FaClock className="text-blue-600" />
                 Pedidos Recientes
               </h2>
             </div>
             <div className="p-6">
               {recentOrders.length === 0 ? (
                 <div className="text-center py-8">
-                  <i className="fas fa-shopping-bag text-4xl text-gray-300 mb-4"></i>
+                  <FaShoppingBag className="text-4xl text-gray-300 mb-4 mx-auto" />
                   <p className="text-gray-600 mb-4">Aún no has realizado ningún pedido</p>
                   <Link 
                     href="/categoria/all"
                     className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                   >
-                    <i className="fas fa-store"></i>
+                    <FaStore />
                     Comenzar a Comprar
                   </Link>
                 </div>
@@ -310,8 +311,8 @@ export default function MiCuentaPage() {
           {/* Acciones rápidas */}
           <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-800 flex items-center">
-                <i className="fas fa-bolt text-yellow-600 mr-3"></i>
+              <h2 className="text-lg font-bold text-gray-800 flex items-center gap-3">
+                <FaBolt className="text-yellow-600" />
                 Acciones Rápidas
               </h2>
             </div>
@@ -322,7 +323,7 @@ export default function MiCuentaPage() {
                   className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
                 >
                   <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <i className="fas fa-box text-white"></i>
+                    <FaBox className="text-white" />
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800">Mis Pedidos</p>
@@ -335,7 +336,7 @@ export default function MiCuentaPage() {
                   className="flex items-center gap-4 p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors"
                 >
                   <div className="w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center">
-                    <i className="fas fa-heart text-white"></i>
+                    <FaHeart className="text-white" />
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800">Mis Favoritos</p>
@@ -348,7 +349,7 @@ export default function MiCuentaPage() {
                   className="flex items-center gap-4 p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
                 >
                   <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
-                    <i className="fas fa-truck text-white"></i>
+                    <FaTruck className="text-white" />
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800">Rastrear Pedido</p>
@@ -361,7 +362,7 @@ export default function MiCuentaPage() {
                   className="flex items-center gap-4 p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
                 >
                   <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                    <i className="fas fa-user text-white"></i>
+                    <FaUser className="text-white" />
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800">Mi Perfil</p>

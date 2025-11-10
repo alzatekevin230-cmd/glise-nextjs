@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import SkeletonLoader from './SkeletonLoader';
+import { FaImage } from 'react-icons/fa';
 
 export default function OptimizedImage({ 
   src, 
@@ -48,7 +49,7 @@ export default function OptimizedImage({
     return (
       <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
         <div className="text-gray-400 text-center">
-          <i className="fas fa-image text-2xl mb-2"></i>
+          <FaImage className="text-2xl mb-2 mx-auto" />
           <p className="text-sm">Error al cargar</p>
         </div>
       </div>

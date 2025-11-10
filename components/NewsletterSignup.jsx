@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { FaSpinner } from 'react-icons/fa';
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('');
@@ -73,7 +74,7 @@ export default function NewsletterSignup() {
           >
             {isSubmitting ? (
               <span className="flex items-center gap-2">
-                <i className="fas fa-spinner fa-spin"></i>
+                <FaSpinner className="animate-spin" />
                 Enviando...
               </span>
             ) : (

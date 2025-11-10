@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { FaShareAlt, FaWhatsapp, FaFacebookF, FaTwitter, FaLink, FaCheck } from 'react-icons/fa';
 
 export default function ShareButtons({ title, url }) {
   const [copied, setCopied] = useState(false);
@@ -47,7 +48,7 @@ export default function ShareButtons({ title, url }) {
   return (
     <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 shadow-lg border border-blue-100">
       <div className="flex items-center gap-2 mb-4">
-        <i className="fas fa-share-alt text-blue-600"></i>
+        <FaShareAlt className="text-blue-600" />
         <h3 className="text-lg font-bold text-gray-900">Comparte este artículo</h3>
       </div>
 
@@ -58,7 +59,7 @@ export default function ShareButtons({ title, url }) {
           className="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
           aria-label="Compartir en WhatsApp"
         >
-          <i className="fab fa-whatsapp text-xl"></i>
+          <FaWhatsapp className="text-xl" />
           <span className="text-sm">WhatsApp</span>
         </button>
 
@@ -68,7 +69,7 @@ export default function ShareButtons({ title, url }) {
           className="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
           aria-label="Compartir en Facebook"
         >
-          <i className="fab fa-facebook-f text-xl"></i>
+          <FaFacebookF className="text-xl" />
           <span className="text-sm">Facebook</span>
         </button>
 
@@ -78,7 +79,7 @@ export default function ShareButtons({ title, url }) {
           className="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
           aria-label="Compartir en Twitter"
         >
-          <i className="fab fa-twitter text-xl"></i>
+          <FaTwitter className="text-xl" />
           <span className="text-sm">Twitter</span>
         </button>
 
@@ -92,7 +93,7 @@ export default function ShareButtons({ title, url }) {
           }`}
           aria-label="Copiar enlace"
         >
-          <i className={`fas ${copied ? 'fa-check' : 'fa-link'} text-xl`}></i>
+          {copied ? <FaCheck className="text-xl" /> : <FaLink className="text-xl" />}
           <span className="text-sm">{copied ? 'Copiado' : 'Copiar'}</span>
         </button>
       </div>

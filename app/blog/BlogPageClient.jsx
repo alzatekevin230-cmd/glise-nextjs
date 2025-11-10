@@ -5,6 +5,7 @@ import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import ArticuloBlogCard from '@/components/ArticuloBlogCard';
 import BlogSearchFilter from '@/components/BlogSearchFilter';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function BlogPageClient({ posts }) {
   const [filteredPosts, setFilteredPosts] = useState(posts);
@@ -13,17 +14,14 @@ export default function BlogPageClient({ posts }) {
     setFilteredPosts(filtered);
   }, []);
 
+  const breadcrumbItems = [
+    { label: 'Inicio', href: '/' },
+    { label: 'Blog', href: '/blog' }
+  ];
+
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8">
-      
-      {/* Botón volver */}
-      <Link 
-        href="/" 
-        className="mb-8 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl inline-flex items-center transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-      >
-        <i className="fas fa-arrow-left mr-2"></i>
-        Volver a la tienda
-      </Link>
+    <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
+      <Breadcrumbs items={breadcrumbItems} />
 
       {/* Header del blog */}
       <div className="text-center mb-12 mt-8">

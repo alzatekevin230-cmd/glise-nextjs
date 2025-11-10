@@ -112,13 +112,13 @@ export default function MenuLateral() {
               <>
                 <h3 className="menu-section-title">Mi Cuenta</h3>
                 <p className="px-2 py-1 text-sm text-gray-500">Hola, {currentUser.displayName || currentUser.email}</p>
-                <Link href="/mi-cuenta" onClick={closeMenu} className="menu-link"><FaTachometerAlt />Mi Dashboard</Link>
-                <Link href="/mis-pedidos" onClick={closeMenu} className="menu-link"><FaBox />Mis Pedidos</Link>
-                <Link href="/mis-favoritos" onClick={closeMenu} className="menu-link"><FaHeart />Mis Favoritos</Link>
-                <Link href="/mi-perfil" onClick={closeMenu} className="menu-link"><FaUser />Mi Perfil</Link>
-                <Link href="/rastrear-pedido" onClick={closeMenu} className="menu-link"><FaTruck />Rastrear Pedido</Link>
+                <Link href="/mi-cuenta" onClick={closeMenu} className="menu-link"><FaTachometerAlt className="text-cyan-600" />Mi Dashboard</Link>
+                <Link href="/mis-pedidos" onClick={closeMenu} className="menu-link"><FaBox className="text-blue-600" />Mis Pedidos</Link>
+                <Link href="/mis-favoritos" onClick={closeMenu} className="menu-link"><FaHeart className="text-pink-600" />Mis Favoritos</Link>
+                <Link href="/mi-perfil" onClick={closeMenu} className="menu-link"><FaUser className="text-purple-600" />Mi Perfil</Link>
+                <Link href="/rastrear-pedido" onClick={closeMenu} className="menu-link"><FaTruck className="text-green-600" />Rastrear Pedido</Link>
                 <button onClick={handleLogout} className="menu-link logout-link w-full text-left">
-                  <FaSignOutAlt />Cerrar Sesión
+                  <FaSignOutAlt className="text-red-600" />Cerrar Sesión
                 </button>
               </>
             ) : (

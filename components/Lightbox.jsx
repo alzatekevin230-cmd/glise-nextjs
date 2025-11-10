@@ -5,6 +5,7 @@ import { useModal } from '@/contexto/ContextoModal';
 import Image from 'next/image';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaImages, FaSearchMinus, FaSearchPlus, FaUndo, FaTimes, FaChevronLeft, FaChevronRight, FaArrowsAlt, FaArrowsAltH, FaHandPointer } from 'react-icons/fa';
 
 export default function Lightbox() {
   const { lightboxImage, lightboxImages = [], closeLightbox } = useModal();
@@ -239,8 +240,8 @@ export default function Lightbox() {
               <div className="max-w-7xl mx-auto flex items-center justify-between">
                 {/* Contador de imágenes */}
                 {hasMultipleImages && (
-                  <div className="text-white text-sm font-semibold bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                    <i className="fas fa-images mr-2"></i>
+                  <div className="text-white text-sm font-semibold bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2">
+                    <FaImages style={{width: '16px', height: '16px', minWidth: '16px', minHeight: '16px'}} />
                     {currentIndex + 1} / {lightboxImages.length}
                   </div>
                 )}
@@ -250,42 +251,42 @@ export default function Lightbox() {
                   <button
                     onClick={handleZoomOut}
                     disabled={scale <= MIN_SCALE}
-                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white transition-colors flex items-center justify-center"
+                    className="w-10 h-10 md:w-10 md:h-10 rounded-full bg-white/20 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white transition-colors flex items-center justify-center"
                     title="Alejar (tecla -)"
                   >
-                    <i className="fas fa-search-minus"></i>
+                    <FaSearchMinus style={{width: '20px', height: '20px', minWidth: '20px', minHeight: '20px'}} />
                   </button>
                   
-                  <span className="text-white text-sm font-bold min-w-[60px] text-center">
+                  <span className="text-white text-sm md:text-sm font-bold min-w-[60px] text-center">
                     {Math.round(scale * 100)}%
                   </span>
                   
                   <button
                     onClick={handleZoomIn}
                     disabled={scale >= MAX_SCALE}
-                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white transition-colors flex items-center justify-center"
+                    className="w-10 h-10 md:w-10 md:h-10 rounded-full bg-white/20 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white transition-colors flex items-center justify-center"
                     title="Acercar (tecla +)"
                   >
-                    <i className="fas fa-search-plus"></i>
+                    <FaSearchPlus style={{width: '20px', height: '20px', minWidth: '20px', minHeight: '20px'}} />
                   </button>
                   
                   <button
                     onClick={handleResetZoom}
                     disabled={scale === 1}
-                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white transition-colors flex items-center justify-center"
+                    className="w-10 h-10 md:w-10 md:h-10 rounded-full bg-white/20 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white transition-colors flex items-center justify-center"
                     title="Restablecer (tecla 0)"
                   >
-                    <i className="fas fa-undo"></i>
+                    <FaUndo style={{width: '20px', height: '20px', minWidth: '20px', minHeight: '20px'}} />
                   </button>
                 </div>
 
                 {/* Botón de cerrar */}
                 <button
                   onClick={closeLightbox}
-                  className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-colors flex items-center justify-center text-2xl"
+                  className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-colors flex items-center justify-center"
                   title="Cerrar (ESC)"
                 >
-                  <i className="fas fa-times"></i>
+                  <FaTimes style={{width: '24px', height: '24px', minWidth: '24px', minHeight: '24px'}} />
                 </button>
               </div>
             </motion.div>
@@ -304,10 +305,10 @@ export default function Lightbox() {
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.2 }}
                     onClick={handlePrevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all flex items-center justify-center text-2xl z-20 hover:scale-110"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all flex items-center justify-center z-20 hover:scale-110"
                     title="Anterior (←)"
                   >
-                    <i className="fas fa-chevron-left"></i>
+                    <FaChevronLeft style={{width: '24px', height: '24px', minWidth: '24px', minHeight: '24px'}} />
                   </motion.button>
 
                   <motion.button
@@ -316,10 +317,10 @@ export default function Lightbox() {
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ duration: 0.2 }}
                     onClick={handleNextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all flex items-center justify-center text-2xl z-20 hover:scale-110"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all flex items-center justify-center z-20 hover:scale-110"
                     title="Siguiente (→)"
                   >
-                    <i className="fas fa-chevron-right"></i>
+                    <FaChevronRight style={{width: '24px', height: '24px', minWidth: '24px', minHeight: '24px'}} />
                   </motion.button>
                 </>
               )}
@@ -381,18 +382,18 @@ export default function Lightbox() {
               transition={{ duration: 0.2 }}
               className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-xs sm:text-sm px-4 py-2 rounded-full z-20 flex items-center gap-4"
             >
-              <span className="hidden sm:inline">
-                <i className="fas fa-arrows-alt mr-2"></i>
+              <span className="hidden sm:inline flex items-center gap-2">
+                <FaArrowsAlt style={{width: '14px', height: '14px'}} />
                 Rueda para zoom
               </span>
               {hasMultipleImages && (
-                <span className="hidden sm:inline">
-                  <i className="fas fa-arrows-alt-h mr-2"></i>
+                <span className="hidden sm:inline flex items-center gap-2">
+                  <FaArrowsAltH style={{width: '14px', height: '14px'}} />
                   Flechas para navegar
                 </span>
               )}
-              <span>
-                <i className="fas fa-hand-pointer mr-2"></i>
+              <span className="flex items-center gap-2">
+                <FaHandPointer style={{width: '14px', height: '14px'}} />
                 Doble clic = Zoom 2x
               </span>
             </motion.div>

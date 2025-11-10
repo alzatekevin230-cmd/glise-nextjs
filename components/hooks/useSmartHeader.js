@@ -7,10 +7,16 @@ export function useSmartHeader() {
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
 
+  // Forzar header visible al montar y en cada cambio de ruta, si en top
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.scrollY < 10) {
+      setIsVisible(true);
+    }
+  }, [typeof window !== 'undefined' ? window.location.pathname : '']);
+
   useEffect(() => {
     const handleScroll = () => {
       if (ticking.current) return;
-      
       ticking.current = true;
       requestAnimationFrame(() => {
         const currentScrollY = window.scrollY;

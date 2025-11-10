@@ -6,6 +6,7 @@ import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { FaStar, FaFire, FaEye, FaArrowRight } from 'react-icons/fa';
 
 export default function CategoryBanners({ categoryName, products = [] }) {
   const swiperRef = useRef(null);
@@ -421,9 +422,9 @@ export default function CategoryBanners({ categoryName, products = [] }) {
                       {/* Badge de descuento */}
                       <div className="mb-3 sm:mb-3">
                         <span className={`${categoryColor.badge} text-white px-5 py-2.5 sm:px-8 sm:py-4 md:px-6 md:py-3 rounded-full text-base sm:text-xl md:text-lg font-black shadow-2xl border-2 border-white/30 backdrop-blur-sm inline-flex items-center gap-2 animate-pulse hover:scale-110 transition-transform`}>
-                          <i className="fas fa-star text-yellow-300"></i>
+                          <FaStar className="text-yellow-300" />
                           <span>{banner.title}</span>
-                          <i className="fas fa-fire text-yellow-300"></i>
+                          <FaFire className="text-yellow-300" />
                         </span>
                       </div>
                       
@@ -450,9 +451,9 @@ export default function CategoryBanners({ categoryName, products = [] }) {
                       href={banner.link}
                       className={`${categoryColor.button} text-white px-6 py-3 sm:px-10 sm:py-4 md:px-6 md:py-3 rounded-xl font-black transition-all duration-300 text-center text-sm sm:text-base md:text-sm shadow-2xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:scale-110 hover:-translate-y-1 border-2 border-white/20 backdrop-blur-sm inline-flex items-center gap-2 group`}
                     >
-                      <i className="fas fa-eye"></i>
+                      <FaEye />
                       <span>Ver Producto</span>
-                      <i className="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                      <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
                     </a>
                   </div>
                 </div>

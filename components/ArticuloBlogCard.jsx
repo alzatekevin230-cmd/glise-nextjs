@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { processBlogImageUrl } from '@/lib/imageUtils';
+import { FaCalendar, FaClock, FaArrowRight } from 'react-icons/fa';
 
 // Utilidad para calcular tiempo de lectura (palabras por minuto)
 function calcularTiempoLectura(contenido) {
@@ -79,12 +80,12 @@ export default function ArticuloBlogCard({ post }) {
         {/* Meta info: Fecha y tiempo de lectura */}
         <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
           <div className="flex items-center gap-1">
-            <i className="far fa-calendar text-blue-600"></i>
+            <FaCalendar className="text-blue-600" />
             <span>{fechaFormateada}</span>
           </div>
           <span className="text-gray-300">•</span>
           <div className="flex items-center gap-1">
-            <i className="far fa-clock text-blue-600"></i>
+            <FaClock className="text-blue-600" />
             <span>{tiempoLectura} lectura</span>
           </div>
         </div>
@@ -107,7 +108,7 @@ export default function ArticuloBlogCard({ post }) {
           className="inline-flex items-center gap-2 text-blue-600 font-semibold text-sm mt-auto group/link"
         >
           <span>Leer artículo completo</span>
-          <i className="fas fa-arrow-right text-xs transition-transform duration-200 group-hover/link:translate-x-1"></i>
+          <FaArrowRight className="text-xs transition-transform duration-200 group-hover/link:translate-x-1" />
         </Link>
       </div>
     </article>

@@ -9,14 +9,15 @@ import { app } from '@/lib/firebaseClient';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { useModal } from '@/contexto/ContextoModal';
+import { FaStar, FaRegStar } from 'react-icons/fa';
 
 const Estrellas = ({ rating }) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
-        if (i <= rating) stars.push(<i key={i} className="fas fa-star text-amber-400"></i>);
-        else stars.push(<i key={i} className="far fa-star text-amber-400"></i>);
+        if (i <= rating) stars.push(<FaStar key={i} className="text-amber-400" />);
+        else stars.push(<FaRegStar key={i} className="text-amber-400" />);
     }
-    return <div className="flex">{stars}</div>;
+    return <div className="flex gap-1">{stars}</div>;
 };
 
 export default function ResenasProducto({ productId }) {

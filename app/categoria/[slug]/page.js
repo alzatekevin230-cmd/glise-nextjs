@@ -3,6 +3,7 @@
 // CAMBIO: Importamos getProductsByCategory y createSlug desde lib/data.js
 import { getProductsByCategory, createSlug } from '@/lib/data.js';
 import PaginaCategoriaCliente from '@/components/PaginaCategoriaCliente.jsx';
+import Breadcrumbs from '@/components/Breadcrumbs.jsx';
 
 // ISR: Revalidar cada 30 minutos
 export const revalidate = 1800;
@@ -19,7 +20,8 @@ export default async function PaginaCategoria({ params }) {
   }));
 
   return (
-    <main className="container mx-auto px-2 sm:px-6 py-8">
+    <main className="container mx-auto px-2 sm:px-6 py-8 pt-[190px] md:pt-8">
+      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Tienda', href: '/categoria/all' }, { label: categoryName }]} />
       <PaginaCategoriaCliente 
         initialProducts={productsWithSlugs} 
         categoryName={categoryName} 

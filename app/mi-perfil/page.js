@@ -7,6 +7,7 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { updatePassword, updateProfile, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import toast from 'react-hot-toast';
+import { FaSpinner, FaUser, FaLock } from 'react-icons/fa';
 
 export default function MiPerfilPage() {
   const { currentUser } = useAuth();
@@ -146,9 +147,9 @@ export default function MiPerfilPage() {
 
   if (loading) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8">
+      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
         <div className="text-center py-20">
-          <i className="fas fa-spinner fa-spin text-3xl text-blue-600"></i>
+          <FaSpinner className="animate-spin text-3xl text-blue-600 mx-auto" />
           <p className="mt-2 text-gray-600">Cargando tu perfil...</p>
         </div>
       </main>
@@ -163,7 +164,7 @@ export default function MiPerfilPage() {
 
   if (!currentUser) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8">
+      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
         <Breadcrumbs items={breadcrumbItems} />
         <div className="text-center py-16">
           <h1 className="text-2xl font-bold">Inicia sesión para acceder a tu perfil</h1>
@@ -174,7 +175,7 @@ export default function MiPerfilPage() {
   }
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8">
+    <main className="container mx-auto px-4 sm:px-6 py-8  mt-4">
       <Breadcrumbs items={breadcrumbItems} />
       
       <div className="max-w-4xl mx-auto">
@@ -183,7 +184,7 @@ export default function MiPerfilPage() {
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <i className="fas fa-user text-2xl"></i>
+                <FaUser className="text-2xl" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold">{profileData.name || 'Mi Perfil'}</h1>
@@ -197,24 +198,24 @@ export default function MiPerfilPage() {
             <nav className="flex">
               <button
                 onClick={() => setActiveTab('perfil')}
-                className={`px-6 py-4 font-medium text-sm ${
+                className={`px-6 py-4 font-medium text-sm flex items-center gap-2 ${
                   activeTab === 'perfil'
                     ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <i className="fas fa-user mr-2"></i>
+                <FaUser />
                 Información Personal
               </button>
               <button
                 onClick={() => setActiveTab('password')}
-                className={`px-6 py-4 font-medium text-sm ${
+                className={`px-6 py-4 font-medium text-sm flex items-center gap-2 ${
                   activeTab === 'password'
                     ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <i className="fas fa-lock mr-2"></i>
+                <FaLock />
                 Seguridad
               </button>
             </nav>
