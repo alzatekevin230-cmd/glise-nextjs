@@ -74,7 +74,7 @@ const nextConfig = {
   // ✅ Optimizaciones experimentales
   experimental: {
     optimizePackageImports: ['react-icons', 'framer-motion', 'swiper'],
-    // Deshabilitar CSS chunks innecesarios
+    // Optimizar CSS crítico para mejor rendimiento
     optimizeCss: true,
   },
   
