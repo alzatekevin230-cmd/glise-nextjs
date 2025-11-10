@@ -1967,7 +1967,13 @@ body.menu-open {
   body.header-mobile-hidden main[class*="pt-"],
   body.header-mobile-hidden div[class*="container"][class*="pt-"] {
     padding-top: 1rem !important; /* Solo un pequeño espacio cuando el header está oculto */
-    transition: padding-top 0.3s ease-in-out;
+    transition: padding-top 0.2s ease-out;
+  }
+  
+  /* Cuando el header completo aparece (no está oculto), el padding debe cambiar instantáneamente */
+  body:not(.header-mobile-hidden) main[class*="pt-"],
+  body:not(.header-mobile-hidden) div[class*="container"][class*="pt-"] {
+    transition: padding-top 0s !important;
   }
 }
 

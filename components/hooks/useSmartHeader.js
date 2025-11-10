@@ -12,7 +12,7 @@ export function useSmartHeader() {
     if (typeof window !== 'undefined' && window.scrollY < 10) {
       setIsVisible(true);
     }
-  }, []);
+  }, [typeof window !== 'undefined' ? window.location.pathname : '']);
 
   useEffect(() => {
     const handleScroll = () => {

@@ -47,7 +47,7 @@ export default async function PaginaMarca({ params }) {
 
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: decodedBrandName }]} />
+      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Tienda', href: '/' }, { label: decodedBrandName }]} />
       <PaginaMarcaCliente 
         brandName={decodedBrandName}
         initialProducts={allProducts}

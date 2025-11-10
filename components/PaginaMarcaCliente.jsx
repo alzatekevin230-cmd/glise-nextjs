@@ -6,7 +6,6 @@ import TarjetaProducto from '@/components/ProductCard.jsx';
 import Pagination from '@/components/Pagination.jsx';
 import dynamic from 'next/dynamic';
 import BrandHero from '@/components/BrandHero';
-import Breadcrumbs from '@/components/Breadcrumbs';
 import ProductCarousel from '@/components/ProductCarousel';
 import { FaThLarge, FaCheck, FaFilter, FaFire, FaBoxes, FaSearch } from 'react-icons/fa';
 
@@ -209,13 +208,6 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
   const totalPages = Math.ceil(totalFilteredProducts / productsPerPage);
   const paginatedProducts = sortedAndFilteredProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
 
-  // Breadcrumbs
-  const breadcrumbItems = [
-    { label: 'Inicio', href: '/' },
-    { label: 'Marcas', href: '/' }, // Podrías crear una página de listado de marcas
-    { label: brandName, active: true }
-  ];
-
   // Componente Sidebar
   const Sidebar = () => (
     <aside className="lg:col-span-1 bg-white p-4 rounded-lg shadow h-fit sticky top-32">
@@ -331,11 +323,6 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
 
   return (
     <>
-      {/* Breadcrumbs */}
-      <div className="mb-6">
-        <Breadcrumbs items={breadcrumbItems} />
-      </div>
-
       {/* Botón de filtros móviles */}
       <div className="flex items-center justify-end mb-6 lg:hidden">
         <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
