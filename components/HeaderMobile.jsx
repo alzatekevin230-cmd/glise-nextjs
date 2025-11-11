@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useModal } from '@/contexto/ContextoModal';
@@ -8,7 +8,6 @@ import { useCarrito } from '@/contexto/ContextoCarrito';
 import { useMenuLateral } from '@/contexto/ContextoMenuLateral';
 import { useSearch } from '@/hooks/useSearch';
 import SearchResults from './SearchResults';
-import { useSmartHeader } from './hooks/useSmartHeader';
 import { FaBars, FaShoppingCart, FaTruck, FaGift, FaStar, FaFire } from 'react-icons/fa';
 import { HiSearch } from 'react-icons/hi';
 
@@ -24,7 +23,6 @@ export default function HeaderMobile() {
   const { cart } = useCarrito();
   const { openMenu } = useMenuLateral();
   const { searchTerm, setSearchTerm, suggestions } = useSearch();
-  const { isVisible } = useSmartHeader();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [currentPromoIndex, setCurrentPromoIndex] = useState(0);
 
@@ -41,25 +39,10 @@ export default function HeaderMobile() {
   const currentMessage = promoMessages[currentPromoIndex];
   const Icon = currentMessage.icon;
 
-  // Agregar/quitar clase al body cuando el header está oculto/visible
-  useEffect(() => {
-    if (typeof document !== 'undefined') {
-      if (!isVisible) {
-        document.body.classList.add('header-mobile-hidden');
-      } else {
-        document.body.classList.remove('header-mobile-hidden');
-      }
-    }
-  }, [isVisible]);
-
   return (
     <div
       id="mobile-header"
-      className={
-        `md:hidden w-full fixed top-0 left-0 z-40 transition-all duration-400 ease-in-out ` +
-        (isVisible ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-14 pointer-events-none')
-      }
-      style={{willChange:'transform,opacity'}}
+      className="md:hidden w-full"
     >
       <div className={`${currentMessage.color} text-white text-center text-sm font-semibold py-2 w-full flex items-center justify-center gap-2 transition-colors duration-500 overflow-hidden`}>
         <Icon className="animate-bounce" />

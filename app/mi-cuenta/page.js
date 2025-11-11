@@ -101,10 +101,12 @@ export default function MiCuentaPage() {
 
   if (loading) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
-        <div className="text-center py-20">
-          <FaSpinner className="animate-spin text-3xl text-blue-600 mx-auto" />
-          <p className="mt-2 text-gray-600">Cargando tu cuenta...</p>
+      <main>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          <div className="text-center py-20">
+            <FaSpinner className="animate-spin text-3xl text-blue-600 mx-auto" />
+            <p className="mt-2 text-gray-600">Cargando tu cuenta...</p>
+          </div>
         </div>
       </main>
     );
@@ -117,19 +119,22 @@ export default function MiCuentaPage() {
 
   if (!currentUser) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="text-center py-16">
-          <h1 className="text-2xl font-bold">Inicia sesión para acceder a tu cuenta</h1>
-          <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu dashboard.</p>
+      <main>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          <Breadcrumbs items={breadcrumbItems} />
+          <div className="text-center py-16">
+            <h1 className="text-2xl font-bold">Inicia sesión para acceder a tu cuenta</h1>
+            <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu dashboard.</p>
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
-      <Breadcrumbs items={breadcrumbItems} />
+    <main>
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
       
       <div className="max-w-6xl mx-auto">
         {/* Header de bienvenida */}
@@ -373,6 +378,7 @@ export default function MiCuentaPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </main>
   );

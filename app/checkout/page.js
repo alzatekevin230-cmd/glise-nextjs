@@ -13,21 +13,36 @@ import { doc, getDoc } from "firebase/firestore";
 import { app, db } from '@/lib/firebaseClient';
 import toast from 'react-hot-toast';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { FaShippingFast, FaChevronDown, FaLock, FaUsers, FaStar, FaShieldAlt, FaCheckCircle, FaTrashAlt, FaSpinner } from 'react-icons/fa';
+import { FaShippingFast, FaChevronDown, FaLock, FaUsers, FaStar, FaShieldAlt, FaCheckCircle, FaTrashAlt, FaSpinner, FaExclamationTriangle, FaCheck } from 'react-icons/fa';
 
 // (El resto de tus componentes auxiliares no cambian)
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 const BarraEnvioGratis = ({ subtotal }) => {
     const envioGratisDesde = 250000;
     if (subtotal >= envioGratisDesde) {
-        return <div className="my-6 p-3 bg-green-50 rounded-lg text-center border border-green-200"><p className="text-sm font-semibold text-green-700">✅ ¡Felicidades! Tienes envío gratis.</p></div>;
+        return (
+            <div className="my-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl text-center border border-green-200 shadow-sm">
+                <div className="flex items-center justify-center gap-2">
+                    <FaCheck className="text-green-600 text-lg" />
+                    <p className="text-lg font-bold text-green-700">¡Felicidades! Tienes envío gratis.</p>
+                </div>
+            </div>
+        );
     }
     const restante = envioGratisDesde - subtotal;
     const progreso = Math.min((subtotal / envioGratisDesde) * 100, 100);
     return (
-        <div className="my-6 p-4 bg-gray-50 border rounded-lg">
-            <p className="text-sm font-semibold text-center text-gray-800 mb-2">¡Agrega <span className="font-bold text-blue-600">{formatPrice(restante)}</span> y obtén envío gratis!</p>
-            <div className="w-full bg-gray-300 rounded-full h-2.5"><div className="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style={{ width: `${progreso}%` }}></div></div>
+        <div className="my-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl shadow-sm">
+            <p className="text-sm font-semibold text-center text-gray-800 mb-3">
+                ¡Agrega <span className="font-bold text-blue-600 text-lg">{formatPrice(restante)}</span> y obtén envío gratis!
+            </p>
+            <div className="w-full bg-gray-300 rounded-full h-3 overflow-hidden shadow-inner">
+                <div
+                    className="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full transition-all duration-700 ease-out shadow-sm"
+                    style={{ width: `${progreso}%` }}
+                ></div>
+            </div>
+            <p className="text-xs text-gray-600 text-center mt-2">{Math.round(progreso)}% completado</p>
         </div>
     );
 };
@@ -37,26 +52,33 @@ const PoliticasEnvioAccordion = () => (
     </div>
 );
 
-// Badges de confianza (versión compacta)
+// Badges de confianza mejorados
 const TrustBadges = () => (
-    <div className="my-4 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100 rounded-md">
-        <p className="text-center text-xs font-semibold text-gray-700 mb-2">Compra 100% segura</p>
-        <div className="grid grid-cols-4 gap-2">
-            <div className="flex flex-col items-center text-center">
-                <FaLock className="text-lg text-green-600 mb-1" />
-                <p className="text-[10px] font-medium text-gray-700">SSL</p>
+    <div className="my-6 p-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-200 rounded-xl shadow-sm">
+        <p className="text-center text-sm font-bold text-gray-800 mb-4 flex items-center justify-center gap-2">
+            <FaShieldAlt className="text-blue-600" />
+            Compra 100% segura
+        </p>
+        <div className="grid grid-cols-4 gap-3">
+            <div className="flex flex-col items-center text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <FaLock className="text-xl text-green-600 mb-2" />
+                <p className="text-xs font-semibold text-gray-700">SSL</p>
+                <p className="text-[10px] text-gray-500">Encriptado</p>
             </div>
-            <div className="flex flex-col items-center text-center">
-                <FaUsers className="text-lg text-blue-600 mb-1" />
-                <p className="text-[10px] font-medium text-gray-700">+5K</p>
+            <div className="flex flex-col items-center text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <FaUsers className="text-xl text-blue-600 mb-2" />
+                <p className="text-xs font-semibold text-gray-700">+5K</p>
+                <p className="text-[10px] text-gray-500">Clientes</p>
             </div>
-            <div className="flex flex-col items-center text-center">
-                <FaStar className="text-lg text-yellow-500 mb-1" />
-                <p className="text-[10px] font-medium text-gray-700">4.8/5</p>
+            <div className="flex flex-col items-center text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <FaStar className="text-xl text-yellow-500 mb-2" />
+                <p className="text-xs font-semibold text-gray-700">4.8/5</p>
+                <p className="text-[10px] text-gray-500">Calificación</p>
             </div>
-            <div className="flex flex-col items-center text-center">
-                <FaShieldAlt className="text-lg text-purple-600 mb-1" />
-                <p className="text-[10px] font-medium text-gray-700">Seguro</p>
+            <div className="flex flex-col items-center text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <FaShieldAlt className="text-xl text-purple-600 mb-2" />
+                <p className="text-xs font-semibold text-gray-700">Garantía</p>
+                <p className="text-[10px] text-gray-500">30 días</p>
             </div>
         </div>
     </div>
@@ -227,7 +249,7 @@ export default function CheckoutPage() {
         }
         
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        
+        npm
         // Validación crítica: Si el subtotal es menor a 250000, el envío DEBE estar calculado
         if (subtotal < 250000) {
             if (!formData.cityCode) {
@@ -282,16 +304,55 @@ export default function CheckoutPage() {
 
     if (cart.length === 0 && !isProcessing) return null;
 
-    // Estilos para que react-select se parezca a tus otros campos
+    // Estilos mejorados para react-select
     const customSelectStyles = {
         control: (provided, state) => ({
             ...provided,
-            borderColor: state.isFocused ? '#60a5fa' : '#d1d5db',
-            boxShadow: state.isFocused ? '0 0 0 2px #bfdbfe' : 'none',
-            '&:hover': { borderColor: '#9ca3af' },
-            minHeight: '42px',
+            borderColor: state.isFocused ? '#3b82f6' : '#d1d5db',
+            borderWidth: '1px',
+            borderRadius: '0.5rem',
+            boxShadow: state.isFocused ? '0 0 0 3px rgba(59, 130, 246, 0.1)' : '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+            '&:hover': {
+                borderColor: state.isFocused ? '#3b82f6' : '#9ca3af',
+                boxShadow: state.isFocused ? '0 0 0 3px rgba(59, 130, 246, 0.1)' : '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+            },
+            minHeight: '48px',
+            backgroundColor: 'white',
+            fontSize: '14px',
+            transition: 'all 0.2s ease-in-out',
         }),
-        placeholder: (provided) => ({ ...provided, color: '#6b7280' }),
+        placeholder: (provided) => ({
+            ...provided,
+            color: '#9ca3af',
+            fontSize: '14px'
+        }),
+        singleValue: (provided) => ({
+            ...provided,
+            color: '#374151',
+            fontSize: '14px'
+        }),
+        input: (provided) => ({
+            ...provided,
+            fontSize: '14px'
+        }),
+        menu: (provided) => ({
+            ...provided,
+            borderRadius: '0.5rem',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            zIndex: 9999,
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#eff6ff' : 'white',
+            color: state.isSelected ? 'white' : '#374151',
+            fontSize: '14px',
+            padding: '12px 16px',
+            cursor: 'pointer',
+            '&:active': {
+                backgroundColor: state.isSelected ? '#2563eb' : '#dbeafe',
+            },
+        }),
     };
 
     const breadcrumbItems = [
@@ -302,7 +363,7 @@ export default function CheckoutPage() {
 
     return (
         <>
-            <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 pb-24 lg:pb-8">
+            <main className="container mx-auto px-2 sm:px-6 py-8">
                 <Breadcrumbs items={breadcrumbItems} />
                 <h1 className="text-3xl font-bold text-center mb-8 mt-6">Finalizar Compra</h1>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-12" noValidate>
@@ -324,24 +385,61 @@ export default function CheckoutPage() {
                                 </p>
                             </div>
                         )}
-                        <h3 className="text-2xl font-semibold mb-6">Detalles de facturación</h3>
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">Nombre *</label>
-                                    <input type="text" id="firstName" name="given-name" autoComplete="given-name" value={formData.firstName} onChange={handleInputChange} className="mt-1 block w-full border rounded-md shadow-sm p-2" />
-                                    {touched.firstName && errors.firstName && <span className="text-red-600 text-sm mt-1">{errors.firstName}</span>}
+                        <h3 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+                            <FaCheck className="text-blue-600" />
+                            Detalles de facturación
+                        </h3>
+                        <div className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label htmlFor="firstName" className="block text-sm font-semibold text-gray-700">
+                                        Nombre *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="firstName"
+                                        name="given-name"
+                                        autoComplete="given-name"
+                                        value={formData.firstName}
+                                        onChange={handleInputChange}
+                                        className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        placeholder="Ingresa tu nombre"
+                                    />
+                                    {touched.firstName && errors.firstName && (
+                                        <span className="text-red-600 text-sm flex items-center gap-1">
+                                            <FaExclamationTriangle />
+                                            {errors.firstName}
+                                        </span>
+                                    )}
                                 </div>
-                                <div>
-                                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Apellidos *</label>
-                                    <input type="text" id="lastName" name="family-name" autoComplete="family-name" value={formData.lastName} onChange={handleInputChange} className="mt-1 block w-full border rounded-md shadow-sm p-2" />
-                                    {touched.lastName && errors.lastName && <span className="text-red-600 text-sm mt-1">{errors.lastName}</span>}
+                                <div className="space-y-2">
+                                    <label htmlFor="lastName" className="block text-sm font-semibold text-gray-700">
+                                        Apellidos *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="lastName"
+                                        name="family-name"
+                                        autoComplete="family-name"
+                                        value={formData.lastName}
+                                        onChange={handleInputChange}
+                                        className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        placeholder="Ingresa tus apellidos"
+                                    />
+                                    {touched.lastName && errors.lastName && (
+                                        <span className="text-red-600 text-sm flex items-center gap-1">
+                                            <FaExclamationTriangle />
+                                            {errors.lastName}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                             
                             {/* CAMPO DE DEPARTAMENTO CON REACT-SELECT */}
-                            <div className="mt-1">
-                                <label htmlFor="state" className="block text-sm font-medium text-gray-700">Departamento *</label>
+                            <div className="space-y-2">
+                                <label htmlFor="state" className="block text-sm font-semibold text-gray-700">
+                                    Departamento *
+                                </label>
                                 <Select
                                     inputId="state"
                                     name="state"
@@ -354,12 +452,19 @@ export default function CheckoutPage() {
                                     styles={customSelectStyles}
                                     noOptionsMessage={() => "No hay departamentos"}
                                 />
-                                {touched.state && errors.state && <span className="text-red-600 text-sm mt-1">{errors.state}</span>}
+                                {touched.state && errors.state && (
+                                    <span className="text-red-600 text-sm flex items-center gap-1">
+                                        <FaExclamationTriangle />
+                                        {errors.state}
+                                    </span>
+                                )}
                             </div>
 
                             {/* CAMPO DE CIUDAD CON REACT-SELECT */}
-                            <div className="mt-1">
-                                <label htmlFor="city" className="block text-sm font-medium text-gray-700">Localidad / Ciudad *</label>
+                            <div className="space-y-2">
+                                <label htmlFor="city" className="block text-sm font-semibold text-gray-700">
+                                    Localidad / Ciudad *
+                                </label>
                                 <Select
                                     inputId="city"
                                     name="city"
@@ -373,66 +478,317 @@ export default function CheckoutPage() {
                                     styles={customSelectStyles}
                                     noOptionsMessage={() => formData.state ? "No hay ciudades para este departamento" : "Selecciona un departamento primero"}
                                 />
-                                {touched.cityCode && errors.cityCode && <span className="text-red-600 text-sm mt-1">{errors.cityCode}</span>}
+                                {touched.cityCode && errors.cityCode && (
+                                    <span className="text-red-600 text-sm flex items-center gap-1">
+                                        <FaExclamationTriangle />
+                                        {errors.cityCode}
+                                    </span>
+                                )}
                             </div>
                             
-                            {/* ... Resto de tu formulario no cambia ... */}
-                            <div>
-                                <label htmlFor="address" className="block text-sm font-medium text-gray-700">Dirección *</label>
-                                <input type="text" id="address" autoComplete="street-address" placeholder="Ej: Calle 5 # 10-20, Apto 301" value={formData.address} onChange={handleInputChange} className="mt-1 block w-full border rounded-md shadow-sm p-2" />
-                                {touched.address && errors.address && <span className="text-red-600 text-sm mt-1">{errors.address}</span>}
+                            {/* Dirección */}
+                            <div className="space-y-2">
+                                <label htmlFor="address" className="block text-sm font-semibold text-gray-700">
+                                    Dirección *
+                                </label>
+                                <input
+                                    type="text"
+                                    id="address"
+                                    autoComplete="street-address"
+                                    placeholder="Ej: Calle 5 # 10-20, Apto 301"
+                                    value={formData.address}
+                                    onChange={handleInputChange}
+                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                />
+                                {touched.address && errors.address && (
+                                    <span className="text-red-600 text-sm flex items-center gap-1">
+                                        <FaExclamationTriangle />
+                                        {errors.address}
+                                    </span>
+                                )}
                             </div>
-                            <div>
-                                <label htmlFor="neighborhood" className="block text-sm font-medium text-gray-700">Barrio (opcional)</label>
-                                <input type="text" id="neighborhood" autoComplete="address-level3" placeholder="Ej: El Prado" value={formData.neighborhood} onChange={handleInputChange} className="mt-1 block w-full border rounded-md shadow-sm p-2" />
+
+                            {/* Barrio */}
+                            <div className="space-y-2">
+                                <label htmlFor="neighborhood" className="block text-sm font-semibold text-gray-700">
+                                    Barrio (opcional)
+                                </label>
+                                <input
+                                    type="text"
+                                    id="neighborhood"
+                                    autoComplete="address-level3"
+                                    placeholder="Ej: El Prado"
+                                    value={formData.neighborhood}
+                                    onChange={handleInputChange}
+                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                />
                             </div>
-                            <div>
-                                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Teléfono *</label>
-                                <input type="tel" id="phone" autoComplete="tel" value={formData.phone} onChange={handleInputChange} className="mt-1 block w-full border rounded-md shadow-sm p-2" />
-                                {touched.phone && errors.phone && <span className="text-red-600 text-sm mt-1">{errors.phone}</span>}
+
+                            {/* Teléfono */}
+                            <div className="space-y-2">
+                                <label htmlFor="phone" className="block text-sm font-semibold text-gray-700">
+                                    Teléfono *
+                                </label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    autoComplete="tel"
+                                    placeholder="Ingresa tu número de teléfono"
+                                    value={formData.phone}
+                                    onChange={handleInputChange}
+                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                />
+                                {touched.phone && errors.phone && (
+                                    <span className="text-red-600 text-sm flex items-center gap-1">
+                                        <FaExclamationTriangle />
+                                        {errors.phone}
+                                    </span>
+                                )}
                             </div>
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo electrónico *</label>
-                                <input type="email" id="email" autoComplete="email" value={formData.email} onChange={handleInputChange} className="mt-1 block w-full border rounded-md shadow-sm p-2" />
-                                {touched.email && errors.email && <span className="text-red-600 text-sm mt-1">{errors.email}</span>}
+
+                            {/* Correo electrónico */}
+                            <div className="space-y-2">
+                                <label htmlFor="email" className="block text-sm font-semibold text-gray-700">
+                                    Correo electrónico *
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    autoComplete="email"
+                                    placeholder="tu@email.com"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                />
+                                {touched.email && errors.email && (
+                                    <span className="text-red-600 text-sm flex items-center gap-1">
+                                        <FaExclamationTriangle />
+                                        {errors.email}
+                                    </span>
+                                )}
                             </div>
-                            <div>
-                                <label htmlFor="orderNotes" className="block text-sm font-medium text-gray-700">Notas del pedido (opcional)</label>
-                                <textarea id="orderNotes" value={formData.orderNotes} onChange={handleInputChange} rows="4" placeholder="Notas sobre tu pedido, ej. Dejar en portería, etc." className="mt-1 block w-full border rounded-md shadow-sm p-2"></textarea>
+
+                            {/* Notas del pedido */}
+                            <div className="space-y-2">
+                                <label htmlFor="orderNotes" className="block text-sm font-semibold text-gray-700">
+                                    Notas del pedido (opcional)
+                                </label>
+                                <textarea
+                                    id="orderNotes"
+                                    value={formData.orderNotes}
+                                    onChange={handleInputChange}
+                                    rows="4"
+                                    placeholder="Notas sobre tu pedido, ej. Dejar en portería, etc."
+                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                                />
                             </div>
                             <PoliticasEnvioAccordion />
                         </div>
                     </div>
                     
-                    {/* La columna de la derecha (resumen de pedido) no necesita cambios */}
-                    <div className="bg-white p-6 rounded-lg shadow-lg border">
-                        <h3 className="text-2xl font-semibold mb-6">Tu pedido</h3>
-                        <div className="space-y-4">{cart.map(item=>(<div key={item.id} className="py-4 border-b"><div className="flex items-start justify-between gap-4"><div className="flex items-start gap-4 flex-grow"><div className="relative aspect-square w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0"><Image src={item.image||item.images?.[0]} alt={item.name} fill className="object-contain"/></div><div className="flex-grow"><p className="font-semibold text-gray-800 leading-tight text-sm">{item.name}</p><p className="text-sm text-gray-600 mt-1">{formatPrice(item.price)}</p></div></div><button type="button" onClick={()=>removeFromCart(item.id)} className="text-gray-400 hover:text-red-600 text-lg transition-colors flex-shrink-0 ml-2"><FaTrashAlt /></button></div><div className="flex items-center justify-between mt-4"><div className="flex items-center border rounded-md"><button type="button" onClick={()=>updateQuantity(item.id,item.quantity-1)} disabled={item.quantity<=1} className="px-3 py-1 text-lg font-semibold text-gray-600 hover:bg-gray-100 rounded-l-md disabled:opacity-50">-</button><span className="px-3 py-1 font-semibold text-center w-10">{item.quantity}</span><button type="button" onClick={()=>updateQuantity(item.id,item.quantity+1)} className="px-3 py-1 text-lg font-semibold text-gray-600 hover:bg-gray-100 rounded-r-md">+</button></div><p className="font-semibold text-right">{formatPrice(item.price*item.quantity)}</p></div></div>))}</div>
-                        <div className="mt-6 border-t pt-4 space-y-2"><div className="flex justify-between"><span>Subtotal</span><span className="font-semibold">{formatPrice(subtotal)}</span></div><div className="pb-4 border-b">{subtotal>=250000?(<div className="flex justify-between items-center shipping-cost-item"><span className="font-medium">Envío</span><span className="font-semibold text-green-600">Gratis</span></div>):formData.cityCode?(shippingCost>0?(<div className="flex justify-between items-center shipping-cost-item"><div><span className="font-medium text-gray-800">Envío con Coordinadora</span><p className="text-sm text-gray-500">{deliveryDays} días hábiles (aprox)</p></div><span className="font-semibold text-gray-900">{formatPrice(shippingCost)}</span></div>):(<div className="flex justify-between items-center text-gray-500 animate-pulse"><span className="flex items-center gap-2"><FaSpinner className="animate-spin" />Calculando...</span></div>)):(<div className="flex justify-between items-center text-gray-500"><span>Envío</span><span>Selecciona una ciudad</span></div>)}</div><div className="flex justify-between text-xl font-bold pt-2 mt-2"><span>Total</span><span>{formatPrice(total)}</span></div></div>
-                        <BarraEnvioGratis subtotal={subtotal}/>
-                        <div className="mt-6 border-t pt-4"><div className="p-4 border rounded-lg bg-gray-50"><label className="font-semibold flex items-center"><input type="radio" name="payment_method" value="wompi" className="mr-2" defaultChecked/>Wompi (Tarjetas, PSE, Nequi, etc.)</label><div className="mt-3 p-4 bg-white rounded-md border"><p className="text-sm text-gray-600 mb-4">Paga con tu tarjeta de crédito, débito, PSE, Nequi, Bancolombia, Daviplata y más a través de Wompi. Tu pago es 100% seguro.</p><Image src="/imagenespagina/logodewompi.webp" alt="Métodos de pago Wompi" width={400} height={80} className="w-full max-w-sm mx-auto object-contain"/></div></div></div>
+                    {/* Resumen de pedido mejorado */}
+                    <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-xl border border-gray-200">
+                        <h3 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+                            <FaLock className="text-green-600" />
+                            Tu pedido
+                        </h3>
+
+                        {/* Lista de productos mejorada */}
+                        <div className="space-y-4 mb-6">
+                            {cart.map(item => (
+                                <div key={item.id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transition-all hover:shadow-md">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div className="flex items-start gap-4 flex-grow">
+                                            <div className="relative aspect-square w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                                                <Image
+                                                    src={item.image || item.images?.[0]}
+                                                    alt={item.name}
+                                                    fill
+                                                    className="object-contain"
+                                                />
+                                            </div>
+                                            <div className="flex-grow min-w-0">
+                                                <p className="font-semibold text-gray-800 leading-tight text-sm line-clamp-2">{item.name}</p>
+                                                <p className="text-sm text-gray-600 mt-1">{formatPrice(item.price)}</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeFromCart(item.id)}
+                                            className="text-gray-400 hover:text-red-600 text-lg transition-colors flex-shrink-0 ml-2 p-1 hover:bg-red-50 rounded"
+                                            aria-label={`Eliminar ${item.name}`}
+                                        >
+                                            <FaTrashAlt />
+                                        </button>
+                                    </div>
+
+                                    {/* Controles de cantidad mejorados */}
+                                    <div className="flex items-center justify-between mt-4">
+                                        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                                            <button
+                                                type="button"
+                                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                disabled={item.quantity <= 1}
+                                                className="px-3 py-2 text-lg font-semibold text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                                aria-label="Disminuir cantidad"
+                                            >
+                                                -
+                                            </button>
+                                            <span className="px-4 py-2 font-semibold text-center min-w-[3rem] bg-gray-50">{item.quantity}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                className="px-3 py-2 text-lg font-semibold text-gray-600 hover:bg-gray-100 transition-colors"
+                                                aria-label="Aumentar cantidad"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                        <p className="font-bold text-gray-900">{formatPrice(item.price * item.quantity)}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Resumen de costos mejorado */}
+                        <div className="border-t border-gray-200 pt-4 space-y-3">
+                            <div className="flex justify-between text-gray-700">
+                                <span>Subtotal</span>
+                                <span className="font-semibold">{formatPrice(subtotal)}</span>
+                            </div>
+
+                            <div className="pb-4 border-b border-gray-200">
+                                {subtotal >= 250000 ? (
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-medium text-gray-800">Envío</span>
+                                        <span className="font-bold text-green-600">¡Gratis!</span>
+                                    </div>
+                                ) : formData.cityCode ? (
+                                    shippingCost > 0 ? (
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <span className="font-medium text-gray-800">Envío con Coordinadora</span>
+                                                <p className="text-sm text-gray-500">{deliveryDays} días hábiles (aprox)</p>
+                                            </div>
+                                            <span className="font-semibold text-gray-900">{formatPrice(shippingCost)}</span>
+                                        </div>
+                                    ) : (
+                                        <div className="flex justify-between items-center text-gray-500 animate-pulse">
+                                            <span className="flex items-center gap-2">
+                                                <FaSpinner className="animate-spin" />
+                                                Calculando envío...
+                                            </span>
+                                        </div>
+                                    )
+                                ) : (
+                                    <div className="flex justify-between items-center text-gray-500">
+                                        <span>Envío</span>
+                                        <span>Selecciona una ciudad</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-300">
+                                <span>Total</span>
+                                <span className="text-blue-600">{formatPrice(total)}</span>
+                            </div>
+                        </div>
+
+                        <BarraEnvioGratis subtotal={subtotal} />
+
+                        {/* Método de pago mejorado */}
+                        <div className="mt-6 border-t pt-4">
+                            <div className="p-4 border border-gray-200 rounded-xl bg-gradient-to-r from-gray-50 to-white shadow-sm">
+                                <label className="font-bold flex items-center text-gray-800">
+                                    <input type="radio" name="payment_method" value="wompi" className="mr-3 w-4 h-4 text-blue-600" defaultChecked />
+                                    <span className="flex items-center gap-2">
+                                        <FaLock className="text-green-600" />
+                                        Wompi (Tarjetas, PSE, Nequi, etc.)
+                                    </span>
+                                </label>
+                                <div className="mt-4 p-4 bg-white rounded-lg border border-gray-100">
+                                    <p className="text-sm text-gray-600 mb-4">Paga con tu tarjeta de crédito, débito, PSE, Nequi, Bancolombia, Daviplata y más a través de Wompi. Tu pago es 100% seguro.</p>
+                                    <Image
+                                        src="/imagenespagina/logodewompi.webp"
+                                        alt="Métodos de pago Wompi"
+                                        width={400}
+                                        height={80}
+                                        className="w-full max-w-sm mx-auto object-contain rounded"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         <TrustBadges />
-                        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg"><p className="text-sm text-gray-700">Tus datos personales se utilizarán para procesar tu pedido, mejorar tu experiencia en esta web y otros propósitos descritos en nuestra <Link href="/politicas" className="text-blue-600 font-semibold hover:underline">política de privacidad</Link>.</p></div>
-                        <div className="mt-6"><label htmlFor="terms" className="flex items-center text-sm"><input type="checkbox" id="terms" checked={termsAccepted} onChange={(e)=>setTermsAccepted(e.target.checked)} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"/><span className="ml-2 text-gray-700">He leído y estoy de acuerdo con los <Link href="/politicas" className="text-blue-600 hover:underline">términos y condiciones</Link> de la web *</span></label>{errors.terms&&<span className="text-red-600 text-sm mt-1">{errors.terms}</span>}</div>
-                        <button 
-                            type="submit" 
-                            disabled={!canSubmit} 
-                            className="w-full mt-4 bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition text-lg disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+
+                        {/* Aviso de privacidad mejorado */}
+                        <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
+                            <div className="flex items-start gap-2">
+                                <FaExclamationTriangle className="text-blue-600 mt-0.5 flex-shrink-0" />
+                                <p className="text-sm text-gray-700">
+                                    Tus datos personales se utilizarán para procesar tu pedido, mejorar tu experiencia en esta web y otros propósitos descritos en nuestra{' '}
+                                    <Link href="/politicas" className="text-blue-600 font-semibold hover:underline">
+                                        política de privacidad
+                                    </Link>.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Términos y condiciones mejorados */}
+                        <div className="mt-6">
+                            <label htmlFor="terms" className="flex items-start text-sm cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    id="terms"
+                                    checked={termsAccepted}
+                                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-0.5 mr-3 flex-shrink-0"
+                                />
+                                <span className="text-gray-700">
+                                    He leído y estoy de acuerdo con los{' '}
+                                    <Link href="/politicas" className="text-blue-600 font-semibold hover:underline">
+                                        términos y condiciones
+                                    </Link>{' '}
+                                    de la web *
+                                </span>
+                            </label>
+                            {errors.terms && <span className="text-red-600 text-sm mt-2 block">{errors.terms}</span>}
+                        </div>
+
+                        {/* Botón de pago mejorado */}
+                        <button
+                            type="submit"
+                            disabled={!canSubmit}
+                            className="w-full mt-6 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-4 px-6 rounded-xl hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-3"
                             title={!canSubmit && subtotal < 250000 && !shippingCalculated ? 'Espera mientras se calcula el costo de envío' : ''}
                         >
                             {isProcessing ? (
-                                <><FaSpinner className="animate-spin" /><span>Procesando...</span></>
+                                <>
+                                    <FaSpinner className="animate-spin" />
+                                    <span>Procesando pedido...</span>
+                                </>
                             ) : isCalculatingShipping ? (
-                                <><FaSpinner className="animate-spin" /><span>Calculando envío...</span></>
+                                <>
+                                    <FaSpinner className="animate-spin" />
+                                    <span>Calculando envío...</span>
+                                </>
                             ) : !canSubmit && subtotal < 250000 ? (
-                                <><FaSpinner className="animate-spin" /><span>Espera el cálculo de envío...</span></>
+                                <>
+                                    <FaSpinner className="animate-spin" />
+                                    <span>Espera el cálculo...</span>
+                                </>
                             ) : (
-                                'REALIZAR EL PEDIDO'
+                                <>
+                                    <FaLock />
+                                    <span>REALIZAR PEDIDO</span>
+                                </>
                             )}
                         </button>
+
                         {subtotal < 250000 && !shippingCalculated && formData.cityCode && (
-                            <p className="text-sm text-amber-600 mt-2 text-center">
-                                ⏳ Calculando el costo de envío. Por favor espera...
+                            <p className="text-sm text-amber-600 mt-3 text-center flex items-center justify-center gap-2">
+                                <FaSpinner className="animate-spin" />
+                                Calculando costo de envío...
                             </p>
                         )}
                     </div>

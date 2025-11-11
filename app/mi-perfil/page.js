@@ -147,10 +147,12 @@ export default function MiPerfilPage() {
 
   if (loading) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
-        <div className="text-center py-20">
-          <FaSpinner className="animate-spin text-3xl text-blue-600 mx-auto" />
-          <p className="mt-2 text-gray-600">Cargando tu perfil...</p>
+      <main>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          <div className="text-center py-20">
+            <FaSpinner className="animate-spin text-3xl text-blue-600 mx-auto" />
+            <p className="mt-2 text-gray-600">Cargando tu perfil...</p>
+          </div>
         </div>
       </main>
     );
@@ -164,19 +166,22 @@ export default function MiPerfilPage() {
 
   if (!currentUser) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="text-center py-16">
-          <h1 className="text-2xl font-bold">Inicia sesión para acceder a tu perfil</h1>
-          <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu información personal.</p>
+      <main>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          <Breadcrumbs items={breadcrumbItems} />
+          <div className="text-center py-16">
+            <h1 className="text-2xl font-bold">Inicia sesión para acceder a tu perfil</h1>
+            <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu información personal.</p>
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8  mt-4">
-      <Breadcrumbs items={breadcrumbItems} />
+    <main>
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
       
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
@@ -380,6 +385,7 @@ export default function MiPerfilPage() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </main>
   );

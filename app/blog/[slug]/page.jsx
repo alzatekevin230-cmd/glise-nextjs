@@ -100,9 +100,10 @@ export default async function PaginaArticulo({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
 
-      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-        {/* Breadcrumbs */}
-        <Breadcrumbs items={breadcrumbItems} />
+      <main>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          {/* Breadcrumbs */}
+          <Breadcrumbs items={breadcrumbItems} />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
@@ -200,6 +201,7 @@ export default async function PaginaArticulo({ params }) {
           <ArticulosRelacionadosBlog posts={relatedPosts} />
         </div>
 
+        </div>
       </main>
     </>
   );

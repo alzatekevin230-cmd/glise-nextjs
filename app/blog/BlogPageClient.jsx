@@ -20,8 +20,9 @@ export default function BlogPageClient({ posts }) {
   ];
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-      <Breadcrumbs items={breadcrumbItems} />
+    <main>
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
 
       {/* Header del blog */}
       <div className="text-center mb-12 mt-8">
@@ -67,6 +68,7 @@ export default function BlogPageClient({ posts }) {
           <p className="text-gray-600">Estamos preparando contenido increíble para ti</p>
         </div>
       )}
+      </div>
     </main>
   );
 }

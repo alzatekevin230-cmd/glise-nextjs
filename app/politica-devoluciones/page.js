@@ -13,8 +13,9 @@ export default function PoliticaDevolucionesPage() {
   ];
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-      <Breadcrumbs items={breadcrumbItems} />
+    <main>
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
       <div className="flex justify-center mb-7 mt-4">
         <div className="w-full md:max-w-2xl rounded-xl bg-green-50 border border-green-200 shadow flex items-center gap-4 px-5 py-4">
           <FaShieldAlt className="text-green-500 text-3xl shrink-0"/>
@@ -82,6 +83,7 @@ export default function PoliticaDevolucionesPage() {
         <div className="text-sm text-center text-gray-400">
           <span>¿Quieres saber sobre otras políticas? <a className="underline text-blue-700 font-semibold ml-1" href="/politicas">Lee todas las políticas de la tienda →</a></span>
         </div>
+      </div>
       </div>
     </main>
   );

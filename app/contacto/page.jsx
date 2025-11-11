@@ -22,5 +22,5 @@ export const metadata = {
 import ContactoClient from './ContactoClient';
 
 export default function ContactoPage() {
-  return <main className="pt-[190px] md:pt-8"><div className="mt-4"><ContactoClient /></div></main>;
+  return <main><div className="container mx-auto px-4 sm:px-6 py-8"><ContactoClient /></div></main>;
 }

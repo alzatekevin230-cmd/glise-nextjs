@@ -60,8 +60,9 @@ export default function RastrearPedidoPage() {
   ];
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-      <Breadcrumbs items={breadcrumbItems} />
+    <main>
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
 
       {/* Si no se ha buscado, muestra el formulario */}
       {!orderData && (
@@ -279,6 +280,7 @@ export default function RastrearPedidoPage() {
           </div>
         </div>
       )}
+      </div>
     </main>
   );
 }

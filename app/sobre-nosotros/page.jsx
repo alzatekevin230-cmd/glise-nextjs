@@ -22,11 +22,11 @@ export default function SobreNosotrosPage() {
   ];
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-      <Breadcrumbs items={breadcrumbItems} />
-      <main className="mt-8 mt-4">{/* mt-4 para el margen visual bajo header mobile */}
+    <main>
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
         <SobreNosotrosClient />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

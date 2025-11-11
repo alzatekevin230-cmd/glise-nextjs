@@ -215,10 +215,12 @@ export default function MisPedidosPage() {
 
   if (loading) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
-        <div className="text-center py-20">
-          <FaSpinner className="animate-spin text-3xl text-cyan-600 mx-auto" />
-          <p className="mt-4 text-gray-600 font-medium">Cargando tus pedidos...</p>
+      <main>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          <div className="text-center py-20">
+            <FaSpinner className="animate-spin text-3xl text-cyan-600 mx-auto" />
+            <p className="mt-4 text-gray-600 font-medium">Cargando tus pedidos...</p>
+          </div>
         </div>
       </main>
     );
@@ -232,19 +234,22 @@ export default function MisPedidosPage() {
 
   if (!currentUser) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8 mt-4">
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="text-center py-16">
-          <h1 className="text-2xl font-bold text-gray-800">Inicia sesión para ver tus pedidos</h1>
-          <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu historial de compras.</p>
+      <main>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          <Breadcrumbs items={breadcrumbItems} />
+          <div className="text-center py-16">
+            <h1 className="text-2xl font-bold text-gray-800">Inicia sesión para ver tus pedidos</h1>
+            <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu historial de compras.</p>
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8  mt-4">
-      <Breadcrumbs items={breadcrumbItems} />
+    <main>
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
       
       {/* Header con título */}
       <div className="mb-8 mt-6">
@@ -434,6 +439,7 @@ export default function MisPedidosPage() {
           })}
         </div>
       )}
+      </div>
     </main>
   );
 }

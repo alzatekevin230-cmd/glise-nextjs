@@ -122,10 +122,12 @@ export default function MisFavoritosPage() {
 
   if (loading) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-        <div className="text-center py-20">
-          <FaSpinner className="animate-spin text-3xl text-blue-600 mx-auto" />
-          <p className="mt-2 text-gray-600">Cargando tus favoritos...</p>
+      <main>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          <div className="text-center py-20">
+            <FaSpinner className="animate-spin text-3xl text-blue-600 mx-auto" />
+            <p className="mt-2 text-gray-600">Cargando tus favoritos...</p>
+          </div>
         </div>
       </main>
     );
@@ -139,19 +141,22 @@ export default function MisFavoritosPage() {
 
   if (!currentUser) {
     return (
-      <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="text-center py-16">
-          <h1 className="text-2xl font-bold">Inicia sesión para ver tus favoritos</h1>
-          <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu lista de productos favoritos.</p>
+      <main>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          <Breadcrumbs items={breadcrumbItems} />
+          <div className="text-center py-16">
+            <h1 className="text-2xl font-bold">Inicia sesión para ver tus favoritos</h1>
+            <p className="mt-2 text-gray-600">Debes tener una cuenta para acceder a tu lista de productos favoritos.</p>
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-      <Breadcrumbs items={breadcrumbItems} />
+    <main>
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
       
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
@@ -272,6 +277,7 @@ export default function MisFavoritosPage() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </main>
   );

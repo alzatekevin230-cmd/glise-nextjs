@@ -1906,6 +1906,23 @@ body.menu-open {
     color: #1f2937; /* casi negro */
     background-color: #fff;
 }
+
+/* Mobile: Más espacio para el selector de cantidad */
+@media (max-width: 767px) {
+    .quantity-input {
+        width: 70px;
+        font-size: 1rem; /* 16px */
+        padding: 0.875rem 0;
+        min-height: 48px;
+    }
+
+    .quantity-btn {
+        padding: 0.75rem 1rem;
+        font-size: 1.25rem; /* 20px */
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
 @layer utilities {
   .line-clamp-2 {
     overflow: hidden;
@@ -1962,12 +1979,24 @@ body.menu-open {
    ================================================================== */
 
 @media (max-width: 767px) {
+  /* HEADER MOBILE: SIN TRANSICIONES, CAMBIO INSTANTÁNEO */
+  #mobile-header {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  #mobile-header * {
+    transition: none !important;
+    animation: none !important;
+  }
+  
   /* Cuando el header mobile está oculto, reducir el padding-top para eliminar el espacio gris */
   /* Solo afecta elementos que tienen padding-top de 190px o similar */
   body.header-mobile-hidden main[class*="pt-"],
   body.header-mobile-hidden div[class*="container"][class*="pt-"] {
     padding-top: 1rem !important; /* Solo un pequeño espacio cuando el header está oculto */
-    transition: padding-top 0.2s ease-out;
+    transition: padding-top 0s !important;
   }
   
   /* Cuando el header completo aparece (no está oculto), el padding debe cambiar instantáneamente */

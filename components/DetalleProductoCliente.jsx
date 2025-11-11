@@ -1,7 +1,7 @@
 // components/DetalleProductoCliente.jsx
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useCarrito } from '@/contexto/ContextoCarrito';
 import { useProductos } from '@/contexto/ContextoProductos';
@@ -9,44 +9,45 @@ import toast from 'react-hot-toast';
 import ProductosRelacionados from './ProductosRelacionados';
 import ProductosVistosRecientemente from './ProductosVistosRecientemente';
 import { useModal } from '@/contexto/ContextoModal';
-import { useFavorites } from '@/hooks/useFavorites';
 import ImageWithZoom from './ImageWithZoom';
 import ResenasProducto from './ResenasProducto';
 import Breadcrumbs from './Breadcrumbs';
 
 // Ayudante para detectar tamaño de pantalla
 import { useWindowSize } from './hooks/useWindowSize';
-import { FaTruck, FaChevronDown, FaShippingFast, FaGift, FaShieldAlt, FaUndo, FaArrowRight, FaChevronLeft, FaChevronRight, FaShoppingCart, FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaTruck, FaChevronDown, FaShippingFast, FaGift, FaShieldAlt, FaUndo, FaArrowRight, FaChevronLeft, FaChevronRight, FaShoppingCart, FaSpinner } from 'react-icons/fa';
 
-// Componente de información de envío
+// Componente de información de envío mejorado
 const EnvioInfoAccordion = () => (
-  <div className="my-4">
-    <details className="shipping-policy-accordion">
-      <summary className="shipping-policy-title">
-        <FaTruck className="mr-3 text-cyan-600" />
-        <span>Información de envío y garantías</span>
-        <FaChevronDown className="icon-arrow" />
+  <div className="my-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200 shadow-sm">
+    <details className="group">
+      <summary className="flex items-center justify-between cursor-pointer list-none">
+        <div className="flex items-center gap-3">
+          <FaTruck className="text-cyan-600 text-xl" />
+          <span className="text-lg font-semibold text-gray-800">Información de envío y garantías</span>
+        </div>
+        <FaChevronDown className="icon-arrow text-cyan-600 transition-transform group-open:rotate-180" />
       </summary>
-      <div className="shipping-policy-content">
-        <div className="space-y-4">
+      <div className="mt-4 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
-            <FaShippingFast className="text-blue-600 mt-1 text-lg" />
+            <FaShippingFast className="text-blue-600 mt-1 text-lg flex-shrink-0" />
             <div>
               <p className="font-semibold text-gray-800">Envíos a todo Colombia</p>
               <p className="text-sm text-gray-600">Entrega en 2-5 días hábiles (principales ciudades)</p>
             </div>
           </div>
-          
+
           <div className="flex items-start gap-3">
-            <FaGift className="text-green-600 mt-1 text-lg" />
+            <FaGift className="text-green-600 mt-1 text-lg flex-shrink-0" />
             <div>
               <p className="font-semibold text-green-600">Envío GRATIS</p>
               <p className="text-sm text-gray-600">En compras superiores a $250.000</p>
             </div>
           </div>
-          
+
           <div className="flex items-start gap-3">
-            <FaShieldAlt className="text-cyan-600 mt-1 text-lg" />
+            <FaShieldAlt className="text-cyan-600 mt-1 text-lg flex-shrink-0" />
             <div>
               <p className="font-semibold text-gray-800">Compra 100% segura</p>
               <p className="text-sm text-gray-600">Garantía de satisfacción de 30 días</p>
@@ -54,16 +55,16 @@ const EnvioInfoAccordion = () => (
           </div>
 
           <div className="flex items-start gap-3">
-            <FaUndo className="text-purple-600 mt-1 text-lg" />
+            <FaUndo className="text-purple-600 mt-1 text-lg flex-shrink-0" />
             <div>
               <p className="font-semibold text-gray-800">Devoluciones fáciles</p>
               <p className="text-sm text-gray-600">Si no estás satisfecho, te devolvemos tu dinero</p>
             </div>
           </div>
         </div>
-        
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <a href="/politica-devoluciones" className="text-sm text-blue-600 hover:underline inline-flex items-center gap-2">
+
+        <div className="pt-4 border-t border-blue-200">
+          <a href="/politica-devoluciones" className="text-sm text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-2 font-medium transition-colors">
             Ver política completa de envíos y devoluciones
             <FaArrowRight />
           </a>
@@ -97,27 +98,28 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   const { agregarAlCarrito, MAX_QUANTITY_PER_ITEM } = useCarrito();
   const { openLightbox } = useModal();
   const { allProducts, loadProducts } = useProductos();
-  const { toggleFavorite, isFavorite } = useFavorites();
   const { width } = useWindowSize();
   const isDesktop = width >= 768;
-  
-  const favorite = isFavorite(product.id);
 
-  const getInitialImages = () => {
+  const getInitialImages = useCallback(() => {
     if (!product) return { all: [] };
     const all = [product.image, ...(product.images || [])].filter(Boolean);
     return { all };
-  };
+  }, [product]);
 
   const { all: allImages } = getInitialImages();
   const [activeImage, setActiveImage] = useState(allImages.length > 0 ? allImages[0] : 'https://placehold.co/600x600');
   const [quantity, setQuantity] = useState(1);
   const [swiperInstance, setSwiperInstance] = useState(null);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [pulseEffect, setPulseEffect] = useState(true);
 
   // Cargar productos para el carrusel de vistos recientemente
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
+
+
 
   useEffect(() => {
     if (product && product.id) {
@@ -145,28 +147,35 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   };
 
   // ================================================================
-  // === LÓGICA DE CARRITO Y CANTIDAD (AHORA COMPLETA) ===
+  // === LÓGICA DE CARRITO Y CANTIDAD (MEJORADA CON LOADING) ===
   // ================================================================
-  const handleAddToCart = () => {
-    const result = agregarAlCarrito({ ...product }, quantity);
-    
-    if (result.success) {
-      toast.success(result.isNew ? `🛒 ${quantity}x ${product.name} añadido al carrito!` : `✅ Cantidad actualizada en el carrito`, {
-        duration: 2500,
-        style: {
-          background: '#22c55e',
-          color: '#fff',
-          fontWeight: 'bold',
-        },
-      });
-      // Resetear cantidad a 1 después de agregar
-      setQuantity(1);
-    } else if (result.reason === 'max_limit') {
-      toast.error(`⚠️ Máximo ${result.max} unidades por producto en el carrito`, {
-        duration: 3000,
-      });
+  const handleAddToCart = useCallback(async () => {
+    if (isAddingToCart) return;
+
+    setIsAddingToCart(true);
+    try {
+      const result = agregarAlCarrito({ ...product }, quantity);
+
+      if (result.success) {
+        toast.success(result.isNew ? `🛒 ${quantity}x ${product.name} añadido al carrito!` : `✅ Cantidad actualizada en el carrito`, {
+          duration: 2500,
+          style: {
+            background: '#22c55e',
+            color: '#fff',
+            fontWeight: 'bold',
+          },
+        });
+        // Resetear cantidad a 1 después de agregar
+        setQuantity(1);
+      } else if (result.reason === 'max_limit') {
+        toast.error(`⚠️ Máximo ${result.max} unidades por producto en el carrito`, {
+          duration: 3000,
+        });
+      }
+    } finally {
+      setIsAddingToCart(false);
     }
-  };
+  }, [agregarAlCarrito, product, quantity, isAddingToCart]);
 
   const increaseQuantity = () => {
       const maxLimit = Math.min(product.stock, MAX_QUANTITY_PER_ITEM);
@@ -185,17 +194,18 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   };
   const decreaseQuantity = () => setQuantity(q => (q > 1 ? q - 1 : 1));
   
-  // Lógica de flechas para la VISTA DE ESCRITORIO
-  const handleNextImage = () => {
+  // Lógica de flechas para la VISTA DE ESCRITORIO (optimizada)
+  const handleNextImage = useCallback(() => {
       const activeImageIndex = allImages.findIndex(img => img === activeImage);
       const nextIndex = (activeImageIndex + 1) % allImages.length;
       setActiveImage(allImages[nextIndex]);
-  };
-  const handlePrevImage = () => {
+  }, [allImages, activeImage]);
+
+  const handlePrevImage = useCallback(() => {
       const activeImageIndex = allImages.findIndex(img => img === activeImage);
       const prevIndex = (activeImageIndex - 1 + allImages.length) % allImages.length;
       setActiveImage(allImages[prevIndex]);
-  };
+  }, [allImages, activeImage]);
 
   if (!product) return <div>Cargando detalles del producto...</div>;
 
@@ -208,32 +218,54 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
     if (isDesktop) {
       // ================================================================
-      // === VERSIÓN PARA ESCRITORIO (AHORA CON PUNTOS PERSONALIZADOS) ===
+      // === VERSIÓN PARA ESCRITORIO (MEJORADA CON INDICADORES NUMÉRICOS) ===
       // ================================================================
       return (
         <div className="flex-grow flex flex-col">
           <div className="relative w-full group">
             <ImageWithZoom src={activeImage} alt={product.name} openLightbox={handleOpenLightbox} priority />
-            
-            {/* --- INICIO DEL CÓDIGO PARA LOS PUNTOS --- */}
+
+            {/* Indicador numérico mejorado */}
             {allImages.length > 1 && (
-              <div className="custom-dots-container">
-                {allImages.map((imgSrc) => (
+              <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
+                {allImages.findIndex(img => img === activeImage) + 1} / {allImages.length}
+              </div>
+            )}
+
+            {/* Puntos mejorados con mejor accesibilidad */}
+            {allImages.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 bg-black/50 rounded-full px-3 py-2 backdrop-blur-sm">
+                {allImages.map((imgSrc, index) => (
                   <button
                     key={imgSrc}
                     onClick={() => setActiveImage(imgSrc)}
-                    className={`custom-dot ${imgSrc === activeImage ? 'active' : ''}`}
-                    aria-label={`Ir a la imagen ${allImages.indexOf(imgSrc) + 1}`}
+                    className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                      imgSrc === activeImage
+                        ? 'bg-white scale-125'
+                        : 'bg-white/50 hover:bg-white/75'
+                    }`}
+                    aria-label={`Ir a la imagen ${index + 1} de ${allImages.length}`}
                   />
                 ))}
               </div>
             )}
-            {/* --- FIN DEL CÓDIGO PARA LOS PUNTOS --- */}
 
             {allImages.length > 1 && (
               <>
-                <button onClick={handlePrevImage} className="absolute top-1/2 left-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Imagen anterior"><FaChevronLeft /></button>
-                <button onClick={handleNextImage} className="absolute top-1/2 right-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Siguiente imagen"><FaChevronRight /></button>
+                <button
+                  onClick={handlePrevImage}
+                  className="absolute top-1/2 left-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                  aria-label="Imagen anterior"
+                >
+                  <FaChevronLeft />
+                </button>
+                <button
+                  onClick={handleNextImage}
+                  className="absolute top-1/2 right-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                  aria-label="Siguiente imagen"
+                >
+                  <FaChevronRight />
+                </button>
               </>
             )}
           </div>
@@ -263,82 +295,125 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:flex md:gap-12 md:items-start">
-        <div className="md:w-1/2 flex flex-col md:flex-row gap-4"> 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        {/* Galería de imágenes */}
+        <div className="flex flex-col gap-4">
           {allImages.length > 1 && (
-            <div className="hidden md:flex flex-col gap-3">
-              {allImages.map((imgSrc) => (<Thumbnail key={imgSrc} src={imgSrc} isActive={imgSrc === activeImage} onClick={() => setActiveImage(imgSrc)} />))}
+            <div className="hidden lg:flex flex-col gap-3">
+              {allImages.map((imgSrc) => (
+                <Thumbnail
+                  key={imgSrc}
+                  src={imgSrc}
+                  isActive={imgSrc === activeImage}
+                  onClick={() => setActiveImage(imgSrc)}
+                />
+              ))}
             </div>
           )}
           {renderGallery()}
           {allImages.length > 1 && (
-            <div className="flex md:hidden gap-3 mt-4 overflow-x-auto pb-2">
-              {allImages.map((imgSrc) => (<Thumbnail key={imgSrc} src={imgSrc} isActive={imgSrc === activeImage} onClick={() => setActiveImage(imgSrc)} />))}
+            <div className="flex lg:hidden gap-3 mt-4 overflow-x-auto pb-2">
+              {allImages.map((imgSrc) => (
+                <Thumbnail
+                  key={imgSrc}
+                  src={imgSrc}
+                  isActive={imgSrc === activeImage}
+                  onClick={() => setActiveImage(imgSrc)}
+                />
+              ))}
             </div>
           )}
         </div>
-        
-        <div className="flex flex-col md:w-1/2">
-            <p className="text-sm text-gray-500 uppercase tracking-wider mt-4 md:mt-0">{product.category}</p>
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 my-2">{product.name}</h1>
-            <div className="my-4">
-                <span className="text-3xl lg:text-4xl font-bold text-blue-600">{formatPrice(product.price)}</span>
+
+        {/* Información del producto */}
+        <div className="flex flex-col space-y-8">
+          <div>
+            <p className="text-sm text-gray-500 uppercase tracking-wider mb-3">{product.category}</p>
+            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">{product.name}</h1>
+            <div className="mb-8">
+              <span className="text-4xl lg:text-5xl font-bold text-blue-600">{formatPrice(product.price)}</span>
             </div>
-            
-            <EnvioInfoAccordion />
-            
-            <div className="flex-grow my-4 overflow-y-auto pr-2 border-t pt-4">
-                <h3 className="text-lg font-semibold mb-2 text-gray-800">Descripción</h3>
-                <p className="text-gray-700 leading-relaxed">{product.description}</p>
+          </div>
+
+          <EnvioInfoAccordion />
+
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Descripción</h3>
+              <p className="text-gray-700 leading-relaxed text-lg">{product.description}</p>
             </div>
-            <div className="my-4 pt-4 border-t">
-                <h3 className="text-lg font-semibold mb-2 text-gray-800">Detalles del producto</h3>
-                <div>
-                  {product.laboratorio && <DetailRow label="Laboratorio" value={product.laboratorio} />}
-                  {product.viaAdministracion && <DetailRow label="Vía de administración" value={product.viaAdministracion} />}
-                  {product.presentacionFarmaceutica && <DetailRow label="Presentación" value={product.presentacionFarmaceutica} />}
-                </div>
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Detalles del producto</h3>
+              <div className="space-y-3">
+                {product.laboratorio && <DetailRow label="Laboratorio" value={product.laboratorio} />}
+                {product.viaAdministracion && <DetailRow label="Vía de administración" value={product.viaAdministracion} />}
+                {product.presentacionFarmaceutica && <DetailRow label="Presentación" value={product.presentacionFarmaceutica} />}
+              </div>
             </div>
-            <div className="mt-auto">
-                <div className="my-4 text-lg">
-                    {product.stock > 0 ? (
-                        product.stock <= 10 ? ( <p className="font-semibold text-blue-600 text-right">¡Quedan solo {product.stock} unidades!</p> ) :
-                        ( <p className="font-semibold text-green-600">En stock</p> )
-                    ) : ( <p className="font-semibold text-red-600">Agotado</p> )}
-                </div>
-                {product.stock > 0 && (
-                    <div className="flex items-center gap-3">
-                        <div className="quantity-selector">
-                            <button onClick={decreaseQuantity} className="quantity-btn">-</button>
-                            <span className="quantity-input">{quantity}</span>
-                            <button onClick={increaseQuantity} className="quantity-btn">+</button>
-                        </div>
-                        <button onClick={handleAddToCart} className="flex-grow bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition flex items-center justify-center text-lg gap-3">
-                            <FaShoppingCart />
-                            Agregar al Carrito
-                        </button>
-                        <button
-                            onClick={() => toggleFavorite(product.id)}
-                            className="flex-shrink-0 w-14 h-14 rounded-lg font-bold transition-all duration-200 flex items-center justify-center hover:scale-110"
-                            aria-label={favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-                            title={favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-                        >
-                            {favorite ? (
-                                <FaHeart className="text-red-500" style={{width: '28px', height: '28px', minWidth: '28px', minHeight: '28px'}} />
-                            ) : (
-                                <FaRegHeart className="text-gray-600 hover:text-red-500 transition-colors" style={{width: '28px', height: '28px', minWidth: '28px', minHeight: '28px'}} />
-                            )}
-                        </button>
-                    </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200">
+            <div className="flex items-center justify-between mb-6">
+              <div className="text-xl">
+                {product.stock > 0 ? (
+                  product.stock <= 10 ? (
+                    <p className="font-bold text-blue-600 text-xl">¡Quedan solo {product.stock} unidades!</p>
+                  ) : (
+                    <p className="font-bold text-green-600 text-xl">En stock</p>
+                  )
+                ) : (
+                  <p className="font-bold text-red-600 text-xl">Agotado</p>
                 )}
+              </div>
             </div>
+
+            {product.stock > 0 && (
+              <div className="flex items-center gap-4 md:gap-6">
+                <div className="quantity-selector flex items-center">
+                  <button
+                    onClick={decreaseQuantity}
+                    className="quantity-btn w-12 h-12 md:w-10 md:h-10 text-xl md:text-lg font-bold"
+                    aria-label="Disminuir cantidad"
+                  >
+                    -
+                  </button>
+                  <span className="quantity-input w-16 h-12 md:w-12 md:h-10 text-xl md:text-lg font-bold flex items-center justify-center" aria-label={`Cantidad: ${quantity}`}>
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={increaseQuantity}
+                    className="quantity-btn w-12 h-12 md:w-10 md:h-10 text-xl md:text-lg font-bold"
+                    aria-label="Aumentar cantidad"
+                  >
+                    +
+                  </button>
+                </div>
+                <button
+                  onClick={handleAddToCart}
+                  disabled={isAddingToCart}
+                  className={`flex-grow bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-8 rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-400 disabled:to-blue-500 disabled:cursor-not-allowed transition-all flex items-center justify-center text-xl gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 ring-4 ring-yellow-400 ring-opacity-75 animate-pulse`}
+                  aria-label={isAddingToCart ? "Agregando al carrito..." : "Agregar al carrito"}
+                >
+                  {isAddingToCart ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    <FaShoppingCart />
+                  )}
+                  {isAddingToCart ? "Agregando..." : "Agregar al Carrito"}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-      <div className="mt-16">
+
+      {/* Secciones relacionadas */}
+      <div className="mt-16 space-y-16">
         <ProductosRelacionados products={relatedProducts} />
         <ProductosVistosRecientemente currentProductId={product.id} allProducts={allProducts} />
+        <ResenasProducto productId={product.id} />
       </div>
-      <ResenasProducto productId={product.id} />
     </>
   );
 }

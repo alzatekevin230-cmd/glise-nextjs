@@ -20,12 +20,14 @@ export default async function PaginaCategoria({ params }) {
   }));
 
   return (
-    <main className="container mx-auto px-2 sm:px-6 py-8 pt-[190px] md:pt-8">
-      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Tienda', href: '/categoria/all' }, { label: categoryName }]} />
-      <PaginaCategoriaCliente 
-        initialProducts={productsWithSlugs} 
-        categoryName={categoryName} 
-      />
+    <main>
+      <div className="container mx-auto px-2 sm:px-6 py-8">
+        <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Tienda', href: '/categoria/all' }, { label: categoryName }]} />
+        <PaginaCategoriaCliente
+          initialProducts={productsWithSlugs}
+          categoryName={categoryName}
+        />
+      </div>
     </main>
   );
 }

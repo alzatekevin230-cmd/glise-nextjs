@@ -30,7 +30,7 @@ export default async function HomePage() {
   return (
     <main>
       {/* Breadcrumbs puede ir aquí si se usa en home en el futuro */}
-      <div className="container mx-auto px-2 sm:px-6 pt-[180px] md:pt-8 mb-8">
+      <div className="container mx-auto px-2 sm:px-6 pt-4 mb-8">
 
         {/* Barra de Contacto para Escritorio */}
         <div className="hidden md:flex bg-cyan-600 text-white text-sm mb-4 rounded-lg shadow-md items-center justify-center text-center p-2">

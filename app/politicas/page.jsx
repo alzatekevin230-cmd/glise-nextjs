@@ -15,8 +15,9 @@ export default function PaginaPoliticas() {
   });
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-8 pt-[190px] md:pt-8">
-      <Breadcrumbs items={breadcrumbItems} />
+    <main>
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
 
       {/* Tarjeta informativa superior */}
       <div className="flex justify-center mb-7 mt-4">
@@ -66,6 +67,7 @@ export default function PaginaPoliticas() {
           <BotonWhatsapp />
           <a href="mailto:gliseybelleza@gmail.com" target="_blank" rel="noopener noreferrer" className="bg-gray-800 text-white flex items-center gap-2 px-4 py-2 rounded-lg font-semibold hover:bg-gray-900 transition"><FaEnvelope/><span>Email</span></a>
         </div>
+      </div>
       </div>
     </main>
   );
