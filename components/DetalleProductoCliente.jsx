@@ -297,9 +297,9 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Galería de imágenes */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col lg:flex-row gap-4">
           {allImages.length > 1 && (
-            <div className="hidden lg:flex flex-col gap-3">
+            <div className="hidden lg:flex flex-col gap-3 flex-shrink-0">
               {allImages.map((imgSrc) => (
                 <Thumbnail
                   key={imgSrc}
@@ -310,7 +310,9 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
               ))}
             </div>
           )}
-          {renderGallery()}
+          <div className="flex-grow">
+            {renderGallery()}
+          </div>
           {allImages.length > 1 && (
             <div className="flex lg:hidden gap-3 mt-4 overflow-x-auto pb-2">
               {allImages.map((imgSrc) => (
@@ -369,21 +371,24 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
             </div>
 
             {product.stock > 0 && (
-              <div className="flex items-center gap-4 md:gap-6">
-                <div className="quantity-selector flex items-center">
+              <div className="flex items-center gap-3 md:gap-6">
+                <div className="flex items-center border border-gray-300 rounded-lg bg-white">
                   <button
                     onClick={decreaseQuantity}
-                    className="quantity-btn w-12 h-12 md:w-10 md:h-10 text-xl md:text-lg font-bold"
+                    className="bg-gray-50 hover:bg-gray-100 border-none px-3.5 py-2.5 md:px-3 md:py-2 text-lg md:text-lg font-bold text-gray-700 cursor-pointer transition-colors flex items-center justify-center w-11 md:w-10 h-11 md:h-10"
                     aria-label="Disminuir cantidad"
                   >
-                    -
+                    −
                   </button>
-                  <span className="quantity-input w-16 h-12 md:w-12 md:h-10 text-xl md:text-lg font-bold flex items-center justify-center" aria-label={`Cantidad: ${quantity}`}>
+                  <span 
+                    className="w-14 md:w-12 h-11 md:h-10 text-base md:text-base font-bold text-gray-800 flex items-center justify-center border-l border-r border-gray-300 bg-white px-2"
+                    aria-label={`Cantidad: ${quantity}`}
+                  >
                     {quantity}
                   </span>
                   <button
                     onClick={increaseQuantity}
-                    className="quantity-btn w-12 h-12 md:w-10 md:h-10 text-xl md:text-lg font-bold"
+                    className="bg-gray-50 hover:bg-gray-100 border-none px-3.5 py-2.5 md:px-3 md:py-2 text-lg md:text-lg font-bold text-gray-700 cursor-pointer transition-colors flex items-center justify-center w-11 md:w-10 h-11 md:h-10"
                     aria-label="Aumentar cantidad"
                   >
                     +
@@ -396,11 +401,11 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
                   aria-label={isAddingToCart ? "Agregando al carrito..." : "Agregar al carrito"}
                 >
                   {isAddingToCart ? (
-                    <FaSpinner className="animate-spin" />
+                    <FaSpinner className="animate-spin text-2xl" />
                   ) : (
-                    <FaShoppingCart />
+                    <FaShoppingCart className="text-2xl flex-shrink-0" />
                   )}
-                  {isAddingToCart ? "Agregando..." : "Agregar al Carrito"}
+                  <span>{isAddingToCart ? "Agregando..." : "Agregar al Carrito"}</span>
                 </button>
               </div>
             )}

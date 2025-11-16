@@ -47,8 +47,41 @@ const BarraEnvioGratis = ({ subtotal }) => {
     );
 };
 const PoliticasEnvioAccordion = () => (
-    <div className="mt-4">
-        <details className="shipping-policy-accordion"><summary className="shipping-policy-title"><FaShippingFast className="mr-3 text-blue-600" /><span>Ver nuestra Política de Envío</span><FaChevronDown className="icon-arrow" /></summary><div className="shipping-policy-content"><p><strong>¡Queremos que recibas tu pedido lo antes posible!</strong> A continuación, te presentamos nuestros tiempos de entrega estimados una vez que tu pago ha sido aprobado.</p><ul><li><strong>Envío Local (Palmira):</strong> 1-2 días hábiles.</li><li><strong>Envío Regional (Valle del Cauca):</strong> 2-3 días hábiles.</li><li><strong>Envío Nacional (Ciudades Principales):</strong> 3-5 días hábiles.</li><li><strong>Envío Zonal (Ciudades Intermedias):</strong> 4-7 días hábiles.</li><li><strong>Otras Ciudades:</strong> 5-10 días hábiles.</li><li><strong>Destinos Especiales:</strong> 8-15 días hábiles.</li></ul><p className="mt-4"><strong>Recuerda:</strong></p><ul><li>Los tiempos son estimados y pueden variar por factores externos a Glisé.</li><li>Los días hábiles no incluyen sábados, domingos ni festivos.</li><li>Las compras realizadas después de las 2:00 PM serán procesadas al siguiente día hábil.</li></ul><p className="mt-4 font-semibold">¡Obtén <strong>envío GRATIS</strong> en compras superiores a $250,000!</p></div></details>
+    <div className="mt-6">
+        <details className="group bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+            <summary className="flex items-center justify-between cursor-pointer list-none p-4 font-semibold text-gray-800 hover:text-blue-700 transition-colors">
+                <div className="flex items-center gap-3">
+                    <FaShippingFast className="text-blue-600 text-xl flex-shrink-0" />
+                    <span className="text-base">Ver nuestra Política de Envío</span>
+                </div>
+                <FaChevronDown className="text-blue-600 transition-transform duration-300 group-open:rotate-180 flex-shrink-0" />
+            </summary>
+            <div className="px-4 pb-4 pt-2 border-t border-blue-200 bg-white">
+                <div className="space-y-4 text-sm text-gray-700">
+                    <p className="font-semibold text-gray-800">¡Queremos que recibas tu pedido lo antes posible!</p>
+                    <p className="text-gray-600">A continuación, te presentamos nuestros tiempos de entrega estimados una vez que tu pago ha sido aprobado:</p>
+                    <ul className="list-disc pl-5 space-y-2">
+                        <li><strong className="text-gray-800">Envío Local (Palmira):</strong> 1-2 días hábiles.</li>
+                        <li><strong className="text-gray-800">Envío Regional (Valle del Cauca):</strong> 2-3 días hábiles.</li>
+                        <li><strong className="text-gray-800">Envío Nacional (Ciudades Principales):</strong> 3-5 días hábiles.</li>
+                        <li><strong className="text-gray-800">Envío Zonal (Ciudades Intermedias):</strong> 4-7 días hábiles.</li>
+                        <li><strong className="text-gray-800">Otras Ciudades:</strong> 5-10 días hábiles.</li>
+                        <li><strong className="text-gray-800">Destinos Especiales:</strong> 8-15 días hábiles.</li>
+                    </ul>
+                    <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                        <p className="font-semibold text-gray-800 mb-2">Recuerda:</p>
+                        <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                            <li>Los tiempos son estimados y pueden variar por factores externos a Glisé.</li>
+                            <li>Los días hábiles no incluyen sábados, domingos ni festivos.</li>
+                            <li>Las compras realizadas después de las 2:00 PM serán procesadas al siguiente día hábil.</li>
+                        </ul>
+                    </div>
+                    <div className="mt-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                        <p className="font-bold text-green-700 text-center">¡Obtén <strong>envío GRATIS</strong> en compras superiores a $250,000!</p>
+                    </div>
+                </div>
+            </div>
+        </details>
     </div>
 );
 
@@ -201,6 +234,7 @@ export default function CheckoutPage() {
                 city: '',
                 cityCode: ''
             }));
+            setTouched(prev => ({ ...prev, state: true }));
             setShippingCost(0);
             setDeliveryDays(null);
             setShippingCalculated(false);
@@ -211,6 +245,7 @@ export default function CheckoutPage() {
                 city: selectedOption ? selectedOption.label : '',
                 cityCode: selectedOption ? selectedOption.value : ''
             }));
+            setTouched(prev => ({ ...prev, cityCode: true }));
         }
     };
     
@@ -218,6 +253,20 @@ export default function CheckoutPage() {
         const { id, value } = e.target;
         setFormData(prev => ({ ...prev, [id]: value }));
     }, []);
+
+    // Función helper para obtener las clases de borde según el estado del campo
+    const getFieldBorderClasses = (fieldName, isSelect = false) => {
+        const hasError = touched[fieldName] && errors[fieldName];
+        const hasValue = formData[fieldName] && String(formData[fieldName]).trim();
+        const isValid = touched[fieldName] && hasValue && !hasError;
+        
+        if (hasError) {
+            return isSelect ? 'border-red-500' : 'border-red-500 border-2';
+        } else if (isValid) {
+            return isSelect ? 'border-green-500' : 'border-green-500 border-2';
+        }
+        return 'border-gray-300';
+    };
 
     const validateForm = () => { /* ... tu función de validación no cambia ... */ 
         const fieldsToValidate = ['firstName', 'lastName', 'address', 'phone', 'email', 'state', 'cityCode'];
@@ -304,23 +353,42 @@ export default function CheckoutPage() {
 
     if (cart.length === 0 && !isProcessing) return null;
 
-    // Estilos mejorados para react-select
+    // Estilos mejorados para react-select con validación visual
+    const getSelectBorderColor = (fieldName) => {
+        const hasError = touched[fieldName] && errors[fieldName];
+        const hasValue = formData[fieldName] && String(formData[fieldName]).trim();
+        const isValid = touched[fieldName] && hasValue && !hasError;
+        
+        if (hasError) return '#ef4444'; // red-500
+        if (isValid) return '#22c55e'; // green-500
+        return '#d1d5db'; // gray-300
+    };
+
     const customSelectStyles = {
-        control: (provided, state) => ({
-            ...provided,
-            borderColor: state.isFocused ? '#3b82f6' : '#d1d5db',
-            borderWidth: '1px',
-            borderRadius: '0.5rem',
-            boxShadow: state.isFocused ? '0 0 0 3px rgba(59, 130, 246, 0.1)' : '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-            '&:hover': {
-                borderColor: state.isFocused ? '#3b82f6' : '#9ca3af',
-                boxShadow: state.isFocused ? '0 0 0 3px rgba(59, 130, 246, 0.1)' : '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-            },
-            minHeight: '48px',
-            backgroundColor: 'white',
-            fontSize: '14px',
-            transition: 'all 0.2s ease-in-out',
-        }),
+        control: (provided, state) => {
+            const fieldName = state.selectProps.inputId === 'state' ? 'state' : 'cityCode';
+            const borderColor = getSelectBorderColor(fieldName);
+            const hasError = touched[fieldName] && errors[fieldName];
+            const hasValue = formData[fieldName] && String(formData[fieldName]).trim();
+            const isValid = touched[fieldName] && hasValue && !hasError;
+            const borderWidth = (hasError || isValid) ? '2px' : '1px';
+            
+            return {
+                ...provided,
+                borderColor: borderColor,
+                borderWidth: borderWidth,
+                borderRadius: '0.5rem',
+                boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                '&:hover': {
+                    borderColor: borderColor,
+                    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+                },
+                minHeight: '48px',
+                backgroundColor: 'white',
+                fontSize: '14px',
+                transition: 'all 0.2s ease-in-out',
+            };
+        },
         placeholder: (provided) => ({
             ...provided,
             color: '#9ca3af',
@@ -402,7 +470,8 @@ export default function CheckoutPage() {
                                         autoComplete="given-name"
                                         value={formData.firstName}
                                         onChange={handleInputChange}
-                                        className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        onBlur={() => setTouched(prev => ({ ...prev, firstName: true }))}
+                                        className={`block w-full border rounded-lg shadow-sm px-4 py-3 focus:outline-none transition-colors ${getFieldBorderClasses('firstName')}`}
                                         placeholder="Ingresa tu nombre"
                                     />
                                     {touched.firstName && errors.firstName && (
@@ -423,7 +492,8 @@ export default function CheckoutPage() {
                                         autoComplete="family-name"
                                         value={formData.lastName}
                                         onChange={handleInputChange}
-                                        className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        onBlur={() => setTouched(prev => ({ ...prev, lastName: true }))}
+                                        className={`block w-full border rounded-lg shadow-sm px-4 py-3 focus:outline-none transition-colors ${getFieldBorderClasses('lastName')}`}
                                         placeholder="Ingresa tus apellidos"
                                     />
                                     {touched.lastName && errors.lastName && (
@@ -498,7 +568,8 @@ export default function CheckoutPage() {
                                     placeholder="Ej: Calle 5 # 10-20, Apto 301"
                                     value={formData.address}
                                     onChange={handleInputChange}
-                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                    onBlur={() => setTouched(prev => ({ ...prev, address: true }))}
+                                    className={`block w-full border rounded-lg shadow-sm px-4 py-3 focus:outline-none transition-colors ${getFieldBorderClasses('address')}`}
                                 />
                                 {touched.address && errors.address && (
                                     <span className="text-red-600 text-sm flex items-center gap-1">
@@ -520,7 +591,7 @@ export default function CheckoutPage() {
                                     placeholder="Ej: El Prado"
                                     value={formData.neighborhood}
                                     onChange={handleInputChange}
-                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:outline-none transition-colors"
                                 />
                             </div>
 
@@ -536,7 +607,8 @@ export default function CheckoutPage() {
                                     placeholder="Ingresa tu número de teléfono"
                                     value={formData.phone}
                                     onChange={handleInputChange}
-                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                    onBlur={() => setTouched(prev => ({ ...prev, phone: true }))}
+                                    className={`block w-full border rounded-lg shadow-sm px-4 py-3 focus:outline-none transition-colors ${getFieldBorderClasses('phone')}`}
                                 />
                                 {touched.phone && errors.phone && (
                                     <span className="text-red-600 text-sm flex items-center gap-1">
@@ -558,7 +630,8 @@ export default function CheckoutPage() {
                                     placeholder="tu@email.com"
                                     value={formData.email}
                                     onChange={handleInputChange}
-                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                    onBlur={() => setTouched(prev => ({ ...prev, email: true }))}
+                                    className={`block w-full border rounded-lg shadow-sm px-4 py-3 focus:outline-none transition-colors ${getFieldBorderClasses('email')}`}
                                 />
                                 {touched.email && errors.email && (
                                     <span className="text-red-600 text-sm flex items-center gap-1">
@@ -579,7 +652,7 @@ export default function CheckoutPage() {
                                     onChange={handleInputChange}
                                     rows="4"
                                     placeholder="Notas sobre tu pedido, ej. Dejar en portería, etc."
-                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                                    className="block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-3 focus:outline-none transition-colors resize-none"
                                 />
                             </div>
                             <PoliticasEnvioAccordion />
@@ -742,7 +815,7 @@ export default function CheckoutPage() {
                                     id="terms"
                                     checked={termsAccepted}
                                     onChange={(e) => setTermsAccepted(e.target.checked)}
-                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-0.5 mr-3 flex-shrink-0"
+                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:outline-none mt-0.5 mr-3 flex-shrink-0"
                                 />
                                 <span className="text-gray-700">
                                     He leído y estoy de acuerdo con los{' '}

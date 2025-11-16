@@ -15,11 +15,11 @@ export default function MainBanner() {
     const swiper = new Swiper('.main-banner-carousel', {
       modules: [Navigation, Pagination, Autoplay],
       loop: true,
-      speed: 600,
+      speed: 1000, // Velocidad de transición más lenta, igual que móvil
       autoplay: { 
         delay: 5000, 
         disableOnInteraction: false,
-        pauseOnMouseEnter: true
+        pauseOnMouseEnter: false // No pausar en desktop, igual que móvil
       },
       pagination: { 
         el: '.main-banner-pagination', 

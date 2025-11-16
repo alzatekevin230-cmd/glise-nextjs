@@ -79,10 +79,19 @@ export default async function PaginaProducto({ params }) {
     slug: createSlug(p.name)
   }));
   
+  // Crear slug de categoría para el breadcrumb (usar encodeURIComponent directamente como en otras páginas)
+  const categorySlug = product.category ? encodeURIComponent(product.category) : 'all';
+  const categoryLabel = product.category || 'Productos';
+  
   return (
     <main>
       <div className="container mx-auto px-2 sm:px-6 py-8">
-        <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: product.category, href: `/categoria/${product.category}` }, { label: product.name }]} />
+        <Breadcrumbs items={[
+          { label: 'Inicio', href: '/' }, 
+          { label: 'Tienda', href: '/categoria/all' },
+          { label: categoryLabel, href: `/categoria/${categorySlug}` }, 
+          { label: product.name }
+        ]} />
         <DetalleProductoCliente product={product} relatedProducts={relatedProducts} />
       </div>
     </main>
