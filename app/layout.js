@@ -13,6 +13,7 @@ import { ProveedorAuth } from '@/contexto/ContextoAuth.jsx';
 import { Toaster } from 'react-hot-toast';
 import { ProveedorProductos } from '@/contexto/ContextoProductos';
 import { ProveedorMenuLateral } from '@/contexto/ContextoMenuLateral';
+import { ProveedorDetalleProducto } from '@/contexto/ContextoDetalleProducto';
 import BotonWhatsapp from '@/components/BotonWhatsapp';
 import BarraNavegacionMovil from '@/components/BarraNavegacionMovil';
 import Lightbox from '@/components/Lightbox';
@@ -159,7 +160,8 @@ export default function RootLayout({ children }) {
           <ProveedorModal>
             <ProveedorAuth>
               <ProveedorCarrito>
-                <ProveedorMenuLateral>
+                <ProveedorDetalleProducto>
+                  <ProveedorMenuLateral>
                     <ProveedorProductos>
                       <ScrollProgressBar />
                       <Toaster position="bottom-center" />
@@ -183,6 +185,7 @@ export default function RootLayout({ children }) {
                     
                   </ProveedorProductos>
                 </ProveedorMenuLateral>
+                </ProveedorDetalleProducto>
               </ProveedorCarrito>
             </ProveedorAuth>
           </ProveedorModal>

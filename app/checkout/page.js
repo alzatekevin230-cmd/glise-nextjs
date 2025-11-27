@@ -298,7 +298,6 @@ export default function CheckoutPage() {
         }
         
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        npm
         // Validación crítica: Si el subtotal es menor a 250000, el envío DEBE estar calculado
         if (subtotal < 250000) {
             if (!formData.cityCode) {

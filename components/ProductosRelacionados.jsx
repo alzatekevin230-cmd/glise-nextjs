@@ -45,7 +45,7 @@ export default function ProductosRelacionados({ products }) {
   if (!products || products.length === 0) return null;
 
   return (
-    <section className="mt-12 pt-8 border-t">
+    <section className="mt-12 pt-8 border-t-0 md:border-t">
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">También te puede interesar</h2>
       
       {/* --- ESTRUCTURA HTML CORREGIDA --- */}

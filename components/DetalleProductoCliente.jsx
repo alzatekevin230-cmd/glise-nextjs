@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useCarrito } from '@/contexto/ContextoCarrito';
 import { useProductos } from '@/contexto/ContextoProductos';
+import { useDetalleProducto } from '@/contexto/ContextoDetalleProducto';
 import toast from 'react-hot-toast';
 import ProductosRelacionados from './ProductosRelacionados';
 import ProductosVistosRecientemente from './ProductosVistosRecientemente';
@@ -19,16 +20,16 @@ import { FaTruck, FaChevronDown, FaShippingFast, FaGift, FaShieldAlt, FaUndo, Fa
 
 // Componente de información de envío mejorado
 const EnvioInfoAccordion = () => (
-  <div className="my-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200 shadow-sm">
+  <div className="my-4 md:my-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-4 md:p-6 border border-blue-200 shadow-sm">
     <details className="group">
       <summary className="flex items-center justify-between cursor-pointer list-none">
         <div className="flex items-center gap-3">
           <FaTruck className="text-cyan-600 text-xl" />
-          <span className="text-lg font-semibold text-gray-800">Información de envío y garantías</span>
+          <span className="text-base md:text-lg font-semibold text-gray-800">Información de envío y garantías</span>
         </div>
         <FaChevronDown className="icon-arrow text-cyan-600 transition-transform group-open:rotate-180" />
       </summary>
-      <div className="mt-4 space-y-4">
+      <div className="mt-3 md:mt-4 space-y-3 md:space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
             <FaShippingFast className="text-blue-600 mt-1 text-lg flex-shrink-0" />
@@ -100,6 +101,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   const { allProducts, loadProducts } = useProductos();
   const { width } = useWindowSize();
   const isDesktop = width >= 768;
+  const { setIsProductPage, setProduct, setQuantity: setContextQuantity, setIsAddingToCart: setContextIsAddingToCart, setHandleAddToCart } = useDetalleProducto();
 
   const getInitialImages = useCallback(() => {
     if (!product) return { all: [] };
@@ -129,8 +131,16 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       const newImages = [product.image, ...(product.images || [])].filter(Boolean);
       if (newImages.length > 0) setActiveImage(newImages[0]);
       setQuantity(1);
+      // Sincronizar con el contexto
+      setIsProductPage(true);
+      setProduct(product);
+      setContextQuantity(1);
     }
-  }, [product]);
+    return () => {
+      setIsProductPage(false);
+      setProduct(null);
+    };
+  }, [product, setIsProductPage, setProduct, setContextQuantity]);
 
   useEffect(() => {
     if (!isDesktop && swiperInstance && allImages.length > 0) {
@@ -153,6 +163,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
     if (isAddingToCart) return;
 
     setIsAddingToCart(true);
+    setContextIsAddingToCart(true);
     try {
       const result = agregarAlCarrito({ ...product }, quantity);
 
@@ -167,6 +178,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
         });
         // Resetear cantidad a 1 después de agregar
         setQuantity(1);
+        setContextQuantity(1);
       } else if (result.reason === 'max_limit') {
         toast.error(`⚠️ Máximo ${result.max} unidades por producto en el carrito`, {
           duration: 3000,
@@ -174,14 +186,26 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       }
     } finally {
       setIsAddingToCart(false);
+      setContextIsAddingToCart(false);
     }
-  }, [agregarAlCarrito, product, quantity, isAddingToCart]);
+  }, [agregarAlCarrito, product, quantity, isAddingToCart, setContextIsAddingToCart, setContextQuantity]);
+
+  // Sincronizar handleAddToCart con el contexto (después de su definición)
+  useEffect(() => {
+    if (setHandleAddToCart) {
+      setHandleAddToCart(() => handleAddToCart);
+    }
+  }, [handleAddToCart, setHandleAddToCart]);
 
   const increaseQuantity = () => {
       const maxLimit = Math.min(product.stock, MAX_QUANTITY_PER_ITEM);
       
       if(quantity < maxLimit) {
-          setQuantity(q => q + 1);
+          setQuantity(q => {
+            const newQ = q + 1;
+            setContextQuantity(newQ);
+            return newQ;
+          });
       } else if (quantity >= MAX_QUANTITY_PER_ITEM) {
           toast.error(`⚠️ Máximo ${MAX_QUANTITY_PER_ITEM} unidades por producto`, {
             duration: 2000,
@@ -192,7 +216,13 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
           });
       }
   };
-  const decreaseQuantity = () => setQuantity(q => (q > 1 ? q - 1 : 1));
+  const decreaseQuantity = () => {
+    setQuantity(q => {
+      const newQ = q > 1 ? q - 1 : 1;
+      setContextQuantity(newQ);
+      return newQ;
+    });
+  };
   
   // Lógica de flechas para la VISTA DE ESCRITORIO (optimizada)
   const handleNextImage = useCallback(() => {
@@ -312,6 +342,10 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
           )}
           <div className="flex-grow">
             {renderGallery()}
+            {/* Versión de escritorio: Debajo de la galería */}
+            <div className="hidden lg:block mt-6">
+              <EnvioInfoAccordion />
+            </div>
           </div>
           {allImages.length > 1 && (
             <div className="flex lg:hidden gap-3 mt-4 overflow-x-auto pb-2">
@@ -337,12 +371,10 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
             </div>
           </div>
 
-          <EnvioInfoAccordion />
-
           <div className="space-y-8">
             <div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Descripción</h3>
-              <p className="text-gray-700 leading-relaxed text-lg">{product.description}</p>
+              <p className="text-gray-700 leading-relaxed text-base md:text-lg text-left whitespace-normal break-words">{product.description}</p>
             </div>
 
             <div>
@@ -354,61 +386,63 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
               </div>
             </div>
           </div>
-
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200">
-            <div className="flex items-center justify-between mb-6">
-              <div className="text-xl">
-                {product.stock > 0 ? (
-                  product.stock <= 10 ? (
-                    <p className="font-bold text-blue-600 text-xl">¡Quedan solo {product.stock} unidades!</p>
-                  ) : (
-                    <p className="font-bold text-green-600 text-xl">En stock</p>
-                  )
-                ) : (
-                  <p className="font-bold text-red-600 text-xl">Agotado</p>
+          
+          <div className="hidden md:block bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200 mt-8">
+            {product.stock > 0 ? (
+              <div className="flex flex-col gap-4">
+                {product.stock <= 10 && (
+                  <div className="text-center">
+                    <p className="font-bold text-blue-600 text-lg">¡Quedan solo {product.stock} unidades!</p>
+                  </div>
                 )}
-              </div>
-            </div>
-
-            {product.stock > 0 && (
-              <div className="flex items-center gap-3 md:gap-6">
-                <div className="flex items-center border border-gray-300 rounded-lg bg-white">
+                <div className="flex items-center gap-3 md:gap-6">
+                  <div className="flex items-center border border-gray-300 rounded-lg bg-white">
+                    <button
+                      onClick={decreaseQuantity}
+                      className="bg-gray-50 hover:bg-gray-100 border-none px-3.5 py-2.5 md:px-3 md:py-2 text-lg md:text-lg font-bold text-gray-700 cursor-pointer transition-colors flex items-center justify-center w-11 md:w-10 h-11 md:h-10"
+                      aria-label="Disminuir cantidad"
+                    >
+                      −
+                    </button>
+                    <span
+                      className="w-14 md:w-12 h-11 md:h-10 text-base md:text-base font-bold text-gray-800 flex items-center justify-center border-l border-r border-gray-300 bg-white px-2"
+                      aria-label={`Cantidad: ${quantity}`}
+                    >
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={increaseQuantity}
+                      className="bg-gray-50 hover:bg-gray-100 border-none px-3.5 py-2.5 md:px-3 md:py-2 text-lg md:text-lg font-bold text-gray-700 cursor-pointer transition-colors flex items-center justify-center w-11 md:w-10 h-11 md:h-10"
+                      aria-label="Aumentar cantidad"
+                    >
+                      +
+                    </button>
+                  </div>
                   <button
-                    onClick={decreaseQuantity}
-                    className="bg-gray-50 hover:bg-gray-100 border-none px-3.5 py-2.5 md:px-3 md:py-2 text-lg md:text-lg font-bold text-gray-700 cursor-pointer transition-colors flex items-center justify-center w-11 md:w-10 h-11 md:h-10"
-                    aria-label="Disminuir cantidad"
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart}
+                    className={`flex-grow bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-8 rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-400 disabled:to-blue-500 disabled:cursor-not-allowed transition-all flex items-center justify-center text-xl gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 ring-4 ring-yellow-400 ring-opacity-75 animate-pulse`}
+                    aria-label={isAddingToCart ? "Agregando al carrito..." : "Agregar al carrito"}
                   >
-                    −
-                  </button>
-                  <span 
-                    className="w-14 md:w-12 h-11 md:h-10 text-base md:text-base font-bold text-gray-800 flex items-center justify-center border-l border-r border-gray-300 bg-white px-2"
-                    aria-label={`Cantidad: ${quantity}`}
-                  >
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={increaseQuantity}
-                    className="bg-gray-50 hover:bg-gray-100 border-none px-3.5 py-2.5 md:px-3 md:py-2 text-lg md:text-lg font-bold text-gray-700 cursor-pointer transition-colors flex items-center justify-center w-11 md:w-10 h-11 md:h-10"
-                    aria-label="Aumentar cantidad"
-                  >
-                    +
+                    {isAddingToCart ? (
+                      <FaSpinner className="animate-spin text-2xl" />
+                    ) : (
+                      <FaShoppingCart className="text-2xl flex-shrink-0" />
+                    )}
+                    <span>{isAddingToCart ? "Agregando..." : "Agregar al Carrito"}</span>
                   </button>
                 </div>
-                <button
-                  onClick={handleAddToCart}
-                  disabled={isAddingToCart}
-                  className={`flex-grow bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-8 rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-400 disabled:to-blue-500 disabled:cursor-not-allowed transition-all flex items-center justify-center text-xl gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 ring-4 ring-yellow-400 ring-opacity-75 animate-pulse`}
-                  aria-label={isAddingToCart ? "Agregando al carrito..." : "Agregar al carrito"}
-                >
-                  {isAddingToCart ? (
-                    <FaSpinner className="animate-spin text-2xl" />
-                  ) : (
-                    <FaShoppingCart className="text-2xl flex-shrink-0" />
-                  )}
-                  <span>{isAddingToCart ? "Agregando..." : "Agregar al Carrito"}</span>
-                </button>
+              </div>
+            ) : (
+              <div className="text-center">
+                <p className="font-bold text-red-600 text-xl">Producto no disponible</p>
               </div>
             )}
+          </div>
+
+          {/* Versión móvil: Debajo de los detalles del producto */}
+          <div className="lg:hidden">
+            <EnvioInfoAccordion />
           </div>
         </div>
       </div>

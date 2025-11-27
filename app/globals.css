@@ -2532,3 +2532,28 @@ input[type="range"]:focus-visible::-moz-range-thumb {
   }
 }
 
+/* Scrollbar azul personalizado para el carrito */
+.cart-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #0891b2 #f0f9ff;
+}
+
+.cart-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cart-scrollbar::-webkit-scrollbar-track {
+  background: #f0f9ff;
+  border-radius: 4px;
+}
+
+.cart-scrollbar::-webkit-scrollbar-thumb {
+  background: #0891b2;
+  border-radius: 4px;
+  border: 1px solid #f0f9ff;
+}
+
+.cart-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #06b6d4;
+}
+
