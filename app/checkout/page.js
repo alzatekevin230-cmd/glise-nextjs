@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Select from 'react-select'; // ¡IMPORTANTE! Importamos la nueva librería
@@ -8,43 +8,85 @@ import { useCarrito } from '@/contexto/ContextoCarrito';
 import { useAuth } from '@/contexto/ContextoAuth';
 import { useModal } from '@/contexto/ContextoModal';
 import { useRouter } from 'next/navigation';
-import { getFunctions, httpsCallable } from "firebase/functions";
 import { doc, getDoc } from "firebase/firestore";
-import { app, db } from '@/lib/firebaseClient';
+import { db } from '@/lib/firebaseClient';
 import toast from 'react-hot-toast';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { FaShippingFast, FaChevronDown, FaLock, FaUsers, FaStar, FaShieldAlt, FaCheckCircle, FaTrashAlt, FaSpinner, FaExclamationTriangle, FaCheck } from 'react-icons/fa';
+import Confetti from 'react-confetti';
+import { FaShippingFast, FaChevronDown, FaLock, FaUsers, FaStar, FaShieldAlt, FaCheckCircle, FaTrashAlt, FaSpinner, FaExclamationTriangle, FaCheck, FaCcVisa, FaCcMastercard, FaCcAmex, FaShoppingBag } from 'react-icons/fa';
 
 // (El resto de tus componentes auxiliares no cambian)
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 const BarraEnvioGratis = ({ subtotal }) => {
-    const envioGratisDesde = 250000;
-    if (subtotal >= envioGratisDesde) {
-        return (
-            <div className="my-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl text-center border border-green-200 shadow-sm">
-                <div className="flex items-center justify-center gap-2">
-                    <FaCheck className="text-green-600 text-lg" />
-                    <p className="text-lg font-bold text-green-700">¡Felicidades! Tienes envío gratis.</p>
-                </div>
-            </div>
-        );
-    }
-    const restante = envioGratisDesde - subtotal;
-    const progreso = Math.min((subtotal / envioGratisDesde) * 100, 100);
+  const envioGratisDesde = 250000;
+  const progreso = Math.min((subtotal / envioGratisDesde) * 100, 100);
+  const restante = envioGratisDesde - subtotal;
+  const porcentaje = Math.round(progreso);
+  const ahorro = subtotal > envioGratisDesde ? subtotal - envioGratisDesde : 0;
+
+  // Cuando ALCANZA o SUPERA el objetivo
+  if (subtotal >= envioGratisDesde) {
     return (
-        <div className="my-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl shadow-sm">
-            <p className="text-sm font-semibold text-center text-gray-800 mb-3">
-                ¡Agrega <span className="font-bold text-blue-600 text-lg">{formatPrice(restante)}</span> y obtén envío gratis!
-            </p>
-            <div className="w-full bg-gray-300 rounded-full h-3 overflow-hidden shadow-inner">
-                <div
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full transition-all duration-700 ease-out shadow-sm"
-                    style={{ width: `${progreso}%` }}
-                ></div>
-            </div>
-            <p className="text-xs text-gray-600 text-center mt-2">{Math.round(progreso)}% completado</p>
+      <div className="my-6 p-4 sm:p-5 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-xl border-2 border-green-200 shadow-md">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <FaCheck className="text-green-600 text-xl" />
+          <p className="text-base font-bold text-green-700">¡Felicitaciones! Tienes envío GRATIS</p>
         </div>
+        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden mb-2">
+          <div 
+            className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500 ease-out"
+            style={{ width: '100%' }}
+          />
+        </div>
+        <p className="text-xs text-center text-green-700 font-semibold">
+          100% completado ✓
+        </p>
+        {ahorro > 0 && (
+          <p className="text-xs text-center text-gray-600 mt-1">
+            Has ahorrado {formatPrice(ahorro)} en envío
+          </p>
+        )}
+      </div>
     );
+  }
+
+  // Cuando está MUY CERCA (más del 90%)
+  if (progreso >= 90) {
+    return (
+      <div className="my-6 p-4 sm:p-5 bg-gradient-to-br from-cyan-50 via-teal-50 to-blue-50 rounded-xl border border-cyan-200 shadow-sm">
+        <p className="text-sm font-semibold text-center text-gray-800 mb-3">
+          ¡Solo <span className="font-bold text-cyan-600 text-base">{formatPrice(restante)}</span> más para envío gratis!
+        </p>
+        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden mb-2">
+          <div 
+            className="bg-gradient-to-r from-cyan-500 to-cyan-600 h-2 rounded-full transition-all duration-500 ease-out"
+            style={{ width: `${progreso}%` }}
+          />
+        </div>
+        <p className="text-xs text-center text-cyan-700 font-semibold">
+          {porcentaje}% completado
+        </p>
+      </div>
+    );
+  }
+
+  // Estado normal (cuando está lejos)
+  return (
+    <div className="my-6 p-4 sm:p-5 bg-gradient-to-br from-cyan-50 via-teal-50 to-blue-50 rounded-xl border border-cyan-200 shadow-sm">
+      <p className="text-sm font-semibold text-center text-gray-800 mb-3">
+        ¡Agrega <span className="font-bold text-cyan-600 text-base">{formatPrice(restante)}</span> y obtén envío gratis!
+      </p>
+      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden mb-2">
+        <div 
+          className="bg-gradient-to-r from-cyan-500 to-cyan-600 h-2 rounded-full transition-all duration-500 ease-out"
+          style={{ width: `${progreso}%` }}
+        />
+      </div>
+      <p className="text-xs text-center text-cyan-700 font-semibold">
+        {porcentaje}% completado
+      </p>
+    </div>
+  );
 };
 const PoliticasEnvioAccordion = () => (
     <div className="mt-6">
@@ -119,7 +161,6 @@ const TrustBadges = () => (
 
 
 export default function CheckoutPage() {
-    const functions = getFunctions(app);
     const { cart, clearCart, updateQuantity, removeFromCart } = useCarrito();
     const { currentUser } = useAuth();
     const { openModal } = useModal();
@@ -140,16 +181,28 @@ export default function CheckoutPage() {
     const [allCities, setAllCities] = useState([]);
     const [touched, setTouched] = useState({});
 
+    const [showConfetti, setShowConfetti] = useState(false);
+    const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+    const prevSubtotalRef = useRef(0);
+
     // Obtenemos las ciudades y las guardamos
     useEffect(() => {
-        const getCities = httpsCallable(functions, 'getCoordinadoraCities');
-        getCities().then(result => setAllCities(result.data)).catch(err => {
-            if (process.env.NODE_ENV === 'development') {
-                console.error("Error al cargar ciudades:", err);
-            }
-            toast.error("No se pudieron cargar las ciudades.");
-        });
-    }, [functions]);
+        fetch('/api/shipping/cities')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setAllCities(data);
+                } else {
+                    throw new Error('Formato inválido de ciudades');
+                }
+            })
+            .catch(err => {
+                if (process.env.NODE_ENV === 'development') {
+                    console.error("Error al cargar ciudades:", err);
+                }
+                toast.error("No se pudieron cargar las ciudades.");
+            });
+    }, []);
 
     // Lógica para memorizar y transformar las listas de departamentos y ciudades
     const departmentOptions = useMemo(() => {
@@ -176,11 +229,21 @@ export default function CheckoutPage() {
         }
         setIsCalculatingShipping(true);
         setShippingCalculated(false);
-        const getQuote = httpsCallable(functions, 'getCoordinadoraQuote');
+        
         try {
-            const result = await getQuote({ destinationCityCode: cityCode, cartItems: cart });
-            setShippingCost(result.data.shippingCost);
-            setDeliveryDays(result.data.deliveryDays);
+            const response = await fetch('/api/shipping/quote', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ destinationCityCode: cityCode, cartItems: cart }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error en cotización');
+            }
+
+            const data = await response.json();
+            setShippingCost(data.shippingCost);
+            setDeliveryDays(data.deliveryDays);
             setShippingCalculated(true);
         } catch (error) {
             console.error("Error al calcular envío:", error);
@@ -191,7 +254,7 @@ export default function CheckoutPage() {
         } finally {
             setIsCalculatingShipping(false);
         }
-    }, [cart, functions]);
+    }, [cart]);
 
     useEffect(() => { localStorage.setItem('checkoutFormData', JSON.stringify(formData)); }, [formData]);
     useEffect(() => {
@@ -225,6 +288,34 @@ export default function CheckoutPage() {
             calculateShipping(formData.cityCode);
         }
     }, [cart, formData.cityCode, calculateShipping]);
+
+    // Confetti Effects
+    useEffect(() => {
+        const updateWindowSize = () => {
+            setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+        };
+        updateWindowSize();
+        window.addEventListener('resize', updateWindowSize);
+        return () => window.removeEventListener('resize', updateWindowSize);
+    }, []);
+
+    useEffect(() => {
+        const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const envioGratisDesde = 250000;
+        const prevSubtotal = prevSubtotalRef.current;
+        
+        const estabaPorDebajo = prevSubtotal < envioGratisDesde;
+        const ahoraPorEncima = subtotal >= envioGratisDesde;
+        
+        if (estabaPorDebajo && ahoraPorEncima) {
+            setShowConfetti(true);
+            const timer = setTimeout(() => setShowConfetti(false), 3500);
+            prevSubtotalRef.current = subtotal;
+            return () => clearTimeout(timer);
+        }
+        
+        prevSubtotalRef.current = subtotal;
+    }, [cart]);
 
     const handleSelectChange = (fieldName, selectedOption) => {
         if (fieldName === 'state') {
@@ -325,9 +416,22 @@ export default function CheckoutPage() {
         const reference = `${Date.now()}`;
         const orderPayload = { orderId: reference, customerDetails: formData, items: cart, subtotal, shippingCost: finalShippingCost, total, orderNotes: formData.orderNotes };
         try {
-            const processOrder = httpsCallable(functions, 'processOrder');
-            const result = await processOrder({ orderData: orderPayload, totalInCents, reference });
-            const { signature, publicKey } = result.data;
+            const response = await fetch('/api/orders/process', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    orderData: orderPayload, 
+                    totalInCents, 
+                    reference,
+                    userId: currentUser?.uid || 'anonymous'
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al procesar la orden');
+            }
+
+            const { signature, publicKey } = await response.json();
             const wompiUrl = `https://checkout.wompi.co/p/?public-key=${publicKey}&currency=COP&amount-in-cents=${totalInCents}&reference=${reference}&signature:integrity=${signature}&redirect-url=https://glise.com.co/gracias`;
             clearCart();
             localStorage.removeItem('checkoutFormData');
@@ -430,6 +534,17 @@ export default function CheckoutPage() {
 
     return (
         <>
+            {showConfetti && windowSize.width > 0 && (
+                <Confetti
+                width={windowSize.width}
+                height={windowSize.height}
+                recycle={false}
+                numberOfPieces={200}
+                gravity={0.3}
+                colors={['#0891b2', '#06b6d4', '#14b8a6', '#0d9488', '#2dd4bf', '#5eead4']}
+                style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999 }}
+                />
+            )}
             <main className="container mx-auto px-2 sm:px-6 py-8">
                 <Breadcrumbs items={breadcrumbItems} />
                 <h1 className="text-3xl font-bold text-center mb-8 mt-6">Finalizar Compra</h1>
@@ -661,7 +776,7 @@ export default function CheckoutPage() {
                     {/* Resumen de pedido mejorado */}
                     <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-xl border border-gray-200">
                         <h3 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
-                            <FaLock className="text-green-600" />
+                            <FaShoppingBag className="text-cyan-600" />
                             Tu pedido
                         </h3>
 
@@ -768,25 +883,49 @@ export default function CheckoutPage() {
 
                         <BarraEnvioGratis subtotal={subtotal} />
 
-                        {/* Método de pago mejorado */}
+                                                {/* Método de pago Wompi */}
                         <div className="mt-6 border-t pt-4">
-                            <div className="p-4 border border-gray-200 rounded-xl bg-gradient-to-r from-gray-50 to-white shadow-sm">
-                                <label className="font-bold flex items-center text-gray-800">
-                                    <input type="radio" name="payment_method" value="wompi" className="mr-3 w-4 h-4 text-blue-600" defaultChecked />
-                                    <span className="flex items-center gap-2">
-                                        <FaLock className="text-green-600" />
-                                        Wompi (Tarjetas, PSE, Nequi, etc.)
-                                    </span>
-                                </label>
-                                <div className="mt-4 p-4 bg-white rounded-lg border border-gray-100">
-                                    <p className="text-sm text-gray-600 mb-4">Paga con tu tarjeta de crédito, débito, PSE, Nequi, Bancolombia, Daviplata y más a través de Wompi. Tu pago es 100% seguro.</p>
-                                    <Image
-                                        src="/imagenespagina/logodewompi.webp"
-                                        alt="Métodos de pago Wompi"
-                                        width={400}
-                                        height={80}
-                                        className="w-full max-w-sm mx-auto object-contain rounded"
-                                    />
+                            <div className="overflow-hidden rounded-lg border border-[#E2E8F0]">
+                                {/* Header */}
+                                <div className="flex items-center justify-between border-b border-[#E5E7EB] bg-white px-5 py-4">
+                                    <div className="flex items-center gap-3">
+                                        <div style={{ width: '18px', height: '18px' }}>
+                                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="9" cy="9" r="9" fill="#10B981"/>
+                                                <circle cx="9" cy="9" r="3" fill="white"/>
+                                            </svg>
+                                        </div>
+                                        <span className="text-base font-medium text-black">Wompi</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <FaCcVisa style={{ color: '#1A1F71', fontSize: '28px' }} />
+                                        <FaCcMastercard style={{ color: '#EB001B', fontSize: '28px' }} />
+                                        <FaCcAmex style={{ color: '#006FCF', fontSize: '28px' }} />
+                                        <span className="rounded bg-[#374151] px-2 py-1 text-xs font-semibold text-white">
+                                            +4
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Contenido */}
+                                <div className="bg-[#F9FAFB] px-6 py-8 text-center">
+                                    <p className="mx-auto mb-6 max-w-md text-sm text-[#4A5568]">
+                                        Paga con tu tarjeta de crédito, débito, PSE, Nequi, Bancolombia, Daviplata y más a través de Wompi. Tu pago es 100% seguro.
+                                    </p>
+                                    
+                                    <svg width="180" height="100" viewBox="0 0 180 100" className="mx-auto mb-5 block">
+                                      <rect x="10" y="20" width="120" height="70" fill="none" stroke="#CBD5E0" strokeWidth="2" rx="4"/>
+                                      <line x1="10" y1="35" x2="130" y2="35" stroke="#CBD5E0" strokeWidth="2"/>
+                                      <circle cx="20" cy="27" r="2" fill="#CBD5E0"/>
+                                      <circle cx="28" cy="27" r="2" fill="#CBD5E0"/>
+                                      <circle cx="36" cy="27" r="2" fill="#CBD5E0"/>
+                                      <line x1="130" y1="55" x2="170" y2="55" stroke="#CBD5E0" strokeWidth="2"/>
+                                      <polyline points="160,48 170,55 160,62" fill="none" stroke="#CBD5E0" strokeWidth="2"/>
+                                    </svg>
+                                    
+                                    <p className="mx-auto max-w-md text-[13px] leading-relaxed text-[#6B7280]">
+                                        Después de hacer clic en &quot;Pagar ahora&quot;, serás redirigido a Wompi para completar tu compra de forma segura.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -831,7 +970,7 @@ export default function CheckoutPage() {
                         <button
                             type="submit"
                             disabled={!canSubmit}
-                            className="w-full mt-6 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-4 px-6 rounded-xl hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-3"
+                            className="w-full mt-6 bg-cyan-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-3"
                             title={!canSubmit && subtotal < 250000 && !shippingCalculated ? 'Espera mientras se calcula el costo de envío' : ''}
                         >
                             {isProcessing ? (
@@ -851,7 +990,7 @@ export default function CheckoutPage() {
                                 </>
                             ) : (
                                 <>
-                                    <FaLock />
+                                    <FaShoppingBag />
                                     <span>REALIZAR PEDIDO</span>
                                 </>
                             )}
@@ -877,7 +1016,7 @@ export default function CheckoutPage() {
                             type="button" 
                             onClick={handleSubmit}
                             disabled={!canSubmit}
-                            className="bg-green-500 text-white font-bold py-2 px-5 rounded-lg hover:bg-green-600 transition disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center text-sm"
+                            className="bg-cyan-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-cyan-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center text-sm"
                         >
                             {isProcessing ? (
                                 <><FaSpinner className="animate-spin mr-2" /><span>Procesando...</span></>
@@ -886,7 +1025,7 @@ export default function CheckoutPage() {
                             ) : !canSubmit && subtotal < 250000 ? (
                                 <><FaSpinner className="animate-spin mr-2" /><span>Espera...</span></>
                             ) : (
-                                <><FaLock className="mr-2" /><span>PAGAR</span></>
+                                <><FaShoppingBag className="mr-2" /><span>PAGAR</span></>
                             )}
                         </button>
                     </div>

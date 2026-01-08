@@ -3,7 +3,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexto/ContextoAuth';
-import { getFunctions, httpsCallable } from "firebase/functions";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { app } from '@/lib/firebaseClient';
 import toast from 'react-hot-toast';
@@ -21,7 +20,6 @@ const Estrellas = ({ rating }) => {
 };
 
 export default function ResenasProducto({ productId }) {
-    const functions = getFunctions(app);
     const storage = getStorage(app);
     const { currentUser } = useAuth();
     const { openLightbox } = useModal();
@@ -35,15 +33,16 @@ export default function ResenasProducto({ productId }) {
     const fetchReviews = useCallback(async () => {
         setLoading(true);
         try {
-            const getReviewsFunc = httpsCallable(functions, 'getReviews');
-            const result = await getReviewsFunc({ productId });
-            setReviews(result.data);
+            const response = await fetch(`/api/reviews?productId=${productId}`);
+            if (!response.ok) throw new Error('Error al cargar reseñas');
+            const data = await response.json();
+            setReviews(data);
         } catch (error) {
             toast.error("No se pudieron cargar las opiniones.");
         } finally {
             setLoading(false);
         }
-    }, [productId, functions]);
+    }, [productId]);
 
     useEffect(() => {
         fetchReviews();
@@ -68,14 +67,25 @@ export default function ResenasProducto({ productId }) {
                 imageUrl = await getDownloadURL(snapshot.ref);
             }
 
-            const addReview = httpsCallable(functions, 'addReview');
-            await addReview({
-                productId: Number(productId),
-                rating: rating,
-                name: name.value,
-                text: text.value,
-                imageUrl: imageUrl,
+            const headers = { 'Content-Type': 'application/json' };
+            if (currentUser) {
+                const token = await currentUser.getIdToken();
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch('/api/reviews', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    productId: Number(productId),
+                    rating: rating,
+                    name: name.value,
+                    text: text.value,
+                    imageUrl: imageUrl,
+                }),
             });
+
+            if (!response.ok) throw new Error('Error al enviar reseña');
 
             toast.success('¡Gracias por tu opinión! Será visible en breve.');
             setShowForm(false);
@@ -84,6 +94,7 @@ export default function ResenasProducto({ productId }) {
             e.target.reset();
             await fetchReviews();
         } catch (error) {
+            console.error(error);
             toast.error('Hubo un error al enviar tu opinión.');
         } finally {
             setIsSubmitting(false);

@@ -9,7 +9,10 @@ import { useAuth } from '@/contexto/ContextoAuth';
 import HeaderMobile from './HeaderMobile';
 import { useSearch } from '@/hooks/useSearch';
 import SearchResults from './SearchResults';
-import { FaHome, FaStore, FaLeaf, FaSpa, FaYinYang, FaBaby, FaGem, FaChevronDown, FaUserCircle, FaShoppingCart, FaHeart, FaSignOutAlt, FaBox, FaTruck, FaTachometerAlt } from 'react-icons/fa';
+import { 
+  FiHome, FiShoppingBag, FiFeather, FiDroplet, FiSun, FiSmile, FiAward, FiChevronDown, FiUser, 
+  FiShoppingCart, FiHeart, FiLogOut, FiBox, FiTruck, FiGrid 
+} from 'react-icons/fi';
 import { HiSearch } from 'react-icons/hi';
 
 export default function Header() {
@@ -70,18 +73,18 @@ export default function Header() {
           <div className="relative flex-shrink-0" ref={menuRef}>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center justify-between bg-cyan-600 hover:bg-cyan-700 text-white font-semibold px-5 py-3 rounded-full transition-colors duration-200">
               <span className="mr-2">Menú</span>
-              <FaChevronDown className={`text-xs transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
+              <FiChevronDown className={`text-xs transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
             </button>
             {isMenuOpen && (
               <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50 border" onClick={() => setIsMenuOpen(false)}>
                 <div className="p-2">
-                  <Link href="/" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaHome className="w-4 text-cyan-600" />Inicio</Link>
-                  <Link href="/categoria/all" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaStore className="w-4 text-blue-600" />Tienda</Link>
-                  <Link href="/categoria/Naturales y Homeopáticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaLeaf className="w-4 text-green-600" />Natural</Link>
-                  <Link href="/categoria/Dermocosméticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaSpa className="w-4 text-pink-600" />Dermocosmética</Link>
-                  <Link href="/categoria/Milenario" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaYinYang className="w-4 text-purple-600" />Milenario</Link>
-                  <Link href="/categoria/Cuidado Infantil" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaBaby className="w-4 text-yellow-500" />Infantil</Link>
-                  <Link href="/categoria/Cuidado y Belleza" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FaGem className="w-4 text-rose-600" />Belleza</Link>
+                  <Link href="/" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiHome className="w-4" />Inicio</Link>
+                  <Link href="/categoria/all" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiShoppingBag className="w-4" />Tienda</Link>
+                  <Link href="/categoria/Naturales y Homeopáticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiFeather className="w-4" />Natural</Link>
+                  <Link href="/categoria/Dermocosméticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiDroplet className="w-4" />Dermocosmética</Link>
+                  <Link href="/categoria/Milenario" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiSun className="w-4" />Milenario</Link>
+                  <Link href="/categoria/Cuidado Infantil" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiSmile className="w-4" />Infantil</Link>
+                  <Link href="/categoria/Cuidado y Belleza" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiAward className="w-4" />Belleza</Link>
                 </div>
               </div>
             )}
@@ -98,31 +101,31 @@ export default function Header() {
           {currentUser ? (
             <div className="relative" ref={userMenuRef}>
               <button onClick={() => setUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 transition-colors">
-                <FaUserCircle className="text-3xl" />
+                <FiUser className="text-3xl" />
                 <span className="text-sm font-medium">Hola, {currentUser.displayName?.split(' ')[0] || currentUser.email?.split('@')[0] || 'Usuario'}</span>
-                <FaChevronDown className={`text-xs transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                <FiChevronDown className={`text-xs transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
               </button>
               {isUserMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border">
                   <div className="p-2" onClick={() => setUserMenuOpen(false)}>
                     <Link href="/mi-cuenta" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FaTachometerAlt className="text-cyan-600" />Mi Dashboard
+                      <FiGrid />Mi Dashboard
                     </Link>
                     <Link href="/mis-pedidos" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FaBox className="text-blue-600" />Mis Pedidos
+                      <FiBox />Mis Pedidos
                     </Link>
                     <Link href="/mis-favoritos" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FaHeart className="text-pink-600" />Mis Favoritos
+                      <FiHeart />Mis Favoritos
                     </Link>
                     <Link href="/mi-perfil" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FaUserCircle className="text-purple-600" />Mi Perfil
+                      <FiUser />Mi Perfil
                     </Link>
                     <Link href="/rastrear-pedido" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FaTruck className="text-green-600" />Rastrear Pedido
+                      <FiTruck />Rastrear Pedido
                     </Link>
                     <div className="border-t my-2"></div>
                     <button onClick={handleLogout} className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-red-600 rounded-md hover:bg-red-500 hover:text-white">
-                      <FaSignOutAlt className="text-red-600" />Cerrar Sesión
+                      <FiLogOut />Cerrar Sesión
                     </button>
                   </div>
                 </div>
@@ -131,9 +134,9 @@ export default function Header() {
           ) : ( 
             <div className="relative" ref={guestMenuRef}>
               <button onClick={() => setGuestMenuOpen(!isGuestMenuOpen)} className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 transition-colors">
-                <FaUserCircle className="text-3xl" />
+                <FiUser className="text-3xl" />
                 <span className="text-sm font-medium">Mi Cuenta</span>
-                <FaChevronDown className={`text-xs transition-transform duration-300 ${isGuestMenuOpen ? 'rotate-180' : ''}`} />
+                <FiChevronDown className={`text-xs transition-transform duration-300 ${isGuestMenuOpen ? 'rotate-180' : ''}`} />
               </button>
               {isGuestMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-md shadow-xl p-2 z-20 border">
@@ -146,7 +149,7 @@ export default function Header() {
             </div>
           )}
           <button onClick={() => openModal('carrito')} className="relative text-cyan-600 hover:text-cyan-700 transition-colors p-3">
-            <FaShoppingCart className="text-3xl" />
+            <FiShoppingCart className="text-3xl" />
             {cartItemCount > 0 && ( <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{cartItemCount}</span> )}
           </button>
         </div>

@@ -1,0 +1,124 @@
+"use client";
+
+import { FaCheck } from 'react-icons/fa';
+import { useCarrito } from '@/contexto/ContextoCarrito';
+import { useEffect, useState, useRef } from 'react';
+import Confetti from 'react-confetti';
+
+const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
+
+const BarraEnvioGratis = () => {
+    const { getSubtotal } = useCarrito();
+    const subtotal = getSubtotal();
+    const envioGratisDesde = 250000;
+    const progreso = Math.min((subtotal / envioGratisDesde) * 100, 100);
+    const restante = envioGratisDesde - subtotal;
+    const porcentaje = Math.round(progreso);
+    const ahorro = subtotal > envioGratisDesde ? subtotal - envioGratisDesde : 0;
+    const [showConfetti, setShowConfetti] = useState(false);
+    const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+    const prevSubtotalRef = useRef(0);
+
+    useEffect(() => {
+        const updateWindowSize = () => {
+            setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+        };
+
+        updateWindowSize();
+        window.addEventListener('resize', updateWindowSize);
+
+        return () => window.removeEventListener('resize', updateWindowSize);
+    }, []);
+
+    useEffect(() => {
+        const estabaPorDebajo = prevSubtotalRef.current < envioGratisDesde;
+        const ahoraPorEncima = subtotal >= envioGratisDesde;
+
+        if (estabaPorDebajo && ahoraPorEncima) {
+            setShowConfetti(true);
+            const timer = setTimeout(() => {
+                setShowConfetti(false);
+            }, 3500);
+            return () => clearTimeout(timer);
+        }
+
+        prevSubtotalRef.current = subtotal;
+    }, [subtotal, envioGratisDesde]);
+
+
+    if (subtotal >= envioGratisDesde) {
+        return (
+            <>
+                {showConfetti && windowSize.width > 0 && (
+                    <Confetti
+                        width={windowSize.width}
+                        height={windowSize.height}
+                        recycle={false}
+                        numberOfPieces={200}
+                        gravity={0.3}
+                        colors={['#0891b2', '#06b6d4', '#14b8a6', '#0d9488', '#2dd4bf', '#5eead4']}
+                        style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999 }}
+                    />
+                )}
+                <div className="mb-5 p-4 sm:p-5 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-xl border-2 border-green-200 shadow-md">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                        <FaCheck className="text-green-600 text-xl" />
+                        <p className="text-base font-bold text-green-700">¡Felicitaciones! Tienes envío GRATIS</p>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden mb-2">
+                        <div
+                            className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500 ease-out"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+                    <p className="text-xs text-center text-green-700 font-semibold">
+                        100% completado ✓
+                    </p>
+                    {ahorro > 0 && (
+                        <p className="text-xs text-center text-gray-600 mt-1">
+                            Has ahorrado {formatPrice(ahorro)} en envío
+                        </p>
+                    )}
+                </div>
+            </>
+        );
+    }
+
+    if (progreso >= 90) {
+        return (
+            <div className="mb-5 p-4 sm:p-5 bg-gradient-to-br from-cyan-50 via-teal-50 to-blue-50 rounded-xl border border-cyan-200 shadow-sm">
+                <p className="text-sm font-semibold text-center text-gray-800 mb-3">
+                    ¡Solo <span className="font-bold text-cyan-600 text-base">{formatPrice(restante)}</span> más para envío gratis!
+                </p>
+                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden mb-2">
+                    <div
+                        className="bg-gradient-to-r from-cyan-500 to-cyan-600 h-2 rounded-full transition-all duration-500 ease-out"
+                        style={{ width: `${progreso}%` }}
+                    />
+                </div>
+                <p className="text-xs text-center text-cyan-700 font-semibold">
+                    {porcentaje}% completado
+                </p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="mb-5 p-4 sm:p-5 bg-gradient-to-br from-cyan-50 via-teal-50 to-blue-50 rounded-xl border border-cyan-200 shadow-sm">
+            <p className="text-sm font-semibold text-center text-gray-800 mb-3">
+                ¡Agrega <span className="font-bold text-cyan-600 text-base">{formatPrice(restante)}</span> y obtén envío gratis!
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden mb-2">
+                <div
+                    className="bg-gradient-to-r from-cyan-500 to-cyan-600 h-2 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${progreso}%` }}
+                />
+            </div>
+            <p className="text-xs text-center text-cyan-700 font-semibold">
+                {porcentaje}% completado
+            </p>
+        </div>
+    );
+};
+
+export default BarraEnvioGratis;

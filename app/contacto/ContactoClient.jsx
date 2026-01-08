@@ -20,13 +20,15 @@ export default function ContactoClient() {
     setFeedback({ type: '', message: '' });
 
     try {
-      // En tu proyecto real, aquí llamarías a la función que guarda en Firestore.
-      // const saveMessage = httpsCallable(functions, 'saveContactMessage'); 
-      // await saveMessage(formData);
-      
-      console.log("Simulando envío de mensaje:", formData);
-      // Simulamos una pequeña espera como si se estuviera enviando
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al enviar el mensaje');
+      }
 
       setFeedback({ type: 'success', message: '¡Mensaje enviado con éxito! Te responderemos pronto.' });
       setFormData({ name: '', email: '', subject: '', message: '' });

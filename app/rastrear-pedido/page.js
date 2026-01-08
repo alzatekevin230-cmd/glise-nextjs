@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from 'react';
-import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '@/lib/firebaseClient';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import OrderStatusTracker from '@/components/OrderStatusTracker';
@@ -15,6 +14,12 @@ const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 // --- FUNCIÓN CORREGIDA ---
 // Esta función ahora sabe cómo leer el objeto de fecha que viene del servidor.
 const formatDate = (timestamp) => {
+  // Si viene como string ISO (de nuestra nueva API)
+  if (typeof timestamp === 'string') {
+    return new Date(timestamp).toLocaleDateString('es-CO', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
   // Verificamos si el timestamp tiene la propiedad _seconds (que viene del servidor)
   if (timestamp && timestamp._seconds) {
     // Si la tiene, la usamos para crear la fecha
@@ -27,7 +32,6 @@ const formatDate = (timestamp) => {
 };
 
 export default function RastrearPedidoPage() {
-  const functions = getFunctions(app);
   const [orderId, setOrderId] = useState('');
   const [email, setEmail] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -40,14 +44,25 @@ export default function RastrearPedidoPage() {
     setError('');
     setOrderData(null);
     try {
-      const trackOrder = httpsCallable(functions, 'trackOrder');
-      const result = await trackOrder({ orderId, email });
-      if (result.data.found) {
-        setOrderData(result.data);
+      const response = await fetch('/api/orders/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, email }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Error en la búsqueda');
+      }
+
+      if (result.found) {
+        setOrderData(result);
       } else {
         setError('No se encontró ningún pedido con los datos proporcionados. Por favor, verifica la información.');
       }
     } catch (err) {
+      console.error(err);
       setError('Ocurrió un error al buscar tu pedido. Inténtalo más tarde.');
     } finally {
       setIsSearching(false);

@@ -8,14 +8,13 @@ import { useCarrito } from '@/contexto/ContextoCarrito';
 import { useMenuLateral } from '@/contexto/ContextoMenuLateral';
 import { useSearch } from '@/hooks/useSearch';
 import SearchResults from './SearchResults';
-import { FaBars, FaShoppingCart, FaTruck, FaGift, FaStar, FaFire } from 'react-icons/fa';
-import { HiSearch } from 'react-icons/hi';
+import { FiMenu, FiShoppingCart, FiTruck, FiGift, FiStar, FiZap, FiSearch } from 'react-icons/fi';
 
 const promoMessages = [
-  { icon: FaTruck, text: "Envíos a todo Colombia", color: "bg-teal-400" },
-  { icon: FaGift, text: "Envío GRATIS en compras +$250.000", color: "bg-rose-300" },
-  { icon: FaStar, text: "+5.000 clientes satisfechos", color: "bg-indigo-300" },
-  { icon: FaFire, text: "Nuevos productos cada semana", color: "bg-cyan-300" }
+  { icon: FiTruck, text: "Envíos a todo Colombia" },
+  { icon: FiGift, text: "Envío GRATIS en compras +$250.000" },
+  { icon: FiStar, text: "+5.000 clientes satisfechos" },
+  { icon: FiZap, text: "Nuevos productos cada semana" }
 ];
 
 export default function HeaderMobile() {
@@ -44,11 +43,11 @@ export default function HeaderMobile() {
       id="mobile-header"
       className="md:hidden w-full"
     >
-      <div className={`${currentMessage.color} text-white text-center text-sm font-semibold py-2 w-full flex items-center justify-center gap-2 transition-colors duration-500 overflow-hidden`}>
-        <Icon className="animate-bounce" />
+      <div className="bg-cyan-600 text-white text-center text-sm font-semibold py-2 w-full flex items-center justify-center gap-2 overflow-hidden relative">
+        <Icon />
         <span 
           key={currentPromoIndex} 
-          className="animate-[slideIn_0.5s_ease-out]"
+          className="animate-fadeIn"
         >
           {currentMessage.text}
         </span>
@@ -65,13 +64,13 @@ export default function HeaderMobile() {
       </div>
       <div className="relative h-20 bg-white shadow w-full flex items-center justify-between px-2">
         <button onClick={openMenu} className="text-2xl text-gray-600 z-10 p-2 -ml-1">
-          <FaBars />
+          <FiMenu />
         </button>
         <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] z-0">
           <Image src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" style={{ width: 'auto' }} />
         </Link>
         <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10 p-2 -mr-1">
-          <FaShoppingCart />
+          <FiShoppingCart />
           {cartItemCount > 0 && (
             <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
               {cartItemCount}
@@ -93,7 +92,7 @@ export default function HeaderMobile() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button type="button" className="absolute right-5 bg-cyan-600 text-white w-10 h-10 rounded-full hover:bg-cyan-700 flex items-center justify-center transition-colors border-0 shadow-none outline-none" style={{top: '50%', transform: 'translateY(-50%)', boxShadow: 'none', border: 'none'}} aria-label="Buscar">
-            <HiSearch style={{width: '28px', height: '28px', minWidth: '28px', minHeight: '28px'}} />
+            <FiSearch style={{width: '28px', height: '28px', minWidth: '28px', minHeight: '28px'}} />
           </button>
           {isSearchFocused && <SearchResults suggestions={suggestions} />}
         </div>
