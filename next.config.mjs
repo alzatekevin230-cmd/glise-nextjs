@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Configurar Turbopack (Next.js 16+)
+  turbopack: {},
+  
   images: {
     // ✅ DESACTIVADO - No usar optimizador para evitar costos de Vercel
     unoptimized: true,
