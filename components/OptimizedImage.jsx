@@ -87,48 +87,7 @@ export default function OptimizedImage({
             fill
             sizes={sizes}
             quality="auto"
-            fetchFormat="auto"
-            crop="fill"
-            className={`object-contain transition-all duration-500 ease-out image-optimized ${
-              imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
-            }`}
-            onLoad={handleLoad}
-            onError={handleError}
-            loading={priority ? 'eager' : 'lazy'}
-            {...props}
-          />
-        </div>
-      );
-    }
-  }
-
-  // Para imágenes no-Cloudinary, usar Image normal de Next.js
-  // Si es Cloudinary, usar CldImage para optimización automática
-  if (isCloudinaryImage) {
-    // Extraer publicId de la URL de Cloudinary
-    const getPublicId = (url) => {
-      if (!url) return null;
-      try {
-        const match = url.match(/\/v\d+\/(.+)$/);
-        return match ? match[1].split('.')[0] : null;
-      } catch {
-        return null;
-      }
-    };
-
-    const publicId = getPublicId(src);
-
-    if (publicId) {
-      return (
-        <div className={`relative ${className} overflow-hidden`}>
-          {!imageLoaded && <SkeletonLoader type="image" className="absolute inset-0" />}
-          <CldImage
-            src={publicId}
-            alt={alt}
-            fill
-            sizes={sizes}
-            quality="auto"
-            fetchFormat="auto"
+            format="auto"
             crop="fill"
             className={`object-contain transition-all duration-500 ease-out image-optimized ${
               imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
