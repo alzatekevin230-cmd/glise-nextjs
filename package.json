@@ -16,7 +16,8 @@
     "migrate-to-cloudinary": "node scripts/migrate-products-to-cloudinary.js",
     "migrate-from-firebase": "node scripts/migrate-firebase-storage-to-cloudinary.js",
     "test-mongodb": "node scripts/test-mongodb.js",
-    "migrate-to-mongodb": "node scripts/migrate-firestore-to-mongodb.js"
+    "migrate-to-mongodb": "node scripts/migrate-firestore-to-mongodb.js",
+    "test-firebase": "node scripts/test-firebase-connection.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.28.3",
