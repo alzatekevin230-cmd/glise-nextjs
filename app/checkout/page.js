@@ -403,7 +403,7 @@ export default function CheckoutPage() {
                 toast.error('El costo de envío aún no se ha calculado. Por favor, espera unos segundos o selecciona otra ciudad.');
                 return;
             }
-            if (shippingCost <= 0) {
+            if (shippingCost < 0) {
                 toast.error('El costo de envío no es válido. Por favor, intenta seleccionar otra ciudad o contacta a soporte.');
                 return;
             }
@@ -452,7 +452,7 @@ export default function CheckoutPage() {
     // Si subtotal < 250000, DEBE tener ciudad seleccionada Y envío calculado Y shippingCost > 0
     const canSubmit = !isProcessing && 
                       !isCalculatingShipping && 
-                      (subtotal >= 250000 || (formData.cityCode && shippingCalculated && shippingCost > 0));
+                      (subtotal >= 250000 || (formData.cityCode && shippingCalculated && shippingCost >= 0));
 
     if (cart.length === 0 && !isProcessing) return null;
 
@@ -845,13 +845,13 @@ export default function CheckoutPage() {
                             </div>
 
                             <div className="pb-4 border-b border-gray-200">
-                                {subtotal >= 250000 ? (
+                                {subtotal >= 250000 || (shippingCalculated && shippingCost === 0) ? (
                                     <div className="flex justify-between items-center">
                                         <span className="font-medium text-gray-800">Envío</span>
                                         <span className="font-bold text-green-600">¡Gratis!</span>
                                     </div>
                                 ) : formData.cityCode ? (
-                                    shippingCost > 0 ? (
+                                    shippingCalculated ? (
                                         <div className="flex justify-between items-center">
                                             <div>
                                                 <span className="font-medium text-gray-800">Envío con Coordinadora</span>

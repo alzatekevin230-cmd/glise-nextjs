@@ -1,14 +1,14 @@
 // components/MenuLateral.jsx
 "use client";
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useMenuLateral } from '@/contexto/ContextoMenuLateral';
 import { useAuth } from '@/contexto/ContextoAuth';
 import { useModal } from '@/contexto/ContextoModal';
 import { 
   FiX, FiShoppingBag, FiGrid, FiBox, FiHeart, FiUser, FiTruck, FiLogIn, FiLogOut, 
-  FiFeather, FiDroplet, FiSun, FiSmile, FiAward 
+  FiFeather, FiDroplet, FiSun, FiSmile, FiAward, FiTag, FiChevronDown, FiChevronUp 
 } from 'react-icons/fi';
 
 const mainCategories = [
@@ -23,6 +23,19 @@ export default function MenuLateral() {
   const { isMenuOpen, closeMenu } = useMenuLateral();
   const { currentUser, logout } = useAuth();
   const { openModal } = useModal();
+  const [isBrandsOpen, setIsBrandsOpen] = useState(false);
+
+  const brands = [
+    { name: 'NIVEA', link: '/marca/NIVEA' },
+    { name: 'EUCERIN', link: '/marca/EUCERIN' },
+    { name: 'ISDIN', link: '/marca/ISDIN' },
+    { name: 'CERAVE', link: '/marca/CERAVE' },
+    { name: 'HEEL', link: '/marca/Heel' },
+    { name: 'FUNAT', link: '/marca/FUNAT' },
+    { name: 'DERMANAT', link: '/marca/DERMANAT' },
+    { name: 'ALMIPRO', link: '/marca/ALMIPRO' },
+    { name: 'GLISÉ', link: '/marca/GLISÉ' }
+  ];
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -96,6 +109,33 @@ export default function MenuLateral() {
                 </Link>
               );
             })}
+
+            <div className="menu-divider"></div>
+
+            <button 
+              onClick={() => setIsBrandsOpen(!isBrandsOpen)} 
+              className="menu-link w-full text-left flex items-center justify-between"
+            >
+              <div className="flex items-center gap-3">
+                  <FiTag /> Marcas
+              </div>
+              {isBrandsOpen ? <FiChevronUp /> : <FiChevronDown />}
+            </button>
+
+            {isBrandsOpen && (
+              <div className="pl-8 bg-gray-50 py-2 rounded-lg mt-1 space-y-2">
+                  {brands.map(brand => (
+                      <Link 
+                          key={brand.name} 
+                          href={brand.link} 
+                          onClick={closeMenu} 
+                          className="flex items-center gap-3 py-2 text-gray-600 hover:text-cyan-600 transition-colors"
+                      >
+                          <span className="text-sm font-medium">{brand.name}</span>
+                      </Link>
+                  ))}
+              </div>
+            )}
 
             <div className="menu-divider"></div>
 

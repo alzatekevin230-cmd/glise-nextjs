@@ -43,7 +43,7 @@ export default function HeaderMobile() {
       id="mobile-header"
       className="md:hidden w-full"
     >
-      <div className="bg-cyan-600 text-white text-center text-sm font-semibold py-2 w-full flex items-center justify-center gap-2 overflow-hidden relative">
+      <div className="bg-cyan-600 text-white text-center text-base font-semibold py-3 w-full flex items-center justify-center gap-2 overflow-hidden relative">
         <Icon />
         <span 
           key={currentPromoIndex} 
@@ -51,22 +51,12 @@ export default function HeaderMobile() {
         >
           {currentMessage.text}
         </span>
-        <div className="absolute right-2 flex gap-1">
-          {promoMessages.map((_, index) => (
-            <div
-              key={index}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                index === currentPromoIndex ? 'bg-white w-3' : 'bg-white/50'
-              }`}
-            />
-          ))}
-        </div>
       </div>
-      <div className="relative h-20 bg-white shadow w-full flex items-center justify-between px-2">
+      <div className="relative h-16 bg-white shadow w-full flex items-center justify-between px-2">
         <button onClick={openMenu} className="text-2xl text-gray-600 z-10 p-2 -ml-1">
           <FiMenu />
         </button>
-        <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] z-0">
+        <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[50%] z-0">
           <Image src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" style={{ width: 'auto' }} />
         </Link>
         <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10 p-2 -mr-1">

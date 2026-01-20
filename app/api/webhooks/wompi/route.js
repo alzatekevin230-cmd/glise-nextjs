@@ -83,7 +83,7 @@ export async function POST(request) {
       const trackingNumber = guideResult.success ? guideResult.trackingNumber : null;
 
       // Send Emails
-      await sendOrderConfirmation(orderDataBeforeUpdate, orderId, trackingNumber);
+      await sendOrderConfirmation(orderDataBeforeUpdate, orderId, trackingNumber, transaction.customer_email);
     }
 
     return NextResponse.json({ message: "Evento procesado." });

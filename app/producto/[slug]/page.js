@@ -6,8 +6,8 @@ import DetalleProductoCliente from '@/components/DetalleProductoCliente';
 import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
-// ISR: Revalidar cada 1 hora (3600 segundos)
-export const revalidate = 3600;
+// ISR: Revalidar cada 0 segundos (siempre fresco)
+export const revalidate = 0;
 
 // Genera todas las rutas de productos en build time
 export async function generateStaticParams() {
