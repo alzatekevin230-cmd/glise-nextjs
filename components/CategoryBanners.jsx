@@ -106,39 +106,22 @@ export default function CategoryBanners({ categoryName, products = [] }) {
       return 20; // 20% por defecto si no está definido
     };
 
-    // Función para obtener productos seleccionados
+    // Función para obtener productos seleccionados (los más baratos de cada categoría)
     const getSelectedProducts = (category) => {
-      const config = getProductConfig();
-      const categoryProducts = [];
+      let categoryProducts = [];
       
       if (category === 'all') {
-        // Para la tienda, buscar productos de todas las categorías
-        Object.keys(config).forEach(productName => {
-          const product = products.find(p => p.name === productName);
-          if (product) {
-            categoryProducts.push(product);
-          }
-        });
+        // Para la tienda, obtener los productos más baratos de todas las categorías
+        categoryProducts = products
+          .filter(p => p.category !== 'all' && p.stock > 0)
+          .sort((a, b) => (a.price || 0) - (b.price || 0))
+          .slice(0, 20);
       } else {
-        // Para categorías específicas, buscar productos de esa categoría
-      Object.keys(config).forEach(productName => {
-        const product = products.find(p => 
-          p.category === category && 
-          p.name === productName
-        );
-        if (product) {
-          categoryProducts.push(product);
-        }
-      });
-      }
-      
-      // Si no encuentra productos específicos, usar los primeros productos de la categoría
-      if (categoryProducts.length === 0) {
-        if (category === 'all') {
-          return products.filter(p => p.category !== 'all').slice(0, 20);
-        } else {
-        return products.filter(p => p.category === category).slice(0, 3);
-        }
+        // Para categorías específicas, obtener los productos más baratos de esa categoría
+        categoryProducts = products
+          .filter(p => p.category === category && p.stock > 0)
+          .sort((a, b) => (a.price || 0) - (b.price || 0))
+          .slice(0, 10); // Tomar hasta 10 productos más baratos
       }
       
       return categoryProducts;

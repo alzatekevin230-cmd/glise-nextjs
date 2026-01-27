@@ -1,112 +1,113 @@
-// components/BestOffers.jsx
+"use client";
 
-import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useRef, useEffect } from 'react';
+import CategoryCard from './CategoryCard';
 
-export default function BestOffers() {
+export default function BestOffers({ products = [] }) {
+  const [isMobile, setIsMobile] = useState(false);
+  const [currentIndexMobile, setCurrentIndexMobile] = useState(0);
+  const containerRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  // Detectar screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (!products || products.length === 0) {
+    return null;
+  }
+
+  // Touch handlers para móvil
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    const dx = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+
+    if (dx > threshold && currentIndexMobile < products.length - 1) {
+      setCurrentIndexMobile(prev => prev + 1);
+    } else if (dx < -threshold && currentIndexMobile > 0) {
+      setCurrentIndexMobile(prev => prev - 1);
+    }
+  };
+
+  // ========== RENDER MÓVIL ==========
+  if (isMobile) {
+    const currentCategory = products[currentIndexMobile];
+
+    return (
+      <section className="mb-12">
+        <div className="container mx-auto px-2">
+          {/* Encabezado */}
+          <div className="flex justify-between items-center mb-5">
+            <h2 className="text-2xl font-bold text-[#000000]">Mejores Ofertas</h2>
+            <Link 
+              href="/categoria/all" 
+              className="text-[#0071ce] font-medium text-sm underline"
+            >
+              Ver todo
+            </Link>
+          </div>
+
+          {/* Carrusel Móvil - tarjeta tipo retrato (angosta) dejando ver la siguiente */}
+          <div 
+            ref={containerRef}
+            className="overflow-x-auto pb-2 category-carousel-mobile"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div className="flex gap-4 pr-2">
+              {products.map((category) => (
+                <div
+                  key={category.categoryName}
+                  style={{
+                    minWidth: '78vw',
+                    maxWidth: '320px'
+                  }}
+                >
+                  <CategoryCard category={category} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ========== RENDER DESKTOP ==========
   return (
-    <section className="mb-16 md:mb-24">
-      <div className="container mx-auto px-2 sm:px-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Mejores Ofertas</h2>
-          <Link href="/categoria/all" className="text-blue-600 font-semibold hover:underline text-sm">Ver todo</Link>
-        </div>
-
-        {/* --- INICIO: Layout Móvil (Optimizado con width y height) --- */}
-        <div className="grid grid-cols-1 gap-4 lg:hidden">
-          <Link href="/categoria/Dermocosméticos" className="offer-grid-card">
-            <Image 
-              src="/imagenespagina/ofertainicio1.webp" 
-              alt="Oferta principal de productos naturales" 
-              width={1200}
-              height={900}
-              className="w-full h-auto"
-              sizes="100vw"
-            />
-          </Link>
-          <div className="grid grid-cols-2 gap-4">
-            <Link href="/producto/bloqueador-nivea-sun-antiedad-fps50-50-ml" className="offer-grid-card block">
-              <Image 
-                src="/imagenespagina/tarjetaofertas.webp" 
-                alt="Oferta en cuidado para bebés" 
-                width={800}
-                height={1200}
-                className="w-full h-auto"
-                sizes="50vw"
-              />
-            </Link>
-            <Link href="/producto/esencia-floral-dulces-suenos-25-ml-funat" className="offer-grid-card block">
-              <Image 
-                src="/imagenespagina/tarjetaofertas2.webp" 
-                alt="Oferta en productos de belleza" 
-                width={800}
-                height={1200}
-                className="w-full h-auto"
-                sizes="50vw"
-              />
-            </Link>
-          </div>
-          <Link href="/categoria/Cuidado Infantil" className="offer-grid-card">
-            <Image 
-              src="/imagenespagina/ofertainicio2.webp" 
-              alt="Oferta en suplementos" 
-              width={1200}
-              height={1200}
-              className="w-full h-auto"
-              sizes="100vw"
-            />
+    <section className="mb-16">
+      <div className="container mx-auto px-4">
+        {/* Encabezado */}
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-[#000000]">Mejores Ofertas</h2>
+          <Link 
+            href="/categoria/all" 
+            className="text-[#0071ce] font-medium text-base underline"
+          >
+            Ver todo
           </Link>
         </div>
 
-        {/* --- INICIO: Layout Escritorio (Optimizado con fill) --- */}
-        <div className="hidden lg:grid grid-cols-2 gap-6">
-          <Link href="/categoria/Dermocosméticos" className="offer-grid-card relative block">
-            <Image 
-              src="/imagenespagina/ofertaescritorio.webp" 
-              alt="Oferta principal de productos naturales" 
-              fill
-              sizes="50vw"
-              className="w-full h-full object-cover" 
-            />
-          </Link>
-          <div className="grid grid-cols-2 gap-6">
-            <Link href="/producto/creatina-en-gomas-sabor-fresa" className="offer-grid-card relative aspect-square block">
-              <Image 
-                src="/imagenespagina/tescritorio1.webp" 
-                alt="Oferta en dermocosméticos" 
-                fill
-                sizes="25vw"
-                className="w-full h-full object-cover" 
-              />
-            </Link>
-            <Link href="/categoria/Naturales y Homeopáticos" className="offer-grid-card relative aspect-square block">
-              <Image 
-                src="/imagenespagina/tescritorio2.webp" 
-                alt="Oferta en productos de belleza" 
-                fill
-                sizes="25vw"
-                className="w-full h-full object-cover" 
-              />
-            </Link>
-            <Link href="/categoria/Cuidado y Belleza" className="offer-grid-card relative aspect-square block">
-              <Image 
-                src="/imagenespagina/tescritorio3.webp" 
-                alt="Oferta en suplementos" 
-                fill
-                sizes="25vw"
-                className="w-full h-full object-cover" 
-              />
-            </Link>
-            <Link href="/categoria/Cuidado Infantil" className="offer-grid-card relative aspect-square block">
-              <Image 
-                src="/imagenespagina/tescritorio4.webp" 
-                alt="Oferta en cuidado infantil" 
-                fill
-                sizes="25vw"
-                className="w-full h-full object-cover" 
-              />
-            </Link>
-          </div>
+        {/* Grid de todas las categorías (sin carrusel) */}
+        <div className="grid gap-3 xl:gap-4" style={{ gridTemplateColumns: `repeat(${products.length}, minmax(0, 1fr))` }}>
+          {products.map((category) => (
+            <div key={category.categoryName}>
+              <CategoryCard category={category} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

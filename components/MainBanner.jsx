@@ -86,7 +86,7 @@ export default function MainBanner() {
         <div className="swiper-wrapper">
 
           {/* --- SLIDE 1 --- */}
-          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
+          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380] overflow-hidden">
             {/* Imagen Mobile - LCP optimizado */}
             <Image 
               src="/imagenespagina/banermovil1.webp" 
@@ -112,7 +112,7 @@ export default function MainBanner() {
           </div>
 
           {/* --- SLIDE 2 --- */}
-          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
+          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380] overflow-hidden">
             {/* Imagen Mobile */}
             <Image 
               src="/imagenespagina/banermovil2.webp" 
@@ -136,7 +136,7 @@ export default function MainBanner() {
           </div>
           
           {/* --- SLIDE 3 --- */}
-          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
+          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380] overflow-hidden">
             <Image 
               src="/imagenespagina/banermovil3.webp" 
               alt="Banner Productos Naturales"
@@ -158,7 +158,7 @@ export default function MainBanner() {
           </div>
           
           {/* --- SLIDE 4 --- */}
-          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
+          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380] overflow-hidden">
             <Image 
               src="/imagenespagina/banermovil4 .webp" 
               alt="Banner Adicional 1"
@@ -180,7 +180,7 @@ export default function MainBanner() {
           </div>
 
           {/* --- SLIDE 5 --- */}
-          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380]">
+          <div className="swiper-slide relative aspect-[800/600] md:aspect-[1440/380] overflow-hidden">
             <Image 
               src="/imagenespagina/banermovil5.webp" 
               alt="Banner Adicional 2"
