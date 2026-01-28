@@ -217,9 +217,9 @@ export default function CategoryBanners({ categoryName, products = [] }) {
           discountedPrice = prices.real;    // Precio real
           discount = calculateDiscount(product);
         } else {
-          // Fallback: usar precio del producto con 20% OFF
-          originalPrice = product.price;
-          discountedPrice = product.price * 0.8;
+          // Fallback: usar precio del producto con precio inflado
+          originalPrice = product.price * 1.2;  // Precio inflado tachado
+          discountedPrice = product.price;      // Precio real
           discount = 20;
         }
         
@@ -254,9 +254,9 @@ export default function CategoryBanners({ categoryName, products = [] }) {
           discountedPrice = prices.real;    // Precio real
           discount = calculateDiscount(product);
         } else {
-          // Fallback: usar precio del producto con 20% OFF
-          originalPrice = product.price;
-          discountedPrice = product.price * 0.8;
+          // Fallback: usar precio del producto con precio inflado
+          originalPrice = product.price * 1.2;  // Precio inflado tachado
+          discountedPrice = product.price;      // Precio real
           discount = 20;
         }
         
