@@ -74,9 +74,19 @@ export default async function HomePage() {
   const gliseProductsData = allProducts.filter(p => p.laboratorio === 'GLISÉ');
   const naturalProductsData = allProducts.filter(p => p.category === 'Naturales y Homeopáticos');
 
+  // Productos destacados para MobilePromo
+  const orangeOilProduct = allProducts
+    .filter(p => p.name.toLowerCase().includes('naranja') && p.stock > 0)
+    .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))[0] || 
+    allProducts.find(p => p.category === 'Milenario' && p.stock > 0);
+
+  const naturalesProduct = allProducts
+    .filter(p => p.category === 'Naturales y Homeopáticos' && p.stock > 0)
+    .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))[0] || null;
+
   return (
     <main>
-      <div className="container mx-auto px-2 sm:px-6 pt-4 mb-8">
+      <div className="container mx-auto px-2 sm:px-6 pt-4 mb-0">
         <div className="hidden md:flex bg-cyan-600 text-white text-sm mb-4 rounded-lg shadow-md items-center justify-center text-center p-2">
           <div className="flex items-center gap-2">
             <FaCommentDots />
@@ -93,7 +103,7 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <MobilePromo />
+      <MobilePromo milenarioProduct={orangeOilProduct} naturalesProduct={naturalesProduct} />
       <FeaturedCategories />
       
       <BestOffers products={bestOffersProducts} />

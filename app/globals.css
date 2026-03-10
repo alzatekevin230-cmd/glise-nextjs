@@ -1742,6 +1742,15 @@ body.menu-open {
     margin-bottom: 0; /* AÑADIDO: Elimina el espacio inferior del título */
 }
 
+.promo-card-prices {
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.promo-card-price {
+    color: white;
+}
+
 .promo-card-cta {
     font-weight: 600;
     font-size: 0.875rem; /* 14px */

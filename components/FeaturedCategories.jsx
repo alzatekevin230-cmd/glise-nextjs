@@ -50,7 +50,7 @@ export default function FeaturedCategories() {
 
   return (
     <AnimatedSection animation="fadeIn" delay={100}>
-      <section id="category-carousel-section" className="mb-16 md:mb-24">
+      <section id="category-carousel-section" className="mt-6 mb-16 md:mb-24">
         <div className="container mx-auto px-4 sm:px-6">
           <AnimatedSection animation="slideUp" delay={200}>
             <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-10">
