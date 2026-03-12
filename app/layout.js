@@ -33,7 +33,7 @@ export const metadata = {
   metadataBase: new URL('https://glise.com.co'),
   title: {
     default: 'Glisé - Farmacia y Belleza Natural en Colombia | Productos Naturales y Dermocosméticos',
-    template: '%s | Glisé'
+    template: '%s | glise'
   },
   description: '🛍️ ¡Descubre Glisé! Tu farmacia online #1 en Colombia. Productos naturales, dermocosméticos premium y cuidado personal de las mejores marcas. ✨ Envíos gratis, calidad garantizada. ¡Compra ahora!',
   keywords: ['farmacia online Colombia', 'productos naturales', 'dermocosméticos', 'belleza natural', 'cuidado personal', 'suplementos', 'Palmira', 'farmacia virtual', 'productos orgánicos', 'cosmética natural', 'medicamentos naturales'],

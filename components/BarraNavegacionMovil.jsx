@@ -98,7 +98,7 @@ export default function BarraNavegacionMovil() {
 
   // Barra normal para otras páginas
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0_-2px_15px_rgba(0,0,0,0.1)] z-30 flex justify-around items-center h-20">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0_-2px_15px_rgba(0,0,0,0.1)] z-30 flex justify-around items-center h-16">
       <Link 
         href="/categoria/all" 
         className="flex flex-col items-center justify-center text-cyan-600 active:text-cyan-800 active:scale-95 active:bg-cyan-50 transition-all duration-150 w-full h-full rounded-lg"

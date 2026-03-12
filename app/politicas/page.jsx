@@ -4,6 +4,28 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import { FaShieldAlt, FaEnvelope } from 'react-icons/fa';
 import BotonWhatsapp from '@/components/BotonWhatsapp';
 
+// Metadatos para SEO - Políticas de Privacidad
+export const metadata = {
+  title: 'Políticas de Privacidad - Glisé Farmacia y Belleza Natural',
+  description: '📋 Conoce nuestras políticas de privacidad en Glisé. Te protegemos con las mejores prácticas de seguridad de datos. Navega con tranquilidad en nuestra farmacia online.',
+  keywords: ['políticas de privacidad', 'protección de datos', 'privacidad', 'Glisé', 'farmacia online', 'seguridad de datos'],
+  openGraph: {
+    title: 'Políticas de Privacidad - Glisé',
+    description: 'Cuidamos tus datos con seguridad y transparencia. Lee nuestras políticas de privacidad.',
+    type: 'website',
+    locale: 'es_CO',
+    siteName: 'Glisé',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Políticas de Privacidad - Glisé',
+    description: 'Protegemos tu privacidad con los más altos estándares de seguridad.',
+  },
+  alternates: {
+    canonical: 'https://glise.com.co/politicas'
+  }
+};
+
 export default function PaginaPoliticas() {
   const breadcrumbItems = [
     { label: 'Inicio', href: '/' },

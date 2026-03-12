@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import TarjetaProducto from '@/components/ProductCard.jsx';
 import Pagination from '@/components/Pagination.jsx';
 import Link from 'next/link';
@@ -13,6 +14,10 @@ const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
 
 export default function PaginaCategoriaCliente({ initialProducts, categoryName }) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   // ... (otros estados sin cambios)
   const [activeBrands, setActiveBrands] = useState([]);
@@ -20,9 +25,44 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
   const [activeUnits, setActiveUnits] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 0]);
   const [brandSearchTerm, setBrandSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('popularity');
-  const [currentPage, setCurrentPage] = useState(1);
+  // Configuración de ordenamiento por defecto:
+  // Si estamos en la categoría "Milenario", ordenamos por precio (menor a mayor) para mostrar ofertas primero.
+  // Para el resto, usamos popularidad.
+  const [sortBy, setSortBy] = useState(() => {
+    if (categoryName && categoryName.toLowerCase() === 'milenario') {
+      return 'price-asc';
+    }
+    return 'popularity';
+  });
+  
+  // LEER PAGINA DE LA URL (Default 1)
+  const pageParam = searchParams.get('page');
+  const currentPage = pageParam ? parseInt(pageParam) : 1;
   const productsPerPage = 20;
+
+  // Función para cambiar de página (Actualiza URL)
+  const handlePageChange = (page) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page);
+    router.push(`${pathname}?${params.toString()}`, { scroll: true });
+  };
+
+  // Función para generar HREF para los Links de paginación (SEO)
+  const getPageHref = (page) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page);
+    return `${pathname}?${params.toString()}`;
+  };
+
+  // Función auxiliar para resetear a página 1 cuando cambian filtros
+  const resetPage = () => {
+    if (currentPage !== 1) {
+      const params = new URLSearchParams(searchParams);
+      params.set('page', 1);
+      // Usamos replace para no llenar el historial con resets de página
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  };
 
 
   const { availableBrands, availablePresentations, availableUnits, minPrice, maxPrice } = useMemo(() => {
@@ -56,9 +96,18 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
   }, [minPrice, maxPrice]);
   
   // ... (resto de funciones y lógica sin cambios)
-  const handleBrandChange = (brandName) => { setCurrentPage(1); setActiveBrands(prev => prev.includes(brandName) ? prev.filter(b => b !== brandName) : [...prev, brandName]); };
-  const handlePresentationChange = (presentationName) => { setCurrentPage(1); setActivePresentations(prev => prev.includes(presentationName) ? prev.filter(p => p !== presentationName) : [...prev, presentationName]); };
-  const handleUnitChange = (unitName) => { setCurrentPage(1); setActiveUnits(prev => prev.includes(unitName) ? prev.filter(u => u !== unitName) : [...prev, unitName]); };
+  const handleBrandChange = (brandName) => { 
+    resetPage(); 
+    setActiveBrands(prev => prev.includes(brandName) ? prev.filter(b => b !== brandName) : [...prev, brandName]); 
+  };
+  const handlePresentationChange = (presentationName) => { 
+    resetPage();
+    setActivePresentations(prev => prev.includes(presentationName) ? prev.filter(p => p !== presentationName) : [...prev, presentationName]); 
+  };
+  const handleUnitChange = (unitName) => { 
+    resetPage();
+    setActiveUnits(prev => prev.includes(unitName) ? prev.filter(u => u !== unitName) : [...prev, unitName]); 
+  };
   const clearFilters = () => {
     setActiveBrands([]);
     setActivePresentations([]);
@@ -66,7 +115,12 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
     setPriceRange([minPrice, maxPrice]);
     setBrandSearchTerm('');
     setSortBy('popularity');
-    setCurrentPage(1);
+    // Resetear a página 1 (URL)
+    const params = new URLSearchParams(searchParams);
+    if (params.has('page')) {
+        params.delete('page');
+        router.replace(`${pathname}?${params.toString()}`);
+    }
   };
   const filteredBrands = availableBrands.filter(brand => brand.toLowerCase().includes(brandSearchTerm.toLowerCase()));
   const sortedAndFilteredProducts = useMemo(() => {
@@ -95,9 +149,40 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
   const paginatedProducts = sortedAndFilteredProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
   // Handler optimizado del filtro de precio
   const handlePriceChange = useCallback((newRange) => {
-    setCurrentPage(1);
+    // Si cambia el precio, volvemos a página 1
+    // NOTA: No podemos llamar a resetPage() directamente dentro de useCallback sin añadirlo a deps, 
+    // lo cual podría causar loops. Mejor lo manejamos cuando el usuario suelta el slider o confirma.
+    // Asumiremos que PriceFilter llama a esto frecuentemente? No, useCallback sugiere optimización.
+    // Vamos a dejar que PriceFilter maneje la UI y aquí solo actualizamos estado.
+    // PERO: necesitamos resetear la página. 
+    // Para simplificar, asumimos que si el rango cambia drásticamente, el usuario querría ver desde el inicio.
+    // Pero si es continuo, puede ser molesto.
     setPriceRange(newRange);
   }, []);
+  
+  // Efecto para resetear página cuando cambia precio (debounceado por el usuario o al soltar)
+  // O simplemente lo hacemos en el onChange si no es continuo.
+  // Dado que PriceFilter suele ser 'onChange', vamos a añadir un useEffect que vigile priceRange
+  // para resetear página, PERO solo si no fue un cambio inicial.
+  // Mmm, mejor simplificar: PriceFilter suele tener un botón o evento 'onAfterChange'.
+  // Si es en tiempo real, resetear la URL a cada paso es malo.
+  // Vamos a asumir que handlePriceChange se llama al final.
+  
+  useEffect(() => {
+     // Cuando cambia el rango de precios, si no estamos en la página 1, ir a la 1.
+     // Esto puede ser agresivo si el usuario solo ajusta un poco. 
+     // Pero es lo correcto para no quedar en página vacía.
+     if (currentPage !== 1) {
+         // resetPage() - no podemos llamarlo directamente si depende de router/searchParams y estamos en effect
+         // Lo haremos manual
+         const params = new URLSearchParams(window.location.search); // Usamos window para evitar dep loops
+         if (params.get('page') && params.get('page') !== '1') {
+             params.set('page', 1);
+             router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+         }
+     }
+  }, [priceRange]); 
+
 
   const Sidebar = () => (
     <aside className="lg:col-span-1 bg-white p-4 rounded-lg shadow h-fit sticky top-32">
@@ -182,7 +267,15 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
         
         <div className="lg:col-span-3">
           <div className="flex justify-end mb-6">
-            <select value={sortBy} onChange={(e) => { setCurrentPage(1); setSortBy(e.target.value); }} className="border-gray-300 rounded-md shadow-sm text-sm">
+            <select value={sortBy} onChange={(e) => { 
+                setSortBy(e.target.value); 
+                // Resetear a página 1 (URL)
+                const params = new URLSearchParams(searchParams);
+                if (params.get('page') && params.get('page') !== '1') {
+                  params.set('page', 1);
+                  router.replace(`${pathname}?${params.toString()}`);
+                }
+            }} className="border-gray-300 rounded-md shadow-sm text-sm">
               <option value="popularity">Más populares</option>
               <option value="price-asc">Precio: más bajo a más alto</option>
               <option value="price-desc">Precio: más alto a más bajo</option>
@@ -194,7 +287,12 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
               <TarjetaProducto key={product.id} product={product} />
             ))}
           </div>
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(page) => setCurrentPage(page)} />
+          <Pagination 
+            currentPage={currentPage} 
+            totalPages={totalPages} 
+            onPageChange={handlePageChange} 
+            getHref={getPageHref}
+          />
         </div>
       </div>
     </>

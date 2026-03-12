@@ -1,15 +1,21 @@
 // components/Pagination.jsx
 "use client";
+import Link from 'next/link';
 
-export default function Pagination({ currentPage, totalPages, onPageChange }) {
+export default function Pagination({ currentPage, totalPages, onPageChange, getHref }) {
   if (totalPages <= 1) return null;
 
-  const handlePageChange = (page) => {
-    onPageChange(page);
-    // Usar requestAnimationFrame para evitar forced reflow
-    requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+  const handlePageChange = (e, page) => {
+    // Si hay getHref, Link maneja la navegación, pero podemos prevenir default si queremos SPA behavior estricto
+    // o simplemente dejar que Next.js Link haga su trabajo (que es client-side navigation).
+    // Si NO hay getHref, usamos el comportamiento de botón antiguo.
+    if (!getHref) {
+      e.preventDefault();
+      onPageChange(page);
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
   };
 
   const getPaginationItems = () => {
@@ -42,35 +48,76 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
 
   const paginationItems = getPaginationItems();
 
+  const renderPageItem = (item, index) => {
+    if (item === '...') {
+      return <span key={`ellipsis-${index}`} className="pagination-ellipsis">...</span>;
+    }
+
+    const isCurrent = currentPage === item;
+    const className = `pagination-btn ${isCurrent ? 'active' : ''}`;
+
+    if (getHref) {
+      return (
+        <Link
+          key={item}
+          href={getHref(item)}
+          className={className}
+          scroll={true} // Scroll al top automático al cambiar de página
+        >
+          {item}
+        </Link>
+      );
+    }
+
+    return (
+      <button
+        key={item}
+        onClick={(e) => handlePageChange(e, item)}
+        className={className}
+      >
+        {item}
+      </button>
+    );
+  };
+
   return (
     <div className="flex justify-center items-center mt-12 space-x-1">
-      <button
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="pagination-btn"
-      >
-        &laquo; Ant
-      </button>
-      {paginationItems.map((item, index) =>
-        item === '...' ? (
-          <span key={`ellipsis-${index}`} className="pagination-ellipsis">...</span>
+      {/* Botón Anterior */}
+      {currentPage > 1 ? (
+        getHref ? (
+          <Link href={getHref(currentPage - 1)} className="pagination-btn" scroll={true}>
+            &laquo; Ant
+          </Link>
         ) : (
-          <button
-            key={item}
-            onClick={() => handlePageChange(item)}
-            className={`pagination-btn ${currentPage === item ? 'active' : ''}`}
-          >
-            {item}
+          <button onClick={(e) => handlePageChange(e, currentPage - 1)} className="pagination-btn">
+             &laquo; Ant
           </button>
         )
+      ) : (
+        <button disabled className="pagination-btn opacity-50 cursor-not-allowed">
+           &laquo; Ant
+        </button>
       )}
-      <button
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="pagination-btn"
-      >
-        Sig &raquo;
-      </button>
+
+      {/* Números de página */}
+      {paginationItems.map((item, index) => renderPageItem(item, index))}
+
+      {/* Botón Siguiente */}
+      {currentPage < totalPages ? (
+        getHref ? (
+          <Link href={getHref(currentPage + 1)} className="pagination-btn" scroll={true}>
+            Sig &raquo;
+          </Link>
+        ) : (
+          <button onClick={(e) => handlePageChange(e, currentPage + 1)} className="pagination-btn">
+            Sig &raquo;
+          </button>
+        )
+      ) : (
+        <button disabled className="pagination-btn opacity-50 cursor-not-allowed">
+          Sig &raquo;
+        </button>
+      )}
     </div>
   );
 }
