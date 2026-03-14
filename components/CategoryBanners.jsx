@@ -7,6 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
 import { FaChevronRight } from 'react-icons/fa';
+import { getImageUrl } from '@/lib/imageUtils';
 
 export default function CategoryBanners({ categoryName, products = [] }) {
   const swiperRef = useRef(null);
@@ -120,7 +121,7 @@ export default function CategoryBanners({ categoryName, products = [] }) {
          return {
            ...product,
            displayPrice: price,
-           image: product.image || product.images?.[0] || '/imagenespagina/placeholder.jpg'
+           image: getImageUrl(product.image || product.images?.[0] || '/imagenespagina/placeholder.jpg')
          };
       })
       .sort((a, b) => a.displayPrice - b.displayPrice)

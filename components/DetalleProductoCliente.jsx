@@ -13,6 +13,7 @@ import { useModal } from '@/contexto/ContextoModal';
 import ImageWithZoom from './ImageWithZoom';
 import ResenasProducto from './ResenasProducto';
 import Breadcrumbs from './Breadcrumbs';
+import { getImageUrl } from '@/lib/imageUtils';
 
 // Ayudante para detectar tamaño de pantalla
 import { useWindowSize } from './hooks/useWindowSize';
@@ -88,11 +89,14 @@ const DetailRow = ({ label, value }) => (
     <span className="font-semibold text-gray-800 text-right uppercase">{value}</span>
   </div>
 );
-const Thumbnail = ({ src, isActive, onClick }) => (
-    <div className={`relative w-20 h-20 border-2 rounded-lg cursor-pointer transition-all duration-200 ${isActive ? 'border-blue-600' : 'border-transparent hover:border-gray-400'}`} onClick={onClick}>
-        <Image src={src} alt="miniatura de producto" fill sizes="80px" className="object-cover rounded-md" />
-    </div>
-);
+const Thumbnail = ({ src, isActive, onClick }) => {
+    const optimizedSrc = getImageUrl(src, '400x400'); // Miniaturas usan 400x400
+    return (
+        <div className={`relative w-20 h-20 border-2 rounded-lg cursor-pointer transition-all duration-200 ${isActive ? 'border-blue-600' : 'border-transparent hover:border-gray-400'}`} onClick={onClick}>
+            <Image src={optimizedSrc} alt="miniatura de producto" fill sizes="80px" className="object-cover rounded-md" />
+        </div>
+    );
+};
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
 export default function DetalleProductoCliente({ product, relatedProducts }) {
@@ -105,7 +109,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
   const getInitialImages = useCallback(() => {
     if (!product) return { all: [] };
-    const all = [product.image, ...(product.images || [])].filter(Boolean);
+    const all = [product.image, ...(product.images || [])].filter(Boolean).map(img => getImageUrl(img, '700x700'));
     return { all };
   }, [product]);
 
@@ -128,7 +132,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       const viewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
       const updatedIds = [product.id, ...viewedIds.filter(id => String(id) !== String(product.id))].slice(0, 20);
       localStorage.setItem('recentlyViewed', JSON.stringify(updatedIds));
-      const newImages = [product.image, ...(product.images || [])].filter(Boolean);
+      const newImages = [product.image, ...(product.images || [])].filter(Boolean).map(img => getImageUrl(img, '700x700'));
       if (newImages.length > 0) setActiveImage(newImages[0]);
       setQuantity(1);
       // Sincronizar con el contexto

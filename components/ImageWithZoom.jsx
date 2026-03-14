@@ -5,8 +5,11 @@ import { useRef, useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearchPlus, FaExpand } from 'react-icons/fa';
+import { getImageUrl } from '@/lib/imageUtils';
 
 export default function ImageWithZoom({ src, alt, openLightbox, priority = false }) {
+    // Optimizar la imagen para detalle (700x700)
+    const optimizedSrc = getImageUrl(src, '700x700');
     // Estados para DESKTOP (zoom lateral)
     const [isZoomingDesktop, setIsZoomingDesktop] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -145,7 +148,7 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
             >
                 {/* Imagen principal */}
             <Image
-                src={src}
+                src={optimizedSrc}
                 alt={alt}
                 width={600}
                 height={600}
@@ -187,7 +190,7 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
                                 transition={{ duration: 0.2 }}
                                 className="absolute inset-0 bg-no-repeat pointer-events-none"
                                 style={{
-                                    backgroundImage: `url(${src})`,
+                                    backgroundImage: `url(${optimizedSrc})`,
                                     backgroundPosition: 'center',
                                     backgroundSize: `${currentZoomPercentMobile}%`
                                 }}
@@ -291,7 +294,7 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
                             <div
                                 className="w-full h-full bg-no-repeat"
     style={{
-        backgroundImage: `url(${src})`,
+        backgroundImage: `url(${optimizedSrc})`,
         backgroundPosition: `${zoomPosition.x} ${zoomPosition.y}`,
                                     backgroundSize: `${ZOOM_SCALE * 100}%`,
                                 }}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useFavorites } from '@/hooks/useFavorites';
+import { getImageUrl } from '@/lib/imageUtils';
 
 export default function OfferProductCard({ product }) {
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -69,7 +70,7 @@ export default function OfferProductCard({ product }) {
 
         {/* Imagen del Producto */}
         <Image
-          src={product.images?.[0] || product.image || '/placeholder.png'}
+          src={getImageUrl(product.images?.[0] || product.image || '/placeholder.png')}
           alt={product.name || 'Producto'}
           fill
           className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"

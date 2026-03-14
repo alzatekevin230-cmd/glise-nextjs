@@ -3,13 +3,14 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { getImageUrl } from '@/lib/imageUtils';
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
 function ProductPromoCard({ product, label, bgColor }) {
   if (!product) return null;
 
-  const imageSrc = (product.images && product.images.length > 0) ? product.images[0] : (product.image || 'https://placehold.co/300x300');
+  const imageSrc = getImageUrl((product.images && product.images.length > 0) ? product.images[0] : (product.image || 'https://placehold.co/300x300'));
   const hasDiscount = product.oldPrice || product.originalPrice;
   const discountPercentage = hasDiscount ? Math.round(((hasDiscount - product.price) / hasDiscount) * 100) : 0;
 

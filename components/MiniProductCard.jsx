@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { getImageUrl } from '@/lib/imageUtils';
 
 export default function MiniProductCard({ product }) {
   if (!product) return null;
@@ -20,7 +21,7 @@ export default function MiniProductCard({ product }) {
       <div className="relative w-full h-[150px] md:h-[210px] bg-white flex items-center justify-center flex-shrink-0 overflow-hidden">
         {/* Imagen */}
         <Image
-          src={product.images?.[0] || product.image || '/placeholder.png'}
+          src={getImageUrl(product.images?.[0] || product.image || '/placeholder.png')}
           alt={product.name || 'Producto'}
           fill
           className="object-contain p-0.5 group-hover:scale-105 transition-transform duration-300"

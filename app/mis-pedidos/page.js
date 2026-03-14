@@ -8,6 +8,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaTimesCircle, FaSpinner, FaShoppingBag, FaFilter, FaCheckCircle, FaTruck, FaBox, FaStore, FaEye, FaRedo } from 'react-icons/fa';
+import { getImageUrl } from '@/lib/imageUtils';
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
@@ -405,6 +406,8 @@ export default function MisPedidosPage() {
                       } else if (item.image) {
                         imageSrc = typeof item.image === 'string' ? item.image : (item.image.url || item.image.src || item.image.path || '/imagenespagina/producto-ejemplo.webp');
                       }
+                      // Optimizar imagen para tarjeta (400x400)
+                      imageSrc = getImageUrl(imageSrc);
 
                       return (
                         <div key={item.id || item.name} className="order-item">

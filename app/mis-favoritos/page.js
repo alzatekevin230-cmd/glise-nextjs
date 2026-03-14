@@ -10,6 +10,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { FaSpinner, FaHeart, FaStore, FaCartPlus } from 'react-icons/fa';
+import { getImageUrl } from '@/lib/imageUtils';
 
 export default function MisFavoritosPage() {
   const { currentUser } = useAuth();
@@ -206,6 +207,8 @@ export default function MisFavoritosPage() {
                   } else if (product.image) {
                     imageSrc = typeof product.image === 'string' ? product.image : (product.image.url || product.image.src || product.image.path || '/imagenespagina/producto-ejemplo.webp');
                   }
+                  // Optimizar imagen para tarjeta (400x400)
+                  imageSrc = getImageUrl(imageSrc);
 
                   const productSlug = product.slug || `producto-${product.id}`;
 

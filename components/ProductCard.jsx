@@ -8,6 +8,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import toast from 'react-hot-toast';
 import AnimatedSection from './AnimatedSection';
 import OptimizedImage from './OptimizedImage';
+import { getImageUrl } from '@/lib/imageUtils';
 import { FaStar, FaStarHalfAlt, FaShoppingCart, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { FaRegStar } from 'react-icons/fa';
 
@@ -41,7 +42,7 @@ export default function ProductCard({ product, isSmall = false }) {
     }
   };
 
-  const imageSrc = (product.images && product.images.length > 0) ? product.images[0] : (product.image || 'https://placehold.co/300x300');
+  const imageSrc = getImageUrl((product.images && product.images.length > 0) ? product.images[0] : (product.image || 'https://placehold.co/300x300'));
   const isOutOfStock = product.stock === 0;
 
   const rating = 3.5 + (product.popularity / 800) * 1.5;
