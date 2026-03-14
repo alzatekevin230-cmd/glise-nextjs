@@ -103,8 +103,10 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <MobilePromo milenarioProduct={orangeOilProduct} naturalesProduct={naturalesProduct} />
+      {/* Compra por categoría: justo debajo del banner principal en móvil */}
       <FeaturedCategories />
+
+      <MobilePromo milenarioProduct={orangeOilProduct} naturalesProduct={naturalesProduct} />
       
       <BestOffers products={bestOffersProducts} />
       

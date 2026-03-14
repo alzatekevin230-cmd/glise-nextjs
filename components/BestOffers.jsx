@@ -47,7 +47,7 @@ export default function BestOffers({ products = [] }) {
     const currentCategory = products[currentIndexMobile];
 
     return (
-      <section className="mb-12">
+      <section className="mt-6 mb-12">
         <div className="container mx-auto px-2">
           {/* Encabezado */}
           <div className="flex justify-between items-center mb-5">
@@ -88,7 +88,7 @@ export default function BestOffers({ products = [] }) {
 
   // ========== RENDER DESKTOP ==========
   return (
-    <section className="mb-16">
+    <section className="mt-10 mb-16">
       <div className="container mx-auto px-4">
         {/* Encabezado */}
         <div className="flex justify-between items-center mb-8">

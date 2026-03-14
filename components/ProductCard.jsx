@@ -57,8 +57,9 @@ export default function ProductCard({ product, isSmall = false }) {
   const titleClasses = isSmall 
     ? "font-semibold text-gray-800 my-1 flex-grow flex items-center justify-center h-10 text-sm"
     : "font-semibold text-gray-800 my-1 flex-grow flex items-center justify-center h-14";
-  const priceClasses = isSmall ? "text-lg font-bold text-blue-600 mb-2" : "text-xl font-bold text-blue-600 mb-3";
-  const buttonClasses = `w-full text-white font-bold rounded-lg transition-all duration-150 flex items-center justify-center ${isSmall ? 'py-1 px-2 text-xs' : 'py-2 px-4'} ${isOutOfStock ? 'btn-disabled' : 'bg-blue-600 hover:bg-blue-700 active:scale-95 active:bg-blue-800'}`;
+  const priceClasses = isSmall ? "text-lg font-bold text-gray-900 mb-2" : "text-xl font-bold text-gray-900 mb-3";
+  // Botón usa el azul/cyan principal de la marca
+  const buttonClasses = `w-full text-white font-bold rounded-lg transition-all duration-150 flex items-center justify-center ${isSmall ? 'py-1 px-2 text-xs' : 'py-2 px-4'} ${isOutOfStock ? 'btn-disabled' : 'bg-cyan-600 hover:bg-cyan-700 active:scale-95 active:bg-cyan-800'}`;
 
   const handleToggleFavorite = (e) => {
     e.preventDefault();

@@ -8,7 +8,8 @@ import Pagination from '@/components/Pagination.jsx';
 import Link from 'next/link';
 import CategoryBanners from '@/components/CategoryBanners';
 import PriceFilter from '@/components/PriceFilter';
-import { FaCheck, FaFilter } from 'react-icons/fa';
+import { FaCheck } from 'react-icons/fa';
+import { FiMenu, FiX } from 'react-icons/fi';
 
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
@@ -183,6 +184,20 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
      }
   }, [priceRange]); 
 
+  // Bloquear scroll del fondo cuando el panel de filtros móvil está abierto
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const originalOverflow = document.body.style.overflow || '';
+    if (isFilterOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = originalOverflow;
+    }
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isFilterOpen]);
+
 
   const Sidebar = () => (
     <aside className="lg:col-span-1 bg-white p-4 rounded-lg shadow h-fit sticky top-32">
@@ -246,27 +261,71 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
 
   return (
     <>
-      {/* Botón de filtros móvil */}
-      <div className="flex items-center justify-end mb-6 lg:hidden">
-        <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
-          <FaFilter />
-          <span>{isFilterOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'}</span>
-        </button>
+      {/* Panel lateral de filtros para móvil (similar al carrito) */}
+      <div className="lg:hidden">
+        {/* Overlay oscuro */}
+        <div
+          className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 ${
+            isFilterOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+          onClick={() => setIsFilterOpen(false)}
+        />
+
+        {/* Panel deslizante (desde la izquierda en móvil) */}
+        <div
+          className={`fixed top-0 left-0 h-full w-[calc(100%-56px)] max-w-xs bg-white z-50 shadow-2xl transform transition-transform duration-300 ease-out ${
+            isFilterOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="relative h-full overflow-y-auto p-4">
+            <button
+              type="button"
+              onClick={() => setIsFilterOpen(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              aria-label="Cerrar filtros"
+            >
+              <FiX className="text-xl" />
+            </button>
+            <div className="mt-8">
+              <Sidebar />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div>
-        <h1 className="text-3xl md:text-4xl font-bold mb-6">{categoryName === 'all' ? 'Tienda' : categoryName}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6">
+          {categoryName === 'all'
+            ? 'Tienda'
+            : categoryName === 'Naturales y Homeopáticos'
+              ? 'Natural'
+              : categoryName}
+        </h1>
       </div>
       
       <CategoryBanners categoryName={categoryName} products={initialProducts} />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className={`lg:block ${isFilterOpen ? 'block' : 'hidden'}`}>
+        {/* Sidebar siempre visible en escritorio */}
+        <div className="hidden lg:block">
           <Sidebar />
         </div>
         
         <div className="lg:col-span-3">
-          <div className="flex justify-end mb-6">
+          {/* Barra superior con botón de filtros (móvil) y orden (select) */}
+          <div className="flex items-center justify-between mb-6">
+            {!isFilterOpen && (
+              <button
+                type="button"
+                onClick={() => setIsFilterOpen(true)}
+                className="lg:hidden bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-3 rounded-lg flex items-center gap-2"
+              >
+                <FiMenu className="text-lg" />
+                <span className="text-sm">Show</span>
+              </button>
+            )}
+
             <select value={sortBy} onChange={(e) => { 
                 setSortBy(e.target.value); 
                 // Resetear a página 1 (URL)

@@ -877,7 +877,7 @@ export default function CheckoutPage() {
 
                             <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-300">
                                 <span>Total</span>
-                                <span className="text-blue-600">{formatPrice(total)}</span>
+                                <span className="text-gray-900">{formatPrice(total)}</span>
                             </div>
                         </div>
 

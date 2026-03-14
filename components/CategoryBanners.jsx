@@ -40,7 +40,8 @@ export default function CategoryBanners({ categoryName, products = [] }) {
     'Medicamentos': '#cce5ff', // Azul suave
     'Suplementos': '#ffe5d0', // Naranja suave
     'Cuidado Personal': '#e0cffc', // Violeta suave
-    'all': '#f0f0f0' // Gris muy claro
+    // Para "Tienda" usamos un amarillo muy claro diferente a las demás
+    'all': '#fef3c7'
   };
 
   const bgColor = categoryBackgrounds[categoryName] || '#f0f0f0';
@@ -106,24 +107,55 @@ export default function CategoryBanners({ categoryName, products = [] }) {
   };
 
   const featuredProducts = (() => {
-    let filtered = products;
-    if (categoryName !== 'all') {
-      filtered = products.filter(p => p.category === categoryName);
+    if (!products || products.length === 0) return [];
+
+    const config = getProductConfig();
+
+    // Normalizar productos con precio e imagen calculados
+    const normalized = products
+      .filter(p => p && p.stock > 0)
+      .map(product => {
+        const prices = config[product.name];
+        const price = prices ? prices.real : product.price;
+
+        return {
+          ...product,
+          displayPrice: price,
+          image: getImageUrl(product.image || product.images?.[0] || '/imagenespagina/placeholder.jpg')
+        };
+      });
+
+    // Caso especial: categoría "all" (Tienda)
+    if (categoryName === 'all') {
+      // Agrupar por categoría y tomar hasta 3 productos de cada una
+      const byCategory = normalized.reduce((acc, p) => {
+        const cat = p.category || 'Otros';
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(p);
+        return acc;
+      }, {});
+
+      let mixed = [];
+      Object.values(byCategory).forEach(list => {
+        // Ordenar por precio (o popularidad si la tienes) y tomar hasta 3
+        const sorted = [...list].sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+        mixed.push(...sorted.slice(0, 3));
+      });
+
+      // Mezclar el array resultante para que queden "revueltos"
+      for (let i = mixed.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [mixed[i], mixed[j]] = [mixed[j], mixed[i]];
+      }
+
+      // Limitar a un máximo de 15 productos para el carrusel
+      return mixed.slice(0, 15);
     }
 
+    // Resto de categorías: comportamiento original (filtrar por categoría y ordenar por precio)
+    const filtered = normalized.filter(p => p.category === categoryName);
+
     return filtered
-      .filter(p => p.stock > 0)
-      .map(product => {
-         const config = getProductConfig();
-         const prices = config[product.name];
-         const price = prices ? prices.real : product.price;
-         
-         return {
-           ...product,
-           displayPrice: price,
-           image: getImageUrl(product.image || product.images?.[0] || '/imagenespagina/placeholder.jpg')
-         };
-      })
       .sort((a, b) => a.displayPrice - b.displayPrice)
       .slice(0, 12);
   })();
@@ -186,32 +218,33 @@ export default function CategoryBanners({ categoryName, products = [] }) {
                 <div key={product.id} className="swiper-slide h-auto">
                    {/* Tarjeta Blanca */}
                    <Link href={`/producto/${product.slug}`} className="block h-full">
+                      {/* Tarjeta con estilos originales, pero producto ligeramente más grande */}
                       <div className="bg-white rounded-xl h-full flex flex-col justify-between hover:shadow-lg transition-shadow duration-300 overflow-hidden relative">
                         
                         {/* Badge de Descuento */}
-                        <div className="absolute top-2 right-2 z-10 bg-red-600 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full shadow-sm">
+                        <div className="absolute top-2 right-2 z-10 bg-red-600 text-white text-xs sm:text-sm font-extrabold px-3 py-1 rounded-full shadow-md">
                             -5%
                         </div>
 
-                        {/* Imagen Arriba con Fondo Gris */}
+                        {/* Imagen Arriba con Fondo Gris (mismo alto original, producto un poco más grande) */}
                         <div className="w-full h-44 sm:h-48 flex items-center justify-center bg-gray-100 p-1">
                             <img 
                                 src={product.image} 
                                 alt={product.name}
-                                className="max-w-full max-h-full object-contain hover:scale-105 transition-transform duration-300 mix-blend-multiply"
+                                className="max-w-full max-h-full object-contain scale-105 hover:scale-110 transition-transform duration-300 mix-blend-multiply"
                             />
                         </div>
 
                         {/* Contenido Texto (Fondo Blanco) */}
                         <div className="flex flex-col flex-grow p-3">
                             {/* Nombre del Producto */}
-                            <h3 className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2 mb-2 min-h-[2.5em]">
+                            <h3 className="text-xs sm:text-base font-medium text-gray-900 line-clamp-2 mb-2 min-h-[2.5em]">
                                 {product.name}
                             </h3>
                             
                             {/* Precio Abajo */}
                             <div className="mt-auto">
-                                <span className="text-base sm:text-lg font-bold text-gray-900 block">
+                                <span className="text-lg sm:text-xl font-extrabold text-gray-900 block">
                                     ${Math.round(product.displayPrice).toLocaleString('es-CO')}
                                 </span>
                             </div>

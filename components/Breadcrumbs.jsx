@@ -22,7 +22,7 @@ export default function Breadcrumbs({ items }) {
                   <FaChevronRight className="text-gray-400 text-xs" />
                 </>
               ) : (
-                <span className="text-gray-600 font-semibold" aria-current="page">
+                <span className="text-gray-900 font-bold" aria-current="page">
                   {item.label}
                 </span>
               )}

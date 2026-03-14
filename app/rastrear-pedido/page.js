@@ -198,7 +198,7 @@ export default function RastrearPedidoPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-500">Total del pedido</p>
-                  <p className="font-bold text-2xl text-blue-600">{formatPrice(orderData.total)}</p>
+                  <p className="font-bold text-2xl text-gray-900">{formatPrice(orderData.total)}</p>
                 </div>
               </div>
             </div>
@@ -270,7 +270,7 @@ export default function RastrearPedidoPage() {
                     {/* Precio - Móvil: debajo, Desktop: derecha */}
                     <div className="md:text-right flex-shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-gray-200 md:border-none">
                       <p className="text-xs md:text-sm text-gray-500 mb-1 md:hidden">Total:</p>
-                      <p className="font-bold text-xl md:text-2xl text-blue-600">{formatPrice(item.price * item.quantity)}</p>
+                      <p className="font-bold text-xl md:text-2xl text-gray-900">{formatPrice(item.price * item.quantity)}</p>
                     </div>
                   </div>
                 ))}

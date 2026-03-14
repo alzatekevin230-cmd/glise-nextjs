@@ -55,7 +55,7 @@ export default function Buscador({ products }) {
               <img src={p.image || p.images?.[0]} alt={p.name} className="w-10 h-10 object-contain rounded-md mr-4" />
               <div>
                 <p className="font-semibold">{p.name}</p>
-                <p className="text-sm text-blue-600">{formatPrice(p.price)}</p>
+                <p className="text-sm text-gray-900">{formatPrice(p.price)}</p>
               </div>
             </a>
           ))}

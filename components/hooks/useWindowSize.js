@@ -4,15 +4,19 @@
 import { useState, useEffect, useRef } from 'react';
 
 export function useWindowSize() {
+  const isClient = typeof window !== 'undefined';
+
   const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
+    width: isClient ? window.innerWidth : 0,
+    height: isClient ? window.innerHeight : 0,
   });
   
   const rafRef = useRef(null);
   const timeoutRef = useRef(null);
 
   useEffect(() => {
+    if (!isClient) return;
+
     function handleResize() {
       // Cancelar cualquier animación o timeout pendiente
       if (rafRef.current) {

@@ -247,7 +247,7 @@ export default function MisFavoritosPage() {
                         </Link>
                         
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-lg font-bold text-blue-600">
+                          <span className="text-lg font-bold text-gray-900">
                             {formatPrice(product.price || 0)}
                           </span>
                           {product.stock !== undefined && (

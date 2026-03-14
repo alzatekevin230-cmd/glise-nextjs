@@ -369,9 +369,12 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
         <div className="flex flex-col space-y-8">
           <div>
             <p className="text-sm text-gray-500 uppercase tracking-wider mb-3">{product.category}</p>
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">{product.name}</h1>
+            {/* Título grande solo en pantallas medianas y escritorio */}
+            <h1 className="hidden md:block text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              {product.name}
+            </h1>
             <div className="mb-8">
-              <span className="text-4xl lg:text-5xl font-bold text-blue-600">{formatPrice(product.price)}</span>
+              <span className="text-4xl lg:text-5xl font-bold text-gray-900">{formatPrice(product.price)}</span>
             </div>
           </div>
 
