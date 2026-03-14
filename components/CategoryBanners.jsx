@@ -1,20 +1,53 @@
-// components/CategoryBanners.jsx
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { FaStar, FaFire, FaEye, FaArrowRight } from 'react-icons/fa';
+import Link from 'next/link';
+import { FaChevronRight } from 'react-icons/fa';
 
 export default function CategoryBanners({ categoryName, products = [] }) {
   const swiperRef = useRef(null);
+  const navigationPrevRef = useRef(null);
+  const navigationNextRef = useRef(null);
+  const [swiperInitialized, setSwiperInitialized] = useState(false);
 
-    // PRECIOS DE MARKETING - PRECIO INFLADO TACHADO Y PRECIO REAL
-    const getProductConfig = () => {
-      return {
-        // Naturales y Homeopáticos (10 productos)
+  // Mapeo de Títulos de Categoría
+  const categoryTitles = {
+    'Milenario': 'Aceites Esenciales',
+    'Naturales y Homeopáticos': 'Salud Natural',
+    'Dermocosméticos': 'Cuidado de la Piel',
+    'Cuidado Infantil': 'Mundo Bebé',
+    'Cuidado y Belleza': 'Rutina de Belleza',
+    'Medicamentos': 'Farmacia',
+    'Suplementos': 'Vitalidad',
+    'Cuidado Personal': 'Higiene Personal',
+    'all': 'Destacados'
+  };
+
+  const displayTitle = categoryTitles[categoryName] || categoryName;
+
+  // Configuración de Colores de Fondo (Pasteles)
+  const categoryBackgrounds = {
+    'Milenario': '#c8e6a0', // Verde pastel (ejemplo usuario)
+    'Naturales y Homeopáticos': '#d4edda', // Verde muy claro
+    'Dermocosméticos': '#e2e3ff', // Azul lavanda suave
+    'Cuidado Infantil': '#e0f2fe', // Azul bebé
+    'Cuidado y Belleza': '#f8d7da', // Rosa suave
+    'Medicamentos': '#cce5ff', // Azul suave
+    'Suplementos': '#ffe5d0', // Naranja suave
+    'Cuidado Personal': '#e0cffc', // Violeta suave
+    'all': '#f0f0f0' // Gris muy claro
+  };
+
+  const bgColor = categoryBackgrounds[categoryName] || '#f0f0f0';
+
+  // Configuración de precios (Manteniendo lógica de negocio existente)
+  const getProductConfig = () => {
+     return {
+        // Naturales y Homeopáticos
         'BEL COLAGMIN 300 G': { inflated: 75000, real: 66900 },
         'Red Krill 1000 mg 30 Perlas Healthy': { inflated: 95000, real: 80200 }, 
         'Mega Cranberry 60 Perlas Healthy': { inflated: 78000, real: 68900 },
@@ -26,7 +59,7 @@ export default function CategoryBanners({ categoryName, products = [] }) {
         'Climaterix 60 Perlas Healthy America': { inflated: 95000, real: 80200 },
         'Collagen Biotin Complex 60 Perlas Healthy America': { inflated: 80000, real: 66600 },
         
-        // Dermocosméticos (10 productos)
+        // Dermocosméticos
         'Bloqueador Sol-or Family SPF50 120 g': { inflated: 70000, real: 57500 },
         'Eucerin Solar Oil Control Tinted Tono Medio 50 Ml': { inflated: 170000, real: 140800 },
         'Eucerin Ph5 Loción 400 Ml': { inflated: 150000, real: 124300 },
@@ -38,14 +71,14 @@ export default function CategoryBanners({ categoryName, products = [] }) {
         'Finura Antioxidantech 60 Tabletas Recubiertas': { inflated: 180000, real: 150700 },
         'Cetaphil Crema Hidratante 453 g': { inflated: 190000, real: 157300 },
         
-        // Cuidado Infantil (5 productos)
+        // Cuidado Infantil
         'Almipro Syndet 400 Ml': { inflated: 50000, real: 40300 },
         'Almipro Ungüento 500 g': { inflated: 85000, real: 69900 },
         'Almipro Emoliente 400g': { inflated: 42000, real: 34900 },
         'Acid Mantle Baby Crema 100 g': { inflated: 58000, real: 48300 },
         'Eucerin Baby Baño y Shampoo 250 Ml': { inflated: 85000, real: 71300 },
         
-        // Cuidado y Belleza (10 productos)
+        // Cuidado y Belleza
         'Vitybell 30 Capsulas': { inflated: 150000, real: 123200 },
         'Biocicar Crema 60 g': { inflated: 45000, real: 37200 },
         'Folister Complex Hair Lotion 60 Ml': { inflated: 175000, real: 143000 },
@@ -57,7 +90,7 @@ export default function CategoryBanners({ categoryName, products = [] }) {
         'Hydroclor Unguento Emoliente 500 g': { inflated: 130000, real: 105700 },
         'Eucerin Ph5 Aceite para Ducha 200 mL': { inflated: 115000, real: 95500 },
         
-        // Milenario (10 productos)
+        // Milenario
         'Aceite Esencial de Naranja 120 mL': { inflated: 45000, real: 36000 },
         'Aceite Árbol de Te 120 mL': { inflated: 70000, real: 55900 },
         'Aceite Esencial de Lavanda 120 mL': { inflated: 80000, real: 63500 },
@@ -68,384 +101,146 @@ export default function CategoryBanners({ categoryName, products = [] }) {
         'Aceite de Rosa Mosqueta 18 mL': { inflated: 26000, real: 21300 },
         'Aceite de Argán 120 mL': { inflated: 78000, real: 62400 },
         'Aceite de Coco Refinado Desodorizado 500 mL': { inflated: 30000, real: 24450 },
-        
-        // Tienda (20 productos - mezcla de todas las categorías)
-        'BEL COLAGMIN 300 G': { inflated: 75000, real: 66900 },
-        'Red Krill 1000 mg 30 Perlas Healthy': { inflated: 95000, real: 80200 },
-        'Bloqueador Sol-or Family SPF50 120 g': { inflated: 70000, real: 57500 },
-        'Eucerin Solar Oil Control Tinted Tono Medio 50 Ml': { inflated: 170000, real: 140800 },
-        'Almipro Syndet 400 Ml': { inflated: 50000, real: 40300 },
-        'Almipro Ungüento 500 g': { inflated: 85000, real: 69900 },
-        'Vitybell 30 Capsulas': { inflated: 150000, real: 123200 },
-        'Aceite Esencial de Lavanda 120 mL': { inflated: 80000, real: 63500 },
-        'Genacol Colágeno Hidrolizado 90 Cápsulas': { inflated: 120000, real: 95500 },
-        'Cerave Loción Hidratante para Piel Seca Sin Perfume 473 Ml': { inflated: 140000, real: 114200 },
-        'Alitopic Leche Emoliente 500 Ml': { inflated: 150000, real: 121000 },
-        'Aceite Esencial de Romero 120 mL': { inflated: 110000, real: 88400 },
-        'Isdin Champu Nutradeica Anticaspa Grasa 200 Ml': { inflated: 135000, real: 110900 },
-        'Aceite de Argán 120 mL': { inflated: 78000, real: 62400 },
-        'Vitabiosa Natural 1000 mL': { inflated: 140000, real: 116400 },
-        'Cetaphil Crema Hidratante 453 g': { inflated: 190000, real: 157300 },
-        'Aceite Esencial de Menta 120 mL': { inflated: 62000, real: 49500 },
-        'Folister Complex Hair Lotion 60 Ml': { inflated: 175000, real: 143000 },
-        'Colágeno Hidrolizado Caja x 30 Sobres ICOM': { inflated: 140000, real: 117600 },
-        'Eucerin Baby Baño y Shampoo 250 Ml': { inflated: 85000, real: 71300 }
       };
-    };
-
-    // Función para obtener descuento basado en precios de marketing
-    const calculateDiscount = (product) => {
-      const config = getProductConfig();
-      const prices = config[product.name];
-      
-      if (prices) {
-        const discount = Math.round(((prices.inflated - prices.real) / prices.inflated) * 100);
-        return discount;
-      }
-      
-      return 20; // 20% por defecto si no está definido
-    };
-
-    // Función para obtener productos seleccionados (los más baratos de cada categoría)
-    const getSelectedProducts = (category) => {
-      let categoryProducts = [];
-      
-      if (category === 'all') {
-        // Para la tienda, obtener los productos más baratos de todas las categorías
-        categoryProducts = products
-          .filter(p => p.category !== 'all' && p.stock > 0)
-          .sort((a, b) => (a.price || 0) - (b.price || 0))
-          .slice(0, 20);
-      } else {
-        // Para categorías específicas, obtener los productos más baratos de esa categoría
-        categoryProducts = products
-          .filter(p => p.category === category && p.stock > 0)
-          .sort((a, b) => (a.price || 0) - (b.price || 0))
-          .slice(0, 10); // Tomar hasta 10 productos más baratos
-      }
-      
-      return categoryProducts;
-    };
-
-    // Función para obtener colores por categoría
-    const getCategoryColor = (category) => {
-      const colors = {
-        'Naturales y Homeopáticos': {
-          bg: 'bg-green-50',
-          border: 'border-green-200',
-          badge: 'bg-green-500',
-          button: 'bg-green-600 hover:bg-green-700'
-        },
-        'Dermocosméticos': {
-          bg: 'bg-purple-50',
-          border: 'border-purple-200',
-          badge: 'bg-purple-500',
-          button: 'bg-purple-600 hover:bg-purple-700'
-        },
-        'Medicamentos': {
-          bg: 'bg-blue-50',
-          border: 'border-blue-200',
-          badge: 'bg-blue-500',
-          button: 'bg-blue-600 hover:bg-blue-700'
-        },
-        'Cuidado Personal': {
-          bg: 'bg-pink-50',
-          border: 'border-pink-200',
-          badge: 'bg-pink-500',
-          button: 'bg-pink-600 hover:bg-pink-700'
-        },
-        'Suplementos': {
-          bg: 'bg-orange-50',
-          border: 'border-orange-200',
-          badge: 'bg-orange-500',
-          button: 'bg-orange-600 hover:bg-orange-700'
-        },
-        'Milenario': {
-          bg: 'bg-amber-50',
-          border: 'border-amber-200',
-          badge: 'bg-amber-500',
-          button: 'bg-amber-600 hover:bg-amber-700'
-        },
-        'Cuidado Infantil': {
-          bg: 'bg-sky-50',
-          border: 'border-sky-200',
-          badge: 'bg-sky-500',
-          button: 'bg-sky-600 hover:bg-sky-700'
-        },
-        'Cuidado y Belleza': {
-          bg: 'bg-rose-50',
-          border: 'border-rose-200',
-          badge: 'bg-rose-500',
-          button: 'bg-rose-600 hover:bg-rose-700'
-        },
-        'all': {
-          bg: 'bg-gradient-to-br from-blue-50 to-purple-50',
-          border: 'border-blue-200',
-          badge: 'bg-gradient-to-r from-blue-500 to-purple-500',
-          button: 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
-        },
-        'default': {
-          bg: 'bg-gradient-to-br from-blue-50 to-purple-50',
-          border: 'border-blue-200',
-          badge: 'bg-gradient-to-r from-blue-500 to-purple-500',
-          button: 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
-        }
-      };
-      
-      return colors[category] || colors['default'];
-    };
-
-    // Función para obtener productos en oferta por categoría
-    const getProductsOnSale = (category) => {
-      // Obtener productos seleccionados
-      let categoryProducts = getSelectedProducts(category);
-      
-      // Para la categoría "all" (tienda), limitar a 20 productos
-      if (category === 'all') {
-        categoryProducts = categoryProducts.slice(0, 20);
-      }
-      
-      return categoryProducts.map(product => {
-        const config = getProductConfig();
-        const prices = config[product.name];
-        
-        let originalPrice, discountedPrice, discount;
-        
-        if (prices) {
-          // Usar precios de marketing
-          originalPrice = prices.inflated;  // Precio inflado tachado
-          discountedPrice = prices.real;    // Precio real
-          discount = calculateDiscount(product);
-        } else {
-          // Fallback: usar precio del producto con precio inflado
-          originalPrice = product.price * 1.2;  // Precio inflado tachado
-          discountedPrice = product.price;      // Precio real
-          discount = 20;
-        }
-        
-        return {
-          ...product,
-          originalPrice,
-          discountedPrice,
-          discount,
-          discountText: `${discount}% OFF`
-        };
-      });
-    };
-
-    // Banners genéricos con productos en oferta
-    const getGenericBanners = () => {
-      const allProducts = products.filter(p => p.category !== 'all');
-      const genericColors = [
-        "bg-slate-800",
-        "bg-indigo-800",
-        "bg-emerald-800"
-      ];
-      
-      const productsOnSale = allProducts.slice(0, 3).map((product, index) => {
-        const config = getProductConfig();
-        const prices = config[product.name];
-        
-        let originalPrice, discountedPrice, discount;
-        
-        if (prices) {
-          // Usar precios de marketing
-          originalPrice = prices.inflated;  // Precio inflado tachado
-          discountedPrice = prices.real;    // Precio real
-          discount = calculateDiscount(product);
-        } else {
-          // Fallback: usar precio del producto con precio inflado
-          originalPrice = product.price * 1.2;  // Precio inflado tachado
-          discountedPrice = product.price;      // Precio real
-          discount = 20;
-        }
-        
-        return {
-          id: product.id,
-          title: `¡${discount}% OFF!`,
-          subtitle: product.name,
-          originalPrice,
-          discountedPrice,
-          image: product.image || product.images?.[0] || '/imagenespagina/placeholder.jpg',
-          link: `/producto/${product.slug}`,
-          bgColor: genericColors[index] || genericColors[0]
-        };
-      });
-      
-      return productsOnSale;
-    };
-
-    // Función para crear banners específicos por categoría
-    const getCategoryBanners = (category) => {
-      const categoryProducts = getProductsOnSale(category);
-      
-      // Colores elegantes y profesionales por categoría
-      const categoryColors = {
-        'Naturales y Homeopáticos': [
-          "bg-slate-800",
-          "bg-gray-800", 
-          "bg-zinc-800"
-        ],
-        'Dermocosméticos': [
-          "bg-indigo-800",
-          "bg-blue-800",
-          "bg-sky-800"
-        ],
-        'Cuidado Infantil': [
-          "bg-emerald-800",
-          "bg-teal-800",
-          "bg-cyan-800"
-        ],
-        'Cuidado y Belleza': [
-          "bg-rose-800",
-          "bg-pink-800",
-          "bg-fuchsia-800"
-        ],
-        'Milenario': [
-          "bg-purple-800",
-          "bg-violet-800",
-          "bg-indigo-800"
-        ],
-        'all': [
-          "bg-gradient-to-r from-blue-600 to-purple-600",
-          "bg-gradient-to-r from-emerald-600 to-teal-600",
-          "bg-gradient-to-r from-orange-600 to-red-600",
-          "bg-gradient-to-r from-pink-600 to-rose-600",
-          "bg-gradient-to-r from-indigo-600 to-blue-600"
-        ]
-      };
-      
-      const bgColors = categoryColors[category] || [
-        "bg-gradient-to-r from-blue-600 to-purple-600",
-        "bg-gradient-to-r from-emerald-600 to-teal-600",
-        "bg-gradient-to-r from-orange-600 to-red-600"
-      ];
-      
-      return categoryProducts.map((product, index) => ({
-        id: product.id,
-        title: `¡${product.discount}% OFF!`,
-        subtitle: product.name,
-        originalPrice: product.originalPrice,
-        discountedPrice: product.discountedPrice,
-        image: product.image || product.images?.[0] || '/imagenespagina/placeholder.jpg',
-        link: `/producto/${product.slug}`,
-        bgColor: bgColors[index] || bgColors[0]
-      }));
-    };
-
-  // Banners específicos por categoría
-  const categoryBanners = {
-    'Naturales y Homeopáticos': getCategoryBanners('Naturales y Homeopáticos'),
-    'Dermocosméticos': getCategoryBanners('Dermocosméticos'),
-    'Cuidado Infantil': getCategoryBanners('Cuidado Infantil'),
-    'Cuidado y Belleza': getCategoryBanners('Cuidado y Belleza'),
-    'Milenario': getCategoryBanners('Milenario'),
-    'all': getCategoryBanners('all')
   };
 
-  // Seleccionar banners según la categoría
-  const banners = categoryBanners[categoryName] || getGenericBanners();
-  const categoryColor = getCategoryColor(categoryName);
+  const featuredProducts = (() => {
+    let filtered = products;
+    if (categoryName !== 'all') {
+      filtered = products.filter(p => p.category === categoryName);
+    }
+
+    return filtered
+      .filter(p => p.stock > 0)
+      .map(product => {
+         const config = getProductConfig();
+         const prices = config[product.name];
+         const price = prices ? prices.real : product.price;
+         
+         return {
+           ...product,
+           displayPrice: price,
+           image: product.image || product.images?.[0] || '/imagenespagina/placeholder.jpg'
+         };
+      })
+      .sort((a, b) => a.displayPrice - b.displayPrice)
+      .slice(0, 12);
+  })();
+  
+  // Si no hay productos, no mostramos nada
+  if (featuredProducts.length === 0) return null;
 
   useEffect(() => {
     if (swiperRef.current) {
-      swiperRef.current.destroy(true, true);
+        swiperRef.current.destroy(true, true);
     }
 
-    swiperRef.current = new Swiper('.category-banners-swiper', {
-      modules: [Navigation, Autoplay],
-      loop: true,
-      spaceBetween: 20,
-      navigation: {
-        nextEl: '.category-banners-next',
-        prevEl: '.category-banners-prev',
-      },
-      autoplay: {
-        delay: 5000,
-        disableOnInteraction: false,
-      },
-      slidesPerView: 1,
-      breakpoints: {
-        640: { slidesPerView: 2, spaceBetween: 50 },
-        768: { slidesPerView: 2, spaceBetween: 60 },
-        1024: { slidesPerView: 3, spaceBetween: 30 }
-      }
-    });
+    if (featuredProducts.length > 0) {
+        swiperRef.current = new Swiper('.category-banners-swiper', {
+            modules: [Navigation, Autoplay],
+            spaceBetween: 16,
+            slidesPerView: 2.5, // Mobile: 2.5 cards visible
+            slidesOffsetBefore: 20, // Mobile: Padding for first card
+            slidesOffsetAfter: 20,
+            navigation: {
+                nextEl: navigationNextRef.current,
+                prevEl: navigationPrevRef.current,
+            },
+            breakpoints: {
+                640: { slidesPerView: 2.2, spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
+                768: { slidesPerView: 3.2, spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
+                1024: { slidesPerView: 4, spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 }, // Desktop Grid look (4 items)
+                1280: { slidesPerView: 5, spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 }
+            }
+        });
+        setSwiperInitialized(true);
+    }
 
     return () => {
-      if (swiperRef.current) {
-        swiperRef.current.destroy(true, true);
-      }
+        if (swiperRef.current) {
+            swiperRef.current.destroy(true, true);
+        }
     };
-  }, [categoryName]);
+  }, [categoryName, featuredProducts]);
 
   return (
-    <section className="mt-8 mb-12">
-      <div className="container mx-auto px-1 sm:px-6 relative">
-        <div className="swiper-container category-banners-swiper overflow-hidden rounded-2xl p-1">
-          <div className="swiper-wrapper">
-            {banners.map((banner) => (
-              <div key={banner.id} className="swiper-slide">
-                <div className={`${categoryColor.bg} rounded-lg px-0 py-3 sm:px-6 sm:py-6 md:px-4 md:py-4 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 min-h-[200px] sm:min-h-[180px] md:min-h-[160px] flex flex-col justify-between border ${categoryColor.border}`}>
-                  {/* Contenido superior - producto e información */}
-                  <div className="flex items-center gap-2 sm:gap-6">
-                    {/* Imagen del producto - GRANDE a un lado */}
-                    <div className="flex-shrink-0">
-                      <div className="relative w-48 h-48 sm:w-52 sm:h-52 md:w-44 md:h-44 flex items-center justify-center">
-                        <img 
-                          src={banner.image} 
-                          alt={banner.subtitle}
-                          className="max-w-full max-h-full object-contain drop-shadow-2xl hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                    </div>
-                    
-                    {/* Contenido del banner - al lado del producto */}
-                    <div className="flex-grow flex flex-col justify-start">
-                      {/* Badge de descuento */}
-                      <div className="mb-3 sm:mb-3">
-                        <span className={`${categoryColor.badge} text-white px-5 py-2.5 sm:px-8 sm:py-4 md:px-6 md:py-3 rounded-full text-base sm:text-xl md:text-lg font-black shadow-2xl border-2 border-white/30 backdrop-blur-sm inline-flex items-center gap-2 animate-pulse hover:scale-110 transition-transform`}>
-                          <FaStar className="text-yellow-300" />
-                          <span>{banner.title}</span>
-                          <FaFire className="text-yellow-300" />
-                        </span>
-                      </div>
-                      
-                      {/* Nombre del producto */}
-                      <h3 className="text-base sm:text-xl md:text-base font-bold text-gray-900 mb-2 sm:mb-3 md:mb-2 leading-tight line-clamp-2">
-                        {banner.subtitle}
-                      </h3>
-                      
-                      {/* Precios */}
-                      {banner.originalPrice && banner.discountedPrice && (
-                        <div className="mb-2 sm:mb-4">
-                          <div className="flex flex-col gap-1">
-                            <span className="text-xs sm:text-sm md:text-xs text-gray-500 line-through">Antes: ${Math.round(banner.originalPrice).toLocaleString('es-CO')}</span>
-                            <span className="text-xl sm:text-2xl md:text-xl font-black text-gray-900">Ahora: ${Math.round(banner.discountedPrice).toLocaleString('es-CO')}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {/* Botón centrado abajo */}
-                  <div className="flex justify-center mt-3">
-                    <a 
-                      href={banner.link}
-                      className={`${categoryColor.button} text-white px-6 py-3 sm:px-10 sm:py-4 md:px-6 md:py-3 rounded-xl font-black transition-all duration-300 text-center text-sm sm:text-base md:text-sm shadow-2xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:scale-110 hover:-translate-y-1 border-2 border-white/20 backdrop-blur-sm inline-flex items-center gap-2 group`}
-                    >
-                      <FaEye />
-                      <span>Ver Producto</span>
-                      <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
+    <section className="mt-6 mb-10">
+      <div className="">
+        
+        {/* Contenedor Principal con Fondo y Bordes Redondeados */}
+        <div 
+          className="-mx-2 sm:-mx-6 md:mx-0 rounded-none md:rounded-[16px] py-2 px-0 md:p-6 relative"
+          style={{ backgroundColor: bgColor }}
+        >
+          {/* Header: Título y Ver Todo (Ahora dentro del contenedor) */}
+          <div className="flex justify-between items-center mb-2 px-5 md:px-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 capitalize">
+              {displayTitle}
+            </h2>
           </div>
+
+          <div className="swiper-container category-banners-swiper overflow-hidden">
+            <div className="swiper-wrapper">
+              {featuredProducts.map((product) => (
+                <div key={product.id} className="swiper-slide h-auto">
+                   {/* Tarjeta Blanca */}
+                   <Link href={`/producto/${product.slug}`} className="block h-full">
+                      <div className="bg-white rounded-xl h-full flex flex-col justify-between hover:shadow-lg transition-shadow duration-300 overflow-hidden relative">
+                        
+                        {/* Badge de Descuento */}
+                        <div className="absolute top-2 right-2 z-10 bg-red-600 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full shadow-sm">
+                            -5%
+                        </div>
+
+                        {/* Imagen Arriba con Fondo Gris */}
+                        <div className="w-full h-44 sm:h-48 flex items-center justify-center bg-gray-100 p-1">
+                            <img 
+                                src={product.image} 
+                                alt={product.name}
+                                className="max-w-full max-h-full object-contain hover:scale-105 transition-transform duration-300 mix-blend-multiply"
+                            />
+                        </div>
+
+                        {/* Contenido Texto (Fondo Blanco) */}
+                        <div className="flex flex-col flex-grow p-3">
+                            {/* Nombre del Producto */}
+                            <h3 className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2 mb-2 min-h-[2.5em]">
+                                {product.name}
+                            </h3>
+                            
+                            {/* Precio Abajo */}
+                            <div className="mt-auto">
+                                <span className="text-base sm:text-lg font-bold text-gray-900 block">
+                                    ${Math.round(product.displayPrice).toLocaleString('es-CO')}
+                                </span>
+                            </div>
+                        </div>
+                      </div>
+                   </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Botón Navegación Personalizado (Derecha) */}
+          <button 
+             ref={navigationNextRef}
+             className="absolute top-1/2 -right-3 transform -translate-y-1/2 z-10 bg-white text-gray-700 p-3 rounded-full shadow-lg hover:bg-gray-50 focus:outline-none transition-all hidden md:flex items-center justify-center border border-gray-100 hover:scale-110"
+             aria-label="Siguiente"
+          >
+             <FaChevronRight className="w-4 h-4" />
+          </button>
+          
+          {/* Botón Anterior (Opcional, oculto por defecto según diseño pedido pero útil) */}
+          <button 
+             ref={navigationPrevRef}
+             className="absolute top-1/2 -left-3 transform -translate-y-1/2 z-10 bg-white text-gray-700 p-3 rounded-full shadow-lg hover:bg-gray-50 focus:outline-none transition-all hidden md:flex items-center justify-center border border-gray-100 hover:scale-110 disabled:opacity-0"
+             aria-label="Anterior"
+          >
+             <FaChevronRight className="w-4 h-4 rotate-180" />
+          </button>
+
         </div>
-        <div className="swiper-button-next category-banners-next text-gray-600"></div>
-        <div className="swiper-button-prev category-banners-prev text-gray-600"></div>
       </div>
     </section>
   );

@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function convertImages() {
-  const sourceDir = path.join(__dirname, '..', 'nuevo infantil 2026');
+  const sourceDir = path.join(__dirname, '..', 'imagenes a web');
   
   if (!fs.existsSync(sourceDir)) {
     console.error(`Directory not found: ${sourceDir}`);
@@ -33,15 +33,18 @@ async function convertImages() {
         console.log(`
 📸 Procesando: ${file}`);
         
-        await sharp(inputPath)
+        await sharp(inputPath) // Use the sharp instance correctly
           .webp({
             quality: 80, // Calidad entre 75-85% como solicitado
             effort: 6
           })
           .toFile(outputPath);
           
+        // Delete original file after successful conversion
+        fs.unlinkSync(inputPath);
+        console.log(`   ✓ Convertido a: ${outputFileName} y original eliminado`);
+        
         processedCount++;
-        console.log(`   ✓ Convertido a: ${outputFileName}`);
         
       } catch (error) {
         console.error(`✗ Error procesando ${file}:`, error.message);
@@ -49,7 +52,7 @@ async function convertImages() {
     }
     
     console.log(`
-🎉 Proceso completado: ${processedCount} imágenes convertidas.`);
+🎉 Proceso completado: ${processedCount} imágenes convertidas y originales eliminados.`);
     
   } catch (error) {
     console.error('Error general:', error.message);
