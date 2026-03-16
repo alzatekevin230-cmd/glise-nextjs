@@ -2,11 +2,6 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import { auth, db } from '@/lib/firebaseClient'; // CAMBIO: Importamos 'db' también
-// CAMBIO: Importamos las funciones necesarias para el login con Google
-import { onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-// CAMBIO: Importamos funciones de Firestore para crear el perfil del nuevo usuario
-import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useModal } from './ContextoModal';
 
 const AuthContext = createContext();
@@ -21,13 +16,18 @@ export const ProveedorAuth = ({ children }) => {
   const { closeModal } = useModal(); // Obtenemos closeModal para usarlo después del login
 
   useEffect(() => {
-    // Optimización: Lazy load Firebase Auth después de que la página cargue
-    // Esto evita que el iframe de Firebase bloquee el LCP inicial (ahorro de ~1148ms)
+    // Optimización: NO importamos Firebase en el bundle inicial.
+    // Cargamos Firebase Auth en idle para evitar que el iframe bloquee el LCP inicial.
     let unsubscribe = null;
     let idleCallbackId = null;
     let timeoutId = null;
 
-    const initAuth = () => {
+    const initAuth = async () => {
+      const [{ onAuthStateChanged }, { auth }] = await Promise.all([
+        import('firebase/auth'),
+        import('@/lib/firebaseClient'),
+      ]);
+
       unsubscribe = onAuthStateChanged(auth, (user) => {
         setCurrentUser(user);
         setLoading(false);
@@ -57,14 +57,28 @@ export const ProveedorAuth = ({ children }) => {
     };
   }, []);
 
-  const logout = () => {
+  const logout = async () => {
+    const [{ signOut }, { auth }] = await Promise.all([
+      import('firebase/auth'),
+      import('@/lib/firebaseClient'),
+    ]);
     return signOut(auth);
   };
 
   // --- INICIO DE LA NUEVA FUNCIÓN ---
   const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
     try {
+      const [
+        { GoogleAuthProvider, signInWithPopup },
+        { doc, getDoc, setDoc },
+        { auth, db },
+      ] = await Promise.all([
+        import('firebase/auth'),
+        import('firebase/firestore'),
+        import('@/lib/firebaseClient'),
+      ]);
+
+      const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 

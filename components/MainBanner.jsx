@@ -2,8 +2,6 @@
 
 import { useEffect } from 'react';
 import Image from 'next/image';
-import Swiper from 'swiper';
-import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -12,68 +10,79 @@ import 'swiper/css/effect-fade';
 
 export default function MainBanner() {
   useEffect(() => {
-    const swiper = new Swiper('.main-banner-carousel', {
-      modules: [Navigation, Pagination, Autoplay],
-      loop: true,
-      speed: 1000, // Velocidad de transición más lenta, igual que móvil
-      autoplay: { 
-        delay: 5000, 
-        disableOnInteraction: false,
-        pauseOnMouseEnter: false // No pausar en desktop, igual que móvil
-      },
-      pagination: { 
-        el: '.main-banner-pagination', 
-        clickable: true,
-        dynamicBullets: false,
-        type: 'bullets',
-        renderBullet: function (index, className) {
-          return '<span class="' + className + '"></span>';
-        }
-      },
-      navigation: { 
-        nextEl: '.main-banner-next', 
-        prevEl: '.main-banner-prev' 
-      },
-      // Habilitar touch explícitamente
-      touchEventsTarget: 'container',
-      simulateTouch: true,
-      touchRatio: 1,
-      touchAngle: 45,
-      grabCursor: true,
-      allowTouchMove: true,
-      // Prevenir conflictos con scroll vertical
-      touchStartPreventDefault: false,
-      resistanceRatio: 0.85,
-      // Optimizaciones de rendimiento - evitar forced reflows
-      watchSlidesProgress: false, // ✅ Desactivar para mejor rendimiento
-      watchSlidesVisibility: false, // ✅ Desactivar para mejor rendimiento
-      observer: false, // ✅ No observar cambios DOM innecesarios
-      observeParents: false, // ✅ Mejora rendimiento
-      observeSlideChildren: false, // ✅ Mejora rendimiento
-      resizeObserver: false, // ✅ Usar resize event simple
-      updateOnWindowResize: true,
-      preventInteractionOnTransition: true,
-      // Event listeners optimizados
-      on: {
-        slideChange: function () {
-          // Usar requestAnimationFrame para evitar forced reflow
-          requestAnimationFrame(() => {
-            if (this.pagination && this.pagination.render) {
-              this.pagination.render();
-              this.pagination.update();
-            }
-          });
+    let swiper = null;
+
+    const init = async () => {
+      const [{ default: Swiper }, { Navigation, Pagination, Autoplay }] = await Promise.all([
+        import('swiper'),
+        import('swiper/modules'),
+      ]);
+
+      swiper = new Swiper('.main-banner-carousel', {
+        modules: [Navigation, Pagination, Autoplay],
+        loop: true,
+        speed: 1000, // Velocidad de transición más lenta, igual que móvil
+        autoplay: { 
+          delay: 5000, 
+          disableOnInteraction: false,
+          pauseOnMouseEnter: false // No pausar en desktop, igual que móvil
         },
-        touchEnd: function () {
-          // Usar requestAnimationFrame para evitar forced reflow
-          requestAnimationFrame(() => {
-            if (this.pagination && this.pagination.update) {
-              this.pagination.update();
-            }
-          });
+        pagination: { 
+          el: '.main-banner-pagination', 
+          clickable: true,
+          dynamicBullets: false,
+          type: 'bullets',
+          renderBullet: function (index, className) {
+            return '<span class="' + className + '"></span>';
+          }
+        },
+        navigation: { 
+          nextEl: '.main-banner-next', 
+          prevEl: '.main-banner-prev' 
+        },
+        // Habilitar touch explícitamente
+        touchEventsTarget: 'container',
+        simulateTouch: true,
+        touchRatio: 1,
+        touchAngle: 45,
+        grabCursor: true,
+        allowTouchMove: true,
+        // Prevenir conflictos con scroll vertical
+        touchStartPreventDefault: false,
+        resistanceRatio: 0.85,
+        // Optimizaciones de rendimiento - evitar forced reflows
+        watchSlidesProgress: false, // ✅ Desactivar para mejor rendimiento
+        watchSlidesVisibility: false, // ✅ Desactivar para mejor rendimiento
+        observer: false, // ✅ No observar cambios DOM innecesarios
+        observeParents: false, // ✅ Mejora rendimiento
+        observeSlideChildren: false, // ✅ Mejora rendimiento
+        resizeObserver: false, // ✅ Usar resize event simple
+        updateOnWindowResize: true,
+        preventInteractionOnTransition: true,
+        // Event listeners optimizados
+        on: {
+          slideChange: function () {
+            // Usar requestAnimationFrame para evitar forced reflow
+            requestAnimationFrame(() => {
+              if (this.pagination && this.pagination.render) {
+                this.pagination.render();
+                this.pagination.update();
+              }
+            });
+          },
+          touchEnd: function () {
+            // Usar requestAnimationFrame para evitar forced reflow
+            requestAnimationFrame(() => {
+              if (this.pagination && this.pagination.update) {
+                this.pagination.update();
+              }
+            });
+          }
         }
-      }
-    });
+      });
+    };
+
+    init();
     
     return () => {
       if (swiper) swiper.destroy();

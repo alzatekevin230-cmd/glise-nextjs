@@ -5,13 +5,6 @@ import { useState, useEffect } from 'react';
 import { useModal } from '@/contexto/ContextoModal';
 // CAMBIO: Importamos el contexto de Auth para usar la función de Google
 import { useAuth } from '@/contexto/ContextoAuth'; 
-import { auth, db } from '@/lib/firebaseClient.js';
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  sendPasswordResetEmail
-} from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
 
 export default function ModalAutenticacion() {
   const { modalActivo, closeModal, authTab, setAuthTab } = useModal();
@@ -46,6 +39,11 @@ export default function ModalAutenticacion() {
       return;
     }
     try {
+      const [{ createUserWithEmailAndPassword }, { doc, setDoc }, { auth, db }] = await Promise.all([
+        import('firebase/auth'),
+        import('firebase/firestore'),
+        import('@/lib/firebaseClient'),
+      ]);
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, "users", userCredential.user.uid), {
         name: name,
@@ -63,6 +61,10 @@ export default function ModalAutenticacion() {
     e.preventDefault();
     setError('');
     try {
+      const [{ signInWithEmailAndPassword }, { auth }] = await Promise.all([
+        import('firebase/auth'),
+        import('@/lib/firebaseClient'),
+      ]);
       await signInWithEmailAndPassword(auth, email, password);
       alert('¡Inicio de sesión exitoso!');
       closeModal();
@@ -75,6 +77,10 @@ export default function ModalAutenticacion() {
       e.preventDefault();
       setError('');
       try {
+          const [{ sendPasswordResetEmail }, { auth }] = await Promise.all([
+            import('firebase/auth'),
+            import('@/lib/firebaseClient'),
+          ]);
           await sendPasswordResetEmail(auth, email);
           alert('Se ha enviado un enlace a tu correo para restablecer la contraseña.');
           setView('login-register');

@@ -3,7 +3,15 @@
 
 import { useEffect, useRef } from 'react';
 import { useModal } from '@/contexto/ContextoModal';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaChevronDown } from 'react-icons/fa'; 
+import {
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaChevronDown,
+  FaFacebook,
+  FaInstagram,
+  FaTiktok,
+} from 'react-icons/fa'; 
 
 export default function Footer() {
   const footerRef = useRef(null);
@@ -109,15 +117,30 @@ export default function Footer() {
            <div>
             <div>
               <h4 className="font-bold mb-3 pt-3">SÍGUENOS</h4>
-              <div className="flex items-center gap-2">
-                <a href="https://www.facebook.com/profile.php?id=61577239121612&locale=es_LA" target="_blank" aria-label="Facebook" className="text-gray-500 hover:opacity-75 transition-opacity">
-                  <img src="/imagenespagina/logofacebook.webp" alt="Facebook" className="h-10 w-10" />
+              <div className="flex items-center gap-4">
+                <a
+                  href="https://www.facebook.com/profile.php?id=61577239121612&locale=es_LA"
+                  target="_blank"
+                  aria-label="Facebook"
+                  className="text-blue-600 hover:text-blue-700 transition-colors text-3xl"
+                >
+                  <FaFacebook />
                 </a>
-                <a href="https://www.instagram.com/glisefarmer/" target="_blank" aria-label="Instagram" className="text-gray-500 hover:opacity-75 transition-opacity">
-                  <img src="/imagenespagina/logoinstagram.webp" alt="Instagram" className="h-10 w-10" />
+                <a
+                  href="https://www.instagram.com/glisefarmer/"
+                  target="_blank"
+                  aria-label="Instagram"
+                  className="text-pink-500 hover:text-pink-600 transition-colors text-3xl"
+                >
+                  <FaInstagram />
                 </a>
-                <a href="#" target="_blank" aria-label="YouTube" className="text-gray-500 hover:opacity-75 transition-opacity">
-                  <img src="/imagenespagina/logoyoutube.webp" alt="YouTube" className="h-10 w-10" />
+                <a
+                  href="https://www.tiktok.com/@glisefarmer"
+                  target="_blank"
+                  aria-label="TikTok"
+                  className="text-black hover:text-gray-900 transition-colors text-3xl"
+                >
+                  <FaTiktok />
                 </a>
               </div>
             </div>

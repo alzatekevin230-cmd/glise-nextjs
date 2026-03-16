@@ -2,8 +2,6 @@
 "use client";
 
 import { useEffect } from 'react';
-import Swiper from 'swiper';
-import { Navigation, Autoplay } from 'swiper/modules';
 import AnimatedSection from './AnimatedSection';
 import { FiGrid, FiFeather, FiDroplet, FiSmile, FiStar, FiHeart } from 'react-icons/fi';
 
@@ -67,7 +65,14 @@ export default function FeaturedCategories() {
     // Solo inicializamos Swiper para tablet/escritorio
     let swiperInstance = null;
 
-    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+    const init = async () => {
+      if (typeof window === 'undefined' || window.innerWidth < 768) return;
+
+      const [{ default: Swiper }, { Navigation, Autoplay }] = await Promise.all([
+        import('swiper'),
+        import('swiper/modules'),
+      ]);
+
       swiperInstance = new Swiper('.category-discovery-carousel', {
         modules: [Navigation, Autoplay],
         loop: false,
@@ -87,7 +92,9 @@ export default function FeaturedCategories() {
           1024: { slidesPerView: 6, spaceBetween: 30 }
         }
       });
-    }
+    };
+
+    init();
 
     return () => {
       if (swiperInstance) {

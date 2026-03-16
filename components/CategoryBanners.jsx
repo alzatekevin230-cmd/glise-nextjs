@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
-import Swiper from 'swiper';
-import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
@@ -168,26 +166,36 @@ export default function CategoryBanners({ categoryName, products = [] }) {
         swiperRef.current.destroy(true, true);
     }
 
-    if (featuredProducts.length > 0) {
-        swiperRef.current = new Swiper('.category-banners-swiper', {
-            modules: [Navigation, Autoplay],
-            spaceBetween: 16,
-            slidesPerView: 2.5, // Mobile: 2.5 cards visible
-            slidesOffsetBefore: 20, // Mobile: Padding for first card
-            slidesOffsetAfter: 20,
-            navigation: {
-                nextEl: navigationNextRef.current,
-                prevEl: navigationPrevRef.current,
-            },
-            breakpoints: {
-                640: { slidesPerView: 2.2, spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
-                768: { slidesPerView: 3.2, spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
-                1024: { slidesPerView: 4, spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 }, // Desktop Grid look (4 items)
-                1280: { slidesPerView: 5, spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 }
-            }
-        });
-        setSwiperInitialized(true);
-    }
+    const init = async () => {
+      if (featuredProducts.length === 0) return;
+
+      const [{ default: Swiper }, { Navigation, Autoplay }] = await Promise.all([
+        import('swiper'),
+        import('swiper/modules'),
+      ]);
+
+      swiperRef.current = new Swiper('.category-banners-swiper', {
+        modules: [Navigation, Autoplay],
+        spaceBetween: 16,
+        slidesPerView: 2.5, // Mobile: 2.5 cards visible
+        slidesOffsetBefore: 20, // Mobile: Padding for first card
+        slidesOffsetAfter: 20,
+        navigation: {
+          nextEl: navigationNextRef.current,
+          prevEl: navigationPrevRef.current,
+        },
+        breakpoints: {
+          640: { slidesPerView: 2.2, spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
+          768: { slidesPerView: 3.2, spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
+          1024: { slidesPerView: 4, spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 }, // Desktop Grid look (4 items)
+          1280: { slidesPerView: 5, spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 }
+        }
+      });
+
+      setSwiperInitialized(true);
+    };
+
+    init();
 
     return () => {
         if (swiperRef.current) {
