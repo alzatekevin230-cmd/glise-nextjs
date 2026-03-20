@@ -57,6 +57,11 @@ async function generarSitemap() {
       imageUrl = data.image;
     }
 
+    // --- NUEVO: Limpiar el token de Firebase ---
+    if (typeof imageUrl === 'string' && imageUrl.includes('&token=')) {
+      imageUrl = imageUrl.split('&token=')[0]; 
+    }
+    // -------------------------------------------
     lines.push('  <url>');
     lines.push(`    <loc>${escapeXml(loc)}</loc>`);
 

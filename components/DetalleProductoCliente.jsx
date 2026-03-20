@@ -246,16 +246,14 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   // components/DetalleProductoCliente.jsx
 
   const renderGallery = () => {
-    if (width === undefined) {
-      return <div className="w-full aspect-square bg-gray-100 rounded-lg"></div>; // Placeholder
-    }
-
-    if (isDesktop) {
-      // ================================================================
-      // === VERSIÓN PARA ESCRITORIO (MEJORADA CON INDICADORES NUMÉRICOS) ===
-      // ================================================================
-      return (
-        <div className="flex-grow flex flex-col">
+    // Renderizamos ambas versiones y controlamos la visibilidad con CSS para evitar saltos de layout
+    // y esperar a que JS determine el ancho de la pantalla (lo que causaba el retraso)
+    return (
+      <>
+        {/* ================================================================
+            === VERSIÓN PARA ESCRITORIO (md:block) ===
+            ================================================================ */}
+        <div className="hidden md:block flex-grow flex flex-col">
           <div className="relative w-full group">
             <ImageWithZoom src={activeImage} alt={product.name} openLightbox={handleOpenLightbox} priority />
 
@@ -304,13 +302,11 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
             )}
           </div>
         </div>
-      );
-    } else {
-      // ============================================================
-      // === VERSIÓN PARA MÓVIL (SIN CAMBIOS) ===
-      // ============================================================
-      return (
-        <div className="flex-1">
+
+        {/* ============================================================
+            === VERSIÓN PARA MÓVIL (md:hidden) ===
+            ============================================================ */}
+        <div className="md:hidden flex-1">
           <div className="relative w-full aspect-square group">
             <Swiper modules={[Pagination]} pagination={{ clickable: true }} loop={allImages.length > 1} onSwiper={setSwiperInstance} onSlideChange={(swiper) => { if (allImages.length > 0) setActiveImage(allImages[swiper.realIndex]); }} allowTouchMove={allImages.length > 1} className="product-gallery-carousel h-full">
               {allImages.map((imgSrc) => (
@@ -319,8 +315,8 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
             </Swiper>
           </div>
         </div>
-      );
-    }
+      </>
+    );
   };
 
   // Generar breadcrumbs para la página de producto
