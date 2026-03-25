@@ -2,6 +2,7 @@
 
 // CAMBIO: Importamos las funciones necesarias desde lib/data.js
 import { getProductBySlug, getRelatedProducts, createSlug, getAllProducts } from '@/lib/data.js';
+import { getImageUrl } from '@/lib/imageUtils';
 import DetalleProductoCliente from '@/components/DetalleProductoCliente';
 import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -23,28 +24,7 @@ export async function generateMetadata({ params }) {
   const product = await getProductBySlug(slug);
   if (!product) return { title: 'Producto no encontrado' };
 
-  const productSchema = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": product.name,
-    "description": product.description,
-    "image": product.imageUrl || product.image,
-    "offers": {
-      "@type": "Offer",
-      "price": product.price,
-      "priceCurrency": "COP",
-      "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      "seller": {
-        "@type": "Organization",
-        "name": "Glisé"
-      }
-    },
-    "brand": {
-      "@type": "Brand",
-      "name": product.laboratorio || "Glisé"
-    },
-    "category": product.category
-  };
+  const optimizedImage = getImageUrl(product.image, '700x700');
 
   return {
     title: `${product.name} - Glisé`,
@@ -52,14 +32,13 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: `${product.name} - Glisé`,
       description: product.description,
-      images: [product.imageUrl || product.image],
+      images: [optimizedImage],
       type: 'website',
     },
     other: {
       'product:price:amount': product.price,
       'product:price:currency': 'COP',
     },
-    structuredData: productSchema,
   };
 }
 
@@ -82,9 +61,37 @@ export default async function PaginaProducto({ params }) {
   // Crear slug de categoría para el breadcrumb (usar encodeURIComponent directamente como en otras páginas)
   const categorySlug = product.category ? encodeURIComponent(product.category) : 'all';
   const categoryLabel = product.category || 'Productos';
+
+  // JSON-LD para Google (Rich Snippets)
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "description": product.description,
+    "image": getImageUrl(product.image, '700x700'),
+    "offers": {
+      "@type": "Offer",
+      "price": product.price,
+      "priceCurrency": "COP",
+      "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "seller": {
+        "@type": "Organization",
+        "name": "Glisé"
+      }
+    },
+    "brand": {
+      "@type": "Brand",
+      "name": product.laboratorio || "Glisé"
+    },
+    "category": product.category
+  };
   
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
       <div className="container mx-auto px-2 sm:px-6 py-8">
         <Breadcrumbs items={[
           { label: 'Inicio', href: '/' }, 

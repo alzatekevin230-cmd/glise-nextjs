@@ -75,7 +75,7 @@ function ProductPromoCard({ product, label, bgColor }) {
       </div>
 
       {/* Badge de marketing lateral (usa color cyan de la marca) */}
-      <div className="absolute top-1/2 left-2 -translate-y-1/2 bg-cyan-600 text-white px-2.5 py-1.5 rounded-full shadow-sm text-center">
+      <div className="absolute top-1/2 left-2 -translate-y-1/2 bg-red-600 text-white px-2.5 py-1.5 rounded-full shadow-sm text-center">
         <p className="text-[11px] font-bold m-0 tracking-wide">OFERTA</p>
       </div>
     </Link>

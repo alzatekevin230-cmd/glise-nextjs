@@ -43,7 +43,7 @@ export default function HeaderMobile() {
       id="mobile-header"
       className="md:hidden w-full"
     >
-      <div className="bg-cyan-600 text-white text-center text-base font-semibold py-3 w-full flex items-center justify-center gap-2 overflow-hidden relative">
+      <div className="bg-cyan-700 text-white text-center text-base font-semibold py-3 w-full flex items-center justify-center gap-2 overflow-hidden relative">
         <Icon />
         <span 
           key={currentPromoIndex} 
@@ -53,14 +53,22 @@ export default function HeaderMobile() {
         </span>
       </div>
       <div className="relative h-16 bg-white shadow w-full flex items-center justify-between px-2">
-        <button onClick={openMenu} className="text-2xl text-gray-600 z-10 p-2 -ml-1">
-          <FiMenu />
+        <button
+          onClick={openMenu}
+          className="text-2xl text-gray-600 z-10 p-2 -ml-1"
+          aria-label="Abrir menú"
+        >
+          <FiMenu aria-hidden="true" />
         </button>
         <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[50%] z-0">
           <Image src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" width={112} height={56} className="h-14 w-auto object-contain" style={{ width: 'auto' }} />
         </Link>
-        <button onClick={() => openModal('carrito')} className="relative text-2xl text-cyan-600 z-10 p-2 -mr-1">
-          <FiShoppingCart />
+        <button
+          onClick={() => openModal('carrito')}
+          className="relative text-2xl text-cyan-600 z-10 p-2 -mr-1"
+          aria-label={cartItemCount > 0 ? `Abrir carrito, ${cartItemCount} artículos` : 'Abrir carrito'}
+        >
+          <FiShoppingCart aria-hidden="true" />
           {cartItemCount > 0 && (
             <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
               {cartItemCount}

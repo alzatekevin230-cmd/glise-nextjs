@@ -55,7 +55,7 @@ export default function Footer() {
                 <input type="email" id="newsletter-email" placeholder="Ingresa tu correo electrónico" required className="w-full px-4 py-2.5 rounded-md border-2 border-cyan-500 text-gray-800 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
-                <button type="submit" className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-6 py-2.5 rounded-md transition-colors whitespace-nowrap">
+                <button type="submit" className="bg-cyan-700 hover:bg-cyan-800 text-white font-bold px-6 py-2.5 rounded-md transition-colors whitespace-nowrap">
                   Suscribirme
                 </button>
                 <div className="flex items-center">

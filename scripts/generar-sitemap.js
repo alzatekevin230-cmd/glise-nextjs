@@ -1,8 +1,16 @@
 // scripts/generar-sitemap.js
 import fs from 'fs';
 import path from 'path';
-import { db } from '../lib/firebaseClient.js';
-import { collection, getDocs } from 'firebase/firestore';
+import dotenv from 'dotenv';
+
+// Load environment variables before importing firebaseClient
+dotenv.config({ path: '.env.local' });
+dotenv.config(); // fallback to .env
+
+// Dynamic imports for Firebase related modules
+const { db } = await import('../lib/firebaseClient.js');
+const { collection, getDocs } = await import('firebase/firestore');
+import { getImageUrl } from '../lib/imageUtils.js';
 
 // Helpers
 function escapeXml(str = '') {
@@ -62,6 +70,12 @@ async function generarSitemap() {
       imageUrl = imageUrl.split('&token=')[0]; 
     }
     // -------------------------------------------
+    
+    // CORRECCIÓN: Usar URL optimizada para coincidir con el frontend y Schema
+    if (isValidImageUrl(imageUrl)) {
+      imageUrl = getImageUrl(imageUrl, '700x700');
+    }
+
     lines.push('  <url>');
     lines.push(`    <loc>${escapeXml(loc)}</loc>`);
 

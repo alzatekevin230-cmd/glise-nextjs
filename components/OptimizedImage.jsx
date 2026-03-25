@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import SkeletonLoader from './SkeletonLoader';
-import { FaImage } from 'react-icons/fa';
 
 export default function OptimizedImage({ 
   src, 
@@ -12,8 +11,6 @@ export default function OptimizedImage({
   priority = false,
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
   quality = 80, // ✅ Calidad por defecto optimizada
-  width,
-  height,
   ...props 
 }) {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -42,8 +39,7 @@ export default function OptimizedImage({
     setImageLoaded(true);
   };
 
-  const handleError = (e) => {
-    console.error("❌ Error cargando imagen:", src, e);
+  const handleError = () => {
     setImageError(true);
     setImageLoaded(true);
   };
@@ -52,14 +48,13 @@ export default function OptimizedImage({
     return (
       <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
         <div className="text-gray-400 text-center">
-          <FaImage className="text-2xl mb-2 mx-auto" />
+          <i className="fas fa-image text-2xl mb-2"></i>
           <p className="text-sm">Error al cargar</p>
         </div>
       </div>
     );
   }
 
-  // Para imágenes no-Cloudinary (Firebase), usar Image normal de Next.js
   return (
     <div className={`relative ${className} overflow-hidden`}>
       {!imageLoaded && <SkeletonLoader type="image" className="absolute inset-0" />}
@@ -77,7 +72,8 @@ export default function OptimizedImage({
         onError={handleError}
         loading={priority ? 'eager' : 'lazy'}
         priority={priority}
-        unoptimized={true} // Forzar modo no optimizado para asegurar compatibilidad con Firebase
+        placeholder="blur"
+        blurDataURL="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA="
         {...props}
       />
     </div>

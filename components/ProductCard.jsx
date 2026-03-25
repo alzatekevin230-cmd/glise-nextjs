@@ -59,7 +59,7 @@ export default function ProductCard({ product, isSmall = false }) {
     : "font-semibold text-gray-800 my-1 flex-grow flex items-center justify-center h-14";
   const priceClasses = isSmall ? "text-lg font-bold text-gray-900 mb-2" : "text-xl font-bold text-gray-900 mb-3";
   // Botón usa el azul/cyan principal de la marca
-  const buttonClasses = `w-full text-white font-bold rounded-lg transition-all duration-150 flex items-center justify-center ${isSmall ? 'py-1 px-2 text-xs' : 'py-2 px-4'} ${isOutOfStock ? 'btn-disabled' : 'bg-cyan-600 hover:bg-cyan-700 active:scale-95 active:bg-cyan-800'}`;
+  const buttonClasses = `w-full text-white font-bold rounded-lg transition-all duration-150 flex items-center justify-center ${isSmall ? 'py-1 px-2 text-xs' : 'py-2 px-4'} ${isOutOfStock ? 'btn-disabled' : 'bg-cyan-700 hover:bg-cyan-800 active:scale-95 active:bg-cyan-900'}`;
 
   const handleToggleFavorite = (e) => {
     e.preventDefault();
@@ -85,7 +85,7 @@ export default function ProductCard({ product, isSmall = false }) {
           />
 
         <div className={`${cardClasses} flex-grow flex flex-col`}>
-          <p className={`text-xs text-gray-400 uppercase tracking-wider ${isSmall ? 'hidden' : ''}`}>{product.category}</p>
+          <p className={`text-xs text-gray-600 uppercase tracking-wider ${isSmall ? 'hidden' : ''}`}>{product.category}</p>
           <h3 className={titleClasses} title={product.name}>
             <span className="line-clamp-2">{product.name}</span>
           </h3>

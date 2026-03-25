@@ -2,18 +2,19 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useCarrito } from '@/contexto/ContextoCarrito';
 import { useProductos } from '@/contexto/ContextoProductos';
 import { useDetalleProducto } from '@/contexto/ContextoDetalleProducto';
 import toast from 'react-hot-toast';
-import ProductosRelacionados from './ProductosRelacionados';
-import ProductosVistosRecientemente from './ProductosVistosRecientemente';
 import { useModal } from '@/contexto/ContextoModal';
 import ImageWithZoom from './ImageWithZoom';
-import ResenasProducto from './ResenasProducto';
-import Breadcrumbs from './Breadcrumbs';
 import { getImageUrl } from '@/lib/imageUtils';
+
+const ProductosRelacionados = dynamic(() => import('./ProductosRelacionados'));
+const ProductosVistosRecientemente = dynamic(() => import('./ProductosVistosRecientemente'), { ssr: false });
+const ResenasProducto = dynamic(() => import('./ResenasProducto'));
 
 // Ayudante para detectar tamaño de pantalla
 import { useWindowSize } from './hooks/useWindowSize';
@@ -362,22 +363,44 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
         </div>
 
         {/* Información del producto */}
-        <div className="flex flex-col space-y-8">
+        <div className="flex flex-col space-y-4 md:space-y-8">
           <div>
             <p className="text-sm text-gray-500 uppercase tracking-wider mb-3">{product.category}</p>
             {/* Título grande solo en pantallas medianas y escritorio */}
             <h1 className="hidden md:block text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
               {product.name}
             </h1>
-            <div className="mb-8">
-              <span className="text-4xl lg:text-5xl font-bold text-gray-900">{formatPrice(product.price)}</span>
+            <div className="mb-4 md:mb-8">
+              <p className="text-gray-400 text-lg md:text-xl font-medium mb-1">
+                Antes: <span className="line-through">{formatPrice(product.price * 1.3)}</span>
+              </p>
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-4xl lg:text-5xl font-bold text-blue-600">{formatPrice(product.price)}</span>
+                <span className="text-sm md:text-base font-bold text-white bg-red-500 px-3 py-1 rounded-full shadow-sm transform -rotate-2">
+                  AHORA
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-8">
-            <div>
+          <div className="space-y-4 md:space-y-8">
+            {/* Descripción Desktop */}
+            <div className="hidden md:block">
               <h3 className="text-xl font-bold mb-4 text-gray-900">Descripción</h3>
-              <p className="text-gray-700 leading-relaxed text-base md:text-lg text-left whitespace-normal break-words">{product.description}</p>
+              <p className="text-gray-700 leading-relaxed text-lg text-left whitespace-normal break-words">{product.description}</p>
+            </div>
+
+            {/* Descripción Móvil (Acordeón) */}
+            <div className="md:hidden my-4 bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm">
+              <details className="group">
+                <summary className="flex items-center justify-between cursor-pointer list-none">
+                  <h3 className="text-base font-bold text-gray-900 m-0">Descripción</h3>
+                  <FaChevronDown className="text-gray-600 transition-transform group-open:rotate-180" />
+                </summary>
+                <div className="mt-3 text-gray-700 leading-relaxed text-base text-left whitespace-normal break-words">
+                  {product.description}
+                </div>
+              </details>
             </div>
 
             <div>
