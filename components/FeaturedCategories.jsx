@@ -107,7 +107,7 @@ export default function FeaturedCategories() {
     <>
       {/* Versión móvil: contenedor blanco con círculos de categoría (sin animación para que aparezca de una) */}
       {/* En móvil: pegado al banner arriba y un poco más de espacio hacia las tarjetas abajo */}
-      <section className="-mt-5 mb-5 md:hidden">
+      <section className="-mt-1 mb-5 md:hidden">
         <div className="container mx-auto px-2 sm:px-6">
           <div className="bg-white rounded-2xl shadow-md border border-gray-100 px-4 py-4">
             <h2 className="text-lg font-bold text-gray-900 mb-3">

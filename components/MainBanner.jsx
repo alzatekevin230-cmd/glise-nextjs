@@ -48,7 +48,7 @@ export default function MainBanner() {
   }, []);
 
   return (
-    <section className="mb-12">
+    <section className="-mt-5 md:mt-0 mb-0 md:mb-12">
       <div className="px-2 sm:px-4">
         {/* Agregamos pb-5 para que el carrusel no corte la sombra con una línea recta */}
         <div className="swiper-container main-banner-carousel relative overflow-hidden pb-5 pt-2">
