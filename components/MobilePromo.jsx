@@ -83,72 +83,66 @@ function ProductPromoCard({ product, label, bgColor }) {
 }
 
 export default function MobilePromo({ milenarioProduct, naturalesProduct }) {
+  // Arreglo de banners para evitar repetir código JSX (DRY)
+  const promoBanners = [
+    {
+      id: "eucerin",
+      href: "/marca/EUCERIN",
+      title: "Eucerin",
+      cta: "Comprar",
+      image: "/imagenespagina/banereucerin.webp",
+    },
+    {
+      id: "nivea",
+      href: "/marca/NIVEA",
+      title: "Nivea",
+      cta: "Comprar todo",
+      image: "/imagenespagina/banerdenivea.webp",
+    },
+    {
+      id: "creatina",
+      href: "/producto/creatina-en-gomas-sabor-fresa",
+      title: "Creatina",
+      cta: "Ver producto",
+      image: "/imagenespagina/ofertacreatiana.webp",
+    }
+  ];
+
   return (
     // Esta sección solo se mostrará en pantallas pequeñas (md:hidden)
     // Dejamos sin margen superior para que el espacio lo controle FeaturedCategories
     <section className="container mx-auto px-2 sm:px-6 md:hidden">
-      <div className="grid grid-cols-2 gap-4">
+      {/* Tarjetas Superiores en Grid (Aceites y Naturales) */}
+      <div className="grid grid-cols-2 gap-4 mb-4">
         
         {/* Tarjeta de Aceites */}
         <ProductPromoCard product={milenarioProduct} label="Aceites" bgColor="#f0f9ff" />
 
         {/* Tarjeta de Natural */}
         <ProductPromoCard product={naturalesProduct} label="Natural" bgColor="#f0fdf4" />
+      </div>
 
-        <Link href="/marca/EUCERIN" className="promo-card-mobile promo-card--wide col-span-2">
-          <div className="promo-card-content">
-            <h3 className="promo-card-title">Eucerin</h3>
-            <p className="promo-card-cta">Comprar</p>
-          </div>
-          <div className="absolute inset-0">
-            <Image 
-              src="/imagenespagina/banereucerin.webp" 
-              alt="Lo Mejor de Glisé" 
-              fill
-              sizes="(max-width: 768px) 100vw, 0vw"
-              className="promo-card-image-full" 
-              quality={80}
-              loading="lazy"
-            />
-          </div>
-        </Link>
-
-        <Link href="/marca/NIVEA" className="promo-card-mobile promo-card--wide col-span-2">
-          <div className="promo-card-content">
-            <h3 className="promo-card-title">Nivea</h3>
-            <p className="promo-card-cta">Comprar todo</p>
-          </div>
-          <div className="absolute inset-0">
-            <Image 
-              src="/imagenespagina/banerdenivea.webp" 
-              alt="Lo Mejor de Glisé" 
-              fill
-              sizes="(max-width: 768px) 100vw, 0vw"
-              className="promo-card-image-full"
-              quality={80}
-              loading="lazy"
-            />
-          </div>
-        </Link>
-        
-        <Link href="/producto/creatina-en-gomas-sabor-fresa" className="promo-card-mobile promo-card--wide col-span-2">
-          <div className="promo-card-content">
-            <h3 className="promo-card-title">Creatina</h3>
-            <p className="promo-card-cta">Ver producto</p>
-          </div>
-          <div className="absolute inset-0">
-            <Image 
-              src="/imagenespagina/ofertacreatiana.webp" 
-              alt="Banner Cuidado de Bebé" 
-              fill
-              sizes="(max-width: 768px) 100vw, 0vw"
-              className="promo-card-image-full"
-              quality={80}
-              loading="lazy"
-            />
-          </div>
-        </Link>
-
+      {/* Carrusel de Banners Anchos implementado según TODO.md */}
+      <div className="mobile-promo-carousel">
+        {promoBanners.map((banner) => (
+          <Link key={banner.id} href={banner.href} className="promo-card-mobile promo-card--wide promo-card-scroll">
+            <div className="promo-card-content">
+              <h3 className="promo-card-title">{banner.title}</h3>
+              <p className="promo-card-cta">{banner.cta}</p>
+            </div>
+            <div className="absolute inset-0">
+              <Image 
+                src={banner.image} 
+                alt={`Promoción ${banner.title}`} 
+                fill
+                sizes="(max-width: 768px) 85vw, 0vw"
+                className="promo-card-image-full" 
+                quality={80}
+                loading="lazy"
+              />
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );

@@ -103,6 +103,7 @@ export default function Footer() {
               <summary className="footer-accordion-toggle"><span>POLÍTICAS</span><FaChevronDown className="transition-transform duration-300" /></summary>
               <ul className="pt-2 pl-4 space-y-2 text-sm text-gray-600">
                 <li><a href="/politica-devoluciones" className="hover:text-blue-600">Política de Devoluciones</a></li>
+                <li><a href="/politicas-de-envio" className="hover:text-blue-600">Políticas de Envío</a></li>
                 <li><a href="/politicas" className="hover:text-blue-600">Términos y Política de Privacidad</a></li>
               </ul>
             </details>

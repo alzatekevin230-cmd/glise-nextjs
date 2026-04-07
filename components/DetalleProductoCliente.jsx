@@ -67,8 +67,8 @@ const EnvioInfoAccordion = () => (
         </div>
 
         <div className="pt-4 border-t border-blue-200">
-          <a href="/politica-devoluciones" className="text-sm text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-2 font-medium transition-colors">
-            Ver política completa de envíos y devoluciones
+          <a href="/politicas-de-envio" className="text-sm text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-2 font-medium transition-colors">
+            Ver políticas completas de envío
             <FaArrowRight />
           </a>
         </div>
