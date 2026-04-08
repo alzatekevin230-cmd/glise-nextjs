@@ -56,7 +56,7 @@ export default function MainBanner() {
             {/* TARJETA 1 */}
             <div className="swiper-slide !w-auto">
               {/* Capa EXTERNA: Controla el tamaño y proyecta la sombra perfecta */}
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[65vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
+              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
                 {/* Capa INTERNA: Recorte limpio nativo sin hacks */}
                 <div className="absolute inset-0 rounded-2xl overflow-hidden">
                   <Link 
@@ -91,7 +91,7 @@ export default function MainBanner() {
 
           {/* TARJETA 2 */}
           <div className="swiper-slide !w-auto">
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[65vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
+              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
                 <div className="absolute inset-0 rounded-2xl overflow-hidden">
                   <Link 
                     href="/categoria/Cuidado Infantil" 
@@ -123,7 +123,7 @@ export default function MainBanner() {
 
           {/* TARJETA 3 */}
           <div className="swiper-slide !w-auto">
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[65vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
+              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
                 <div className="absolute inset-0 rounded-2xl overflow-hidden">
                   <Link 
                     href="/categoria/Naturales y Homeopáticos" 
@@ -155,7 +155,7 @@ export default function MainBanner() {
 
           {/* TARJETA 4 */}
           <div className="swiper-slide !w-auto">
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[65vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
+              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
                 <div className="absolute inset-0 rounded-2xl overflow-hidden">
                   <Link 
                     href="/categoria/Cuidado y Belleza" 
@@ -187,7 +187,7 @@ export default function MainBanner() {
 
           {/* TARJETA 5 */}
           <div className="swiper-slide !w-auto">
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[65vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
+              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
                 <div className="absolute inset-0 rounded-2xl overflow-hidden">
                   <Link 
                     href="/categoria/Dermocosméticos" 
