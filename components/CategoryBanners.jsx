@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
 import { FaChevronRight } from 'react-icons/fa';
 import { getImageUrl } from '@/lib/imageUtils';
+import Swiper from 'swiper';
+import { Navigation, Autoplay } from 'swiper/modules';
 
 export default function CategoryBanners({ categoryName, products = [] }) {
   const swiperRef = useRef(null);
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
-  const [swiperInitialized, setSwiperInitialized] = useState(false);
 
   // Mapeo de Títulos de Categoría
   const categoryTitles = {
@@ -104,7 +105,7 @@ export default function CategoryBanners({ categoryName, products = [] }) {
       };
   };
 
-  const featuredProducts = (() => {
+  const featuredProducts = useMemo(() => {
     if (!products || products.length === 0) return [];
 
     const config = getProductConfig();
@@ -156,7 +157,7 @@ export default function CategoryBanners({ categoryName, products = [] }) {
     return filtered
       .sort((a, b) => a.displayPrice - b.displayPrice)
       .slice(0, 12);
-  })();
+  }, [products, categoryName]);
   
   // Si no hay productos, no mostramos nada
   if (featuredProducts.length === 0) return null;
@@ -166,36 +167,27 @@ export default function CategoryBanners({ categoryName, products = [] }) {
         swiperRef.current.destroy(true, true);
     }
 
-    const init = async () => {
-      if (featuredProducts.length === 0) return;
+    if (featuredProducts.length === 0) return;
 
-      const [{ default: Swiper }, { Navigation, Autoplay }] = await Promise.all([
-        import('swiper'),
-        import('swiper/modules'),
-      ]);
-
-      swiperRef.current = new Swiper('.category-banners-swiper', {
+    swiperRef.current = new Swiper('.category-banners-swiper', {
         modules: [Navigation, Autoplay],
+        slidesPerView: 'auto',
         spaceBetween: 16,
-        slidesPerView: 2.5, // Mobile: 2.5 cards visible
         slidesOffsetBefore: 20, // Mobile: Padding for first card
         slidesOffsetAfter: 20,
+          resistance: true, // Activa los límites del carrusel
+          resistanceRatio: 0, // 0 = Límite duro, evita totalmente el estiramiento o "rebote" hacia la derecha en la primera tarjeta
         navigation: {
           nextEl: navigationNextRef.current,
           prevEl: navigationPrevRef.current,
         },
         breakpoints: {
-          640: { slidesPerView: 2.2, spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
-          768: { slidesPerView: 3.2, spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
-          1024: { slidesPerView: 4, spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 }, // Desktop Grid look (4 items)
-          1280: { slidesPerView: 5, spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 }
+          640: { spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
+          768: { spaceBetween: 20, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
+          1024: { spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 },
+          1280: { spaceBetween: 24, slidesOffsetBefore: 0, slidesOffsetAfter: 0 }
         }
       });
-
-      setSwiperInitialized(true);
-    };
-
-    init();
 
     return () => {
         if (swiperRef.current) {
@@ -220,10 +212,10 @@ export default function CategoryBanners({ categoryName, products = [] }) {
             </h2>
           </div>
 
-          <div className="swiper-container category-banners-swiper overflow-hidden">
+          <div className="swiper-container category-banners-swiper overflow-hidden min-h-[280px] sm:min-h-[320px]">
             <div className="swiper-wrapper">
               {featuredProducts.map((product) => (
-                <div key={product.id} className="swiper-slide h-auto">
+                <div key={product.id} className="swiper-slide !w-[42%] sm:!w-[42%] md:!w-[30%] lg:!w-[23%] xl:!w-[18%] h-auto">
                    {/* Tarjeta Blanca */}
                    <Link href={`/producto/${product.slug}`} className="block h-full">
                       {/* Tarjeta con estilos originales, pero producto ligeramente más grande */}

@@ -42,6 +42,24 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
+    // Precargar la imagen crítica para máxima velocidad
+    useEffect(() => {
+        if (priority && optimizedSrc) {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'image';
+            link.href = optimizedSrc;
+            link.crossOrigin = 'anonymous';
+            document.head.appendChild(link);
+            
+            return () => {
+                if (document.head.contains(link)) {
+                    document.head.removeChild(link);
+                }
+            };
+        }
+    }, [optimizedSrc, priority]);
+
     // Cachear getBoundingClientRect para evitar forced reflows
     const updateBounds = useCallback(() => {
         if (imageContainerRef.current) {
@@ -153,8 +171,12 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
                 width={600}
                 height={600}
                     priority={priority}
-                    className="w-full h-full object-cover transition-opacity duration-200"
-                    style={{ opacity: isZoomingMobile ? 0.3 : 1 }}
+                    loading={priority ? 'eager' : 'lazy'}
+                    fetchPriority={priority ? 'high' : 'auto'}
+                sizes="(max-width: 768px) 100vw, 600px"
+                unoptimized={true}
+                    className="w-full h-full object-cover image-optimized"
+                    style={isZoomingMobile ? { opacity: 0.3 } : {}}
                 />
 
                 {/* ====== DESKTOP: Recuadro azul que sigue el mouse (estilo Amazon) ====== */}
@@ -166,7 +188,7 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.15 }}
-                                className="absolute pointer-events-none border-2 border-blue-500 bg-blue-500/10"
+                                className="absolute pointer-events-none border-2 border-blue-500 bg-blue-500/10 z-20"
                                 style={{
                                     width: `${ZOOM_BOX_SIZE}px`,
                                     height: `${ZOOM_BOX_SIZE}px`,
@@ -282,31 +304,29 @@ export default function ImageWithZoom({ src, alt, openLightbox, priority = false
 
             {/* ====== DESKTOP: Ventana de zoom lateral (estilo Amazon/Walmart) ====== */}
             {!isMobile && (
-                <AnimatePresence>
-                    {isZoomingDesktop && (
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ duration: 0.2, type: "spring", stiffness: 300, damping: 30 }}
-                            className="hidden lg:block absolute left-full ml-4 top-0 w-[500px] h-full bg-white rounded-lg shadow-2xl overflow-hidden border-2 border-gray-200 pointer-events-none z-50"
-                        >
-                            <div
-                                className="w-full h-full bg-no-repeat"
-    style={{
-        backgroundImage: `url(${optimizedSrc})`,
-        backgroundPosition: `${zoomPosition.x} ${zoomPosition.y}`,
-                                    backgroundSize: `${ZOOM_SCALE * 100}%`,
-                                }}
-                            />
-                            
-                            {/* Badge indicador de zoom */}
-                            <div className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                                {Math.round(ZOOM_SCALE * 100)}% Zoom
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                <motion.div
+                    initial={false}
+                    animate={{ 
+                        opacity: isZoomingDesktop ? 1 : 0, 
+                        x: isZoomingDesktop ? 0 : -20 
+                    }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="hidden lg:block absolute left-full ml-4 top-0 w-[500px] h-full bg-white rounded-lg shadow-2xl overflow-hidden border-2 border-gray-200 pointer-events-none z-50"
+                >
+                    <div
+                        className="w-full h-full bg-no-repeat"
+                        style={{
+                            backgroundImage: `url('${optimizedSrc}')`,
+                            backgroundPosition: `${zoomPosition.x} ${zoomPosition.y}`,
+                            backgroundSize: `${ZOOM_SCALE * 100}%`,
+                        }}
+                    />
+                    
+                    {/* Badge indicador de zoom */}
+                    <div className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+                        {Math.round(ZOOM_SCALE * 100)}% Zoom
+                    </div>
+                </motion.div>
             )}
         </div>
     );

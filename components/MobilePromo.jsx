@@ -87,24 +87,24 @@ export default function MobilePromo({ milenarioProduct, naturalesProduct }) {
   const promoBanners = [
     {
       id: "eucerin",
-      href: "/marca/EUCERIN",
-      title: "Eucerin",
+      href: "/categoria/Dermocosméticos",
+      title: "Dermocosméticos",
       cta: "Comprar",
-      image: "/imagenespagina/banereucerin.webp",
+      image: "/imagenespagina/banermobildermocosmetica.webp",
     },
     {
       id: "nivea",
-      href: "/marca/NIVEA",
-      title: "Nivea",
-      cta: "Comprar todo",
-      image: "/imagenespagina/banerdenivea.webp",
+      href: "/categoria/Cuidado y Belleza",
+      title: "Belleza Facial",
+      cta: "Comprar",
+      image: "/imagenespagina/banermovilbelleza.webp",
     },
     {
       id: "creatina",
-      href: "/producto/creatina-en-gomas-sabor-fresa",
-      title: "Creatina",
-      cta: "Ver producto",
-      image: "/imagenespagina/ofertacreatiana.webp",
+      href: "/categoria/Milenario",
+      title: "Aceites",
+      cta: "Comprar",
+      image: "/imagenespagina/banermovilaceites.webp",
     }
   ];
 
@@ -126,7 +126,7 @@ export default function MobilePromo({ milenarioProduct, naturalesProduct }) {
       <div className="mobile-promo-carousel">
         {promoBanners.map((banner) => (
           <Link key={banner.id} href={banner.href} className="promo-card-mobile promo-card--wide promo-card-scroll">
-            <div className="promo-card-content">
+            <div className="promo-card-content -mt-2 -ml-6">
               <h3 className="promo-card-title">{banner.title}</h3>
               <p className="promo-card-cta">{banner.cta}</p>
             </div>
