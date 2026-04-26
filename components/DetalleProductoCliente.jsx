@@ -244,6 +244,30 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
   if (!product) return <div>Cargando detalles del producto...</div>;
 
+  // 1. JSON-LD PARA GOOGLE (ESTO HACE QUE APAREZCA EN GOOGLE SHOPPING E IMÁGENES)
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: allImages.length > 0 ? allImages : [product.image || 'https://glise.com.co/imagenespagina/logodeglise.webp'],
+    description: product.description,
+    brand: {
+      '@type': 'Brand',
+      name: product.laboratorio || product.brand || 'Glisé'
+    },
+    offers: {
+      '@type': 'Offer',
+      url: `https://glise.com.co/producto/${product.slug || product.id}`,
+      priceCurrency: 'COP',
+      price: product.price,
+      availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Glisé'
+      }
+    }
+  };
+
   // components/DetalleProductoCliente.jsx
 
   const renderGallery = () => {
@@ -311,7 +335,9 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
           <div className="relative w-full aspect-square group">
             <Swiper modules={[Pagination]} pagination={{ clickable: true }} loop={allImages.length > 1} onSwiper={setSwiperInstance} onSlideChange={(swiper) => { if (allImages.length > 0) setActiveImage(allImages[swiper.realIndex]); }} allowTouchMove={allImages.length > 1} className="product-gallery-carousel h-full">
               {allImages.map((imgSrc) => (
-                <SwiperSlide key={imgSrc} className="h-full"><ImageWithZoom src={imgSrc} alt={`${product.name}`} openLightbox={handleOpenLightbox} priority={imgSrc === allImages[0]} /></SwiperSlide>
+                <SwiperSlide key={imgSrc} className="h-full relative">
+                  <ImageWithZoom src={imgSrc} alt={`${product.name}`} openLightbox={handleOpenLightbox} priority={imgSrc === allImages[0]} />
+                </SwiperSlide>
               ))}
             </Swiper>
           </div>
@@ -326,6 +352,11 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
   return (
     <>
+      {/* 2. Inyectamos el JSON-LD en la página de forma invisible para Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Galería de imágenes */}
         <div className="flex flex-col lg:flex-row gap-4">
