@@ -302,12 +302,6 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
               ? 'Natural'
               : categoryName}
         </h1>
-      
-      <p className="text-gray-600 mb-6 md:mb-8 max-w-4xl text-sm md:text-base leading-relaxed">
-        Explora nuestra selección especializada en <strong>{categoryName === 'all' ? 'Tienda' : categoryName}</strong>. 
-        En Glisé Farmacia nos dedicamos a ofrecerte productos dermatológicos, naturales y de cuidado personal 
-        de la más alta calidad. Encuentra las mejores marcas y compra online de forma 100% segura con envíos a toda Colombia.
-      </p>
       </div>
       
       <CategoryBanners categoryName={categoryName} products={initialProducts} />

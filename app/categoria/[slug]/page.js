@@ -16,7 +16,7 @@ export async function generateMetadata({ params }) {
   
   return {
     title: `${capitalizedCategory} | Compra Online en Glisé - Farmacia y Belleza Natural`,
-    description: `Descubre nuestra amplia selección de productos de ${categoryName}. Envíos gratis, garantía de calidad y el mejor precio. ¡Compra en Glisé, tu farmacia online de confianza en Colombia!`,
+    description: `Descubre nuestra amplia selección de productos de ${categoryName}. Envíos gratis, garantía de calidad y el mejor precio. ¡Compra en Glisé, tu tienda online de confianza en Colombia!`,
     keywords: [
       categoryName,
       `productos ${categoryName}`,
