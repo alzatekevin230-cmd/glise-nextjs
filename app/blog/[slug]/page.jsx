@@ -13,7 +13,7 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 import { FaUserCircle, FaCalendar, FaClock } from 'react-icons/fa';
 
 // ISR: Revalidar cada 2 horas (blog)
-export const revalidate = 7200;
+export const revalidate = 0;
 
 // Genera todas las rutas de blog posts en build time
 export async function generateStaticParams() {

@@ -8,6 +8,7 @@ import BestOffers from "@/components/BestOffers";
 import FeaturedProductsBanner from "@/components/FeaturedProductsBanner";
 import GliseProductsBanner from "@/components/GliseProductsBanner";
 import { FaCommentDots, FaWhatsapp } from 'react-icons/fa';
+import Link from 'next/link';
 
 const ShopByBrand = dynamic(() => import('@/components/ShopByBrand'), { loading: () => <div className="h-64" /> });
 const RecommendedProducts = dynamic(() => import('@/components/RecommendedProducts'), { loading: () => <div className="h-64" /> });
