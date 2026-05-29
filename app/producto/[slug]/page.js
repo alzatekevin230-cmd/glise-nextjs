@@ -19,21 +19,38 @@ export async function generateStaticParams() {
   }));
 }
 
+// 🔥 MEJORA SEO: Metadatos dinámicos y enfocados en "Tienda de Confianza"
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  if (!product) return { title: 'Producto no encontrado' };
+  if (!product) return { title: 'Producto no encontrado | Glisé' };
 
   const optimizedImage = getImageUrl(product.image, '700x700');
 
+  // Título persuasivo
+  const seoTitle = `${product.name} | Compra Segura en Glisé`;
+  
+  // Descripción inteligente (limita el texto base y añade gancho comercial)
+  const baseDescription = product.description ? product.description.substring(0, 120) : '';
+  const cleanDescription = `${baseDescription}... Adquiérelo al mejor precio en Glisé. Tu tienda online de confianza con envíos rápidos a toda Colombia y pago 100% seguro.`;
+
   return {
-    title: `${product.name} - Glisé`,
-    description: product.description,
+    title: seoTitle,
+    description: cleanDescription,
     openGraph: {
-      title: `${product.name} - Glisé`,
-      description: product.description,
+      title: seoTitle,
+      description: cleanDescription,
       images: [optimizedImage],
       type: 'website',
+      locale: 'es_CO',
+      siteName: 'Glisé',
+    },
+    // Añadimos etiquetas de Twitter completas
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: cleanDescription,
+      images: [optimizedImage],
     },
     other: {
       'product:price:amount': product.price,
@@ -52,6 +69,7 @@ export default async function PaginaProducto({ params }) {
   
   const relatedProductsRaw = await getRelatedProducts(product.category, product.id);
 
+  // ✅ MANTENIDO: Tu lógica segura para mapear los slugs de productos relacionados
   const relatedProducts = relatedProductsRaw.map(p => ({
     ...p,
     // Usamos tu función createSlug
@@ -62,12 +80,12 @@ export default async function PaginaProducto({ params }) {
   const categorySlug = product.category ? encodeURIComponent(product.category) : 'all';
   const categoryLabel = product.category || 'Productos';
 
-  // JSON-LD para Google (Rich Snippets)
+  // JSON-LD para Google (Rich Snippets) optimizado
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": product.name,
-    "description": product.description,
+    "description": product.description || `${product.name} disponible en Glisé.`,
     "image": getImageUrl(product.image, '700x700'),
     "offers": {
       "@type": "Offer",
@@ -76,7 +94,8 @@ export default async function PaginaProducto({ params }) {
       "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       "seller": {
         "@type": "Organization",
-        "name": "Glisé"
+        "name": "Glisé",
+        "url": "https://glise.com.co" // Se agregó la URL oficial
       }
     },
     "brand": {
@@ -93,12 +112,14 @@ export default async function PaginaProducto({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
       <div className="container mx-auto px-2 sm:px-6 py-8">
+        {/* ✅ MANTENIDO: Tus 4 niveles de Breadcrumbs exactos */}
         <Breadcrumbs items={[
           { label: 'Inicio', href: '/' }, 
           { label: 'Tienda', href: '/categoria/all' },
           { label: categoryLabel, href: `/categoria/${categorySlug}` }, 
           { label: product.name }
         ]} />
+        {/* ✅ MANTENIDO: Tu llamado al componente intacto */}
         <DetalleProductoCliente product={product} relatedProducts={relatedProducts} />
       </div>
     </main>

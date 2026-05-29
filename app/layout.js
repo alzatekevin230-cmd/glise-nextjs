@@ -32,12 +32,12 @@ const inter = Inter({
 export const metadata = {
   metadataBase: new URL('https://glise.com.co'),
   title: {
-    default: 'Glisé - Farmacia y Belleza Natural en Colombia | Productos Naturales y Dermocosméticos',
-    template: '%s | glise'
+    default: 'Glisé | Tu Tienda Online de Confianza en Colombia',
+    template: '%s | Glisé'
   },
-  description: '🛍️ ¡Descubre Glisé! Tu farmacia online #1 en Colombia. Productos naturales, dermocosméticos premium y cuidado personal de las mejores marcas. ✨ Envíos gratis, calidad garantizada. ¡Compra ahora!',
-  keywords: ['farmacia online Colombia', 'productos naturales', 'dermocosméticos', 'belleza natural', 'cuidado personal', 'suplementos', 'Palmira', 'farmacia virtual', 'productos orgánicos', 'cosmética natural', 'medicamentos naturales'],
-  authors: [{ name: 'Glisé - Farmacia y Belleza Natural' }],
+  description: 'Glisé es tu tienda online de confianza. Encuentra todo lo que necesitas para tu bienestar, belleza y cuidado diario en un solo lugar. Disfruta de una experiencia de compra rápida, fácil y 100% segura con cobertura de envíos a nivel nacional.',
+  keywords: ['tienda online Colombia', 'bienestar', 'cuidado personal', 'estilo de vida', 'compras online', 'Glisé Colombia'],
+  authors: [{ name: 'Glisé' }],
   robots: {
     index: true,
     follow: true,
@@ -54,22 +54,22 @@ export const metadata = {
     locale: 'es_CO',
     url: 'https://glise.com.co',
     siteName: 'Glisé',
-    title: 'Glisé - Farmacia y Belleza Natural en Colombia | Productos Naturales y Dermocosméticos',
-    description: '🛍️ ¡Descubre Glisé! Tu farmacia online #1 en Colombia. Productos naturales, dermocosméticos premium y cuidado personal de las mejores marcas. ✨ Envíos gratis, calidad garantizada.',
+    title: 'Glisé | Tu Tienda Online de Confianza en Colombia',
+    description: 'Glisé es tu tienda online de confianza. Encuentra todo lo que necesitas para tu bienestar, belleza y cuidado diario en un solo lugar. Disfruta de una experiencia de compra rápida, fácil y 100% segura.',
     images: [
       {
         url: 'https://glise.com.co/imagenespagina/logodeglise.webp',
         width: 1200,
         height: 630,
-        alt: 'Glisé - Farmacia y Belleza Natural en Colombia',
+        alt: 'Glisé | Tu Tienda Online de Confianza',
         type: 'image/webp'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Glisé - Farmacia y Belleza Natural en Colombia',
-    description: '🛍️ Tu farmacia online #1 en Colombia. Productos naturales, dermocosméticos premium. ✨ Envíos gratis, calidad garantizada.',
+    title: 'Glisé | Tu Tienda Online de Confianza en Colombia',
+    description: 'Glisé es tu tienda online de confianza. Encuentra todo lo que necesitas para tu bienestar, belleza y cuidado diario en un solo lugar.',
     images: ['https://glise.com.co/imagenespagina/logodeglise.webp']
   },
   icons: {
@@ -104,7 +104,7 @@ export default function RootLayout({ children }) {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Glisé',
-    description: 'Farmacia y Belleza Natural en Colombia',
+    description: 'Tu Tienda Online de Confianza en Colombia', // ✅ Modificado aquí también
     url: 'https://glise.com.co',
     logo: 'https://glise.com.co/imagenespagina/logodeglise.webp',
     image: 'https://glise.com.co/imagenespagina/logodeglise.webp',

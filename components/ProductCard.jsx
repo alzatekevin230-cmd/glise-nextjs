@@ -77,12 +77,13 @@ export default function ProductCard({ product, isSmall = false }) {
         <Link href={`/producto/${product.slug}`} className={`cursor-pointer flex-grow flex flex-col ${isOutOfStock ? 'opacity-60' : ''}`}>
           
           <OptimizedImage 
-            src={imageSrc} 
-            alt={product.name}
-            className="aspect-square w-full"
-            sizes="(max-width: 768px) 50vw, 25vw"
-            priority={false}
-          />
+          src={imageSrc} 
+          alt={`${product.name} 100% natural - Glisé`} // 🔥 1. El ALT estratégico para SEO
+          className="aspect-square w-full"
+          sizes="(max-width: 768px) 50vw, 25vw"
+          unoptimized={true} // 🔥 2. Apaga el cobro de Vercel
+          priority={false}
+        />
 
         <div className={`${cardClasses} flex-grow flex flex-col`}>
           <p className={`text-xs text-gray-600 uppercase tracking-wider ${isSmall ? 'hidden' : ''}`}>{product.category}</p>

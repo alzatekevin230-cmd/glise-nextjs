@@ -83,18 +83,26 @@ import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-// --- COMPONENTES AUXILIARES (NO CAMBIAN) ---
+// --- COMPONENTES AUXILIARES ---
 const DetailRow = ({ label, value }) => (
   <div className="flex justify-between items-center py-3 border-b border-gray-200 text-sm">
     <span className="text-gray-600">{label}</span>
     <span className="font-semibold text-gray-800 text-right uppercase">{value}</span>
   </div>
 );
-const Thumbnail = ({ src, isActive, onClick }) => {
+
+// 1. AQUI CAMBIAMOS EL COMPONENTE THUMBNAIL PARA EL SEO
+const Thumbnail = ({ src, isActive, onClick, productName }) => {
     const optimizedSrc = getImageUrl(src, '400x400'); // Miniaturas usan 400x400
     return (
         <div className={`relative w-20 h-20 border-2 rounded-lg cursor-pointer transition-all duration-200 ${isActive ? 'border-blue-600' : 'border-transparent hover:border-gray-400'}`} onClick={onClick}>
-            <Image src={optimizedSrc} alt="miniatura de producto" fill sizes="80px" className="object-cover rounded-md" />
+            <Image 
+              src={optimizedSrc} 
+              alt={`Miniatura de ${productName} - Glisé`} 
+              fill 
+              sizes="80px" 
+              className="object-cover rounded-md" 
+            />
         </div>
     );
 };
@@ -125,8 +133,6 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
-
-
 
   useEffect(() => {
     if (product && product.id) {
@@ -244,7 +250,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
   if (!product) return <div>Cargando detalles del producto...</div>;
 
-  // 1. JSON-LD PARA GOOGLE (ESTO HACE QUE APAREZCA EN GOOGLE SHOPPING E IMÁGENES)
+  // 1. JSON-LD PARA GOOGLE
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -268,28 +274,28 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
     }
   };
 
-  // components/DetalleProductoCliente.jsx
-
   const renderGallery = () => {
-    // Renderizamos ambas versiones y controlamos la visibilidad con CSS para evitar saltos de layout
-    // y esperar a que JS determine el ancho de la pantalla (lo que causaba el retraso)
     return (
       <>
         {/* ================================================================
-            === VERSIÓN PARA ESCRITORIO (md:block) ===
+            === VERSIÓN PARA ESCRITORIO ===
             ================================================================ */}
         <div className="hidden md:block flex-grow flex flex-col">
           <div className="relative w-full group">
-            <ImageWithZoom src={activeImage} alt={product.name} openLightbox={handleOpenLightbox} priority />
+            {/* 2. AQUI INYECTAMOS EL ALT DINÁMICO */}
+            <ImageWithZoom 
+              src={activeImage} 
+              alt={`${product.name} 100% natural - Glisé`} 
+              openLightbox={handleOpenLightbox} 
+              priority 
+            />
 
-            {/* Indicador numérico mejorado */}
             {allImages.length > 1 && (
               <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
                 {allImages.findIndex(img => img === activeImage) + 1} / {allImages.length}
               </div>
             )}
 
-            {/* Puntos mejorados con mejor accesibilidad */}
             {allImages.length > 1 && (
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 bg-black/50 rounded-full px-3 py-2 backdrop-blur-sm">
                 {allImages.map((imgSrc, index) => (
@@ -329,14 +335,20 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
         </div>
 
         {/* ============================================================
-            === VERSIÓN PARA MÓVIL (md:hidden) ===
+            === VERSIÓN PARA MÓVIL ===
             ============================================================ */}
         <div className="md:hidden flex-1">
           <div className="relative w-full aspect-square group">
             <Swiper modules={[Pagination]} pagination={{ clickable: true }} loop={allImages.length > 1} onSwiper={setSwiperInstance} onSlideChange={(swiper) => { if (allImages.length > 0) setActiveImage(allImages[swiper.realIndex]); }} allowTouchMove={allImages.length > 1} className="product-gallery-carousel h-full">
               {allImages.map((imgSrc) => (
                 <SwiperSlide key={imgSrc} className="h-full relative">
-                  <ImageWithZoom src={imgSrc} alt={`${product.name}`} openLightbox={handleOpenLightbox} priority={imgSrc === allImages[0]} />
+                  {/* 3. AQUI TAMBIÉN INYECTAMOS EL ALT DINÁMICO */}
+                  <ImageWithZoom 
+                    src={imgSrc} 
+                    alt={`${product.name} 100% natural - Glisé`} 
+                    openLightbox={handleOpenLightbox} 
+                    priority={imgSrc === allImages[0]} 
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -346,13 +358,8 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
     );
   };
 
-  // Generar breadcrumbs para la página de producto
-  // Elimina todo el código relacionado con Breadcrumbs y breadcrumbItems
-  // El render retorna ahora desde <div className="grid grid-cols-1 md:flex ..."> en adelante, sin el <Breadcrumbs ... />
-
   return (
     <>
-      {/* 2. Inyectamos el JSON-LD en la página de forma invisible para Google */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -368,6 +375,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
                   src={imgSrc}
                   isActive={imgSrc === activeImage}
                   onClick={() => setActiveImage(imgSrc)}
+                  productName={product.name} /* PASAMOS EL NOMBRE AL THUMBNAIL */
                 />
               ))}
             </div>
@@ -387,6 +395,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
                   src={imgSrc}
                   isActive={imgSrc === activeImage}
                   onClick={() => setActiveImage(imgSrc)}
+                  productName={product.name} /* PASAMOS EL NOMBRE AL THUMBNAIL */
                 />
               ))}
             </div>
@@ -397,7 +406,6 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
         <div className="flex flex-col space-y-4 md:space-y-8">
           <div>
             <p className="text-sm text-gray-500 uppercase tracking-wider mb-3">{product.category}</p>
-            {/* Título grande solo en pantallas medianas y escritorio */}
             <h1 className="hidden md:block text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
               {product.name}
             </h1>
@@ -415,13 +423,11 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
           </div>
 
           <div className="space-y-4 md:space-y-8">
-            {/* Descripción Desktop */}
             <div className="hidden md:block">
               <h3 className="text-xl font-bold mb-4 text-gray-900">Descripción</h3>
               <p className="text-gray-700 leading-relaxed text-lg text-left whitespace-normal break-words">{product.description}</p>
             </div>
 
-            {/* Descripción Móvil (Acordeón) */}
             <div className="md:hidden my-4 bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm">
               <details className="group">
                 <summary className="flex items-center justify-between cursor-pointer list-none">
@@ -497,14 +503,12 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
             )}
           </div>
 
-          {/* Versión móvil: Debajo de los detalles del producto */}
           <div className="lg:hidden">
             <EnvioInfoAccordion />
           </div>
         </div>
       </div>
 
-      {/* Secciones relacionadas */}
       <div className="mt-16 space-y-16">
         <ProductosRelacionados products={relatedProducts} />
         <ProductosVistosRecientemente currentProductId={product.id} allProducts={allProducts} />

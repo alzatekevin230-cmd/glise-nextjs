@@ -10,12 +10,29 @@ import GliseProductsBanner from "@/components/GliseProductsBanner";
 import { FaCommentDots, FaWhatsapp } from 'react-icons/fa';
 import Link from 'next/link';
 
-const ShopByBrand = dynamic(() => import('@/components/ShopByBrand'), { loading: () => <div className="h-64" /> });
-const RecommendedProducts = dynamic(() => import('@/components/RecommendedProducts'), { loading: () => <div className="h-64" /> });
-const GliseProducts = dynamic(() => import('@/components/GliseProducts'), { loading: () => <div className="h-64" /> });
-const NaturalProductsSection = dynamic(() => import('@/components/NaturalProductsSection'), { loading: () => <div className="h-64" /> });
-const ArticulosBlog = dynamic(() => import('@/components/ArticulosBlog'), { loading: () => <div className="h-64" /> });
-const ProductosVistosRecientemente = dynamic(() => import('@/components/ProductosVistosRecientemente'), { loading: () => <div className="h-32" /> });
+// Este es el esqueleto de carga elegante (Skeleton Loader)
+const SectionSkeleton = () => (
+  <div className="container mx-auto px-4 py-8 animate-pulse">
+    <div className="h-8 bg-gray-200 rounded-md w-48 mb-6 mx-auto sm:mx-0"></div>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 h-[300px] flex flex-col">
+          <div className="w-full h-40 bg-gray-200 rounded-lg mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2 mt-auto"></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Las cargas dinámicas usando el nuevo esqueleto
+const ShopByBrand = dynamic(() => import('@/components/ShopByBrand'), { loading: () => <SectionSkeleton /> });
+const RecommendedProducts = dynamic(() => import('@/components/RecommendedProducts'), { loading: () => <SectionSkeleton /> });
+const GliseProducts = dynamic(() => import('@/components/GliseProducts'), { loading: () => <SectionSkeleton /> });
+const NaturalProductsSection = dynamic(() => import('@/components/NaturalProductsSection'), { loading: () => <SectionSkeleton /> });
+const ArticulosBlog = dynamic(() => import('@/components/ArticulosBlog'), { loading: () => <SectionSkeleton /> });
+const ProductosVistosRecientemente = dynamic(() => import('@/components/ProductosVistosRecientemente'), { loading: () => <SectionSkeleton /> });
 
 export const revalidate = 600;
 

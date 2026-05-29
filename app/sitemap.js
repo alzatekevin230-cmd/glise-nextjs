@@ -1,12 +1,13 @@
+// app/sitemap.js (o donde lo tengas ubicado)
 import { getHomePageData } from '@/lib/data';
 
 export default async function sitemap() {
   const baseUrl = 'https://glise.com.co';
 
-  // 1. Obtenemos todos los productos y artículos del blog usando tu función existente
+  // 1. Obtenemos todos los productos y artículos del blog
   const { products, blogPosts } = await getHomePageData();
 
-  // 2. Definimos las rutas estáticas principales de la tienda
+  // 2. Definimos las rutas estáticas principales
   const staticRoutes = [
     '',
     '/sobre-nosotros',
@@ -37,15 +38,22 @@ export default async function sitemap() {
     priority: 0.9,
   }));
 
-  // 4. Mapeamos dinámicamente TODOS tus productos desde Firebase
+  // 4. Mapeamos dinámicamente los productos
   const productRoutes = (products || []).map((product) => ({
     url: `${baseUrl}/producto/${product.slug || product.id}`,
-    // Si el producto tiene fecha de actualización en BD la usa, si no, usa la fecha actual
     lastModified: product.updatedAt ? new Date(product.updatedAt) : new Date(),
     changeFrequency: 'weekly',
     priority: 0.7,
   }));
 
-  // Combinamos todas las listas de URLs y se las entregamos a Next.js
-  return [...staticRoutes, ...categories, ...productRoutes];
+  // 🔥 5. NUEVO: Mapeamos dinámicamente los artículos del blog
+  const blogRoutes = (blogPosts || []).map((post) => ({
+    url: `${baseUrl}/blog/${post.slug || post.id}`, // <-- Ajusta '/blog/' si tu ruta es distinta
+    lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(),
+    changeFrequency: 'monthly', // Los artículos suelen cambiar menos frecuentemente que los productos
+    priority: 0.6,
+  }));
+
+  // Combinamos TODO (incluyendo el blog) y se lo entregamos a Next.js
+  return [...staticRoutes, ...categories, ...productRoutes, ...blogRoutes];
 }

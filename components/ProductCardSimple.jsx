@@ -75,13 +75,12 @@ export default function ProductCardSimple({ product, isSmall = false }) {
         
         <OptimizedImage 
           src={imageSrc} 
-          alt={product.name}
+          alt={`${product.name} 100% natural - Glisé`} // 🔥 1. El ALT estratégico para SEO
           className="aspect-square w-full"
           sizes="(max-width: 768px) 50vw, 25vw"
-          quality={75}
+          unoptimized={true} // 🔥 2. Apaga el cobro de Vercel
           priority={false}
         />
-
         <div className={`${cardClasses} flex-grow flex flex-col`}>
           <p className={`text-xs text-gray-600 uppercase tracking-wider ${isSmall ? 'hidden' : ''}`}>{product.category}</p>
           <h3 className={titleClasses} title={product.name}>
