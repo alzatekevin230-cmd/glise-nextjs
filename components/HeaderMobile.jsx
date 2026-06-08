@@ -12,7 +12,6 @@ import { FiMenu, FiShoppingCart, FiTruck, FiGift, FiStar, FiZap, FiSearch } from
 
 const promoMessages = [
   { icon: FiTruck, text: "Envíos a todo Colombia" },
-  { icon: FiGift, text: "Envío GRATIS en compras +$250.000" },
   { icon: FiStar, text: "+5.000 clientes satisfechos" },
   { icon: FiZap, text: "Nuevos productos cada semana" }
 ];

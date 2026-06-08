@@ -6,20 +6,28 @@ export async function POST(request) {
     const { destinationCityCode, cartItems } = await request.json();
 
     if (!destinationCityCode || !cartItems || !cartItems.length) {
-      return NextResponse.json(
-        { error: 'Faltan datos para la cotización.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Faltan datos.' }, { status: 400 });
     }
 
+    // Ejecutamos la cotización
     const quote = await getCoordinadoraQuote(destinationCityCode, cartItems);
-    return NextResponse.json(quote);
+
+    // --- AQUÍ ESTÁ EL TRUCO ---
+    // En lugar de buscar logs, devolvemos la info al navegador
+    return NextResponse.json({
+      ...quote,
+      _DEBUG: {
+        destino: destinationCityCode,
+        items: cartItems.length,
+        // Si soapClient.js calcula el peso, lo verás aquí
+      }
+    });
 
   } catch (error) {
-    console.error('Error in /api/shipping/quote:', error);
-    return NextResponse.json(
-      { error: 'No se pudo calcular el envío en este momento.' },
-      { status: 500 }
-    );
+    // Si falla, el error saldrá directamente en la pantalla de la web
+    return NextResponse.json({ 
+      error: error.message,
+      stack: error.stack 
+    }, { status: 500 });
   }
 }

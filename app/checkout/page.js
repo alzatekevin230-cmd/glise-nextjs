@@ -18,7 +18,7 @@ import { FaShippingFast, FaChevronDown, FaLock, FaUsers, FaStar, FaShieldAlt, Fa
 // (El resto de tus componentes auxiliares no cambian)
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 const BarraEnvioGratis = ({ subtotal }) => {
-  const envioGratisDesde = 250000;
+  const envioGratisDesde = Infinity; // Deshabilitado para pruebas
   const progreso = Math.min((subtotal / envioGratisDesde) * 100, 100);
   const restante = envioGratisDesde - subtotal;
   const porcentaje = Math.round(progreso);
@@ -117,9 +117,6 @@ const PoliticasEnvioAccordion = () => (
                             <li>Los días hábiles no incluyen sábados, domingos ni festivos.</li>
                             <li>Las compras realizadas después de las 2:00 PM serán procesadas al siguiente día hábil.</li>
                         </ul>
-                    </div>
-                    <div className="mt-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
-                        <p className="font-bold text-green-700 text-center">¡Obtén <strong>envío GRATIS</strong> en compras superiores a $250,000!</p>
                     </div>
                 </div>
             </div>
@@ -299,22 +296,9 @@ export default function CheckoutPage() {
         return () => window.removeEventListener('resize', updateWindowSize);
     }, []);
 
+    // Sincronizar referencia de subtotal sin disparar confetti
     useEffect(() => {
-        const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        const envioGratisDesde = 250000;
-        const prevSubtotal = prevSubtotalRef.current;
-        
-        const estabaPorDebajo = prevSubtotal < envioGratisDesde;
-        const ahoraPorEncima = subtotal >= envioGratisDesde;
-        
-        if (estabaPorDebajo && ahoraPorEncima) {
-            setShowConfetti(true);
-            const timer = setTimeout(() => setShowConfetti(false), 3500);
-            prevSubtotalRef.current = subtotal;
-            return () => clearTimeout(timer);
-        }
-        
-        prevSubtotalRef.current = subtotal;
+        prevSubtotalRef.current = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     }, [cart]);
 
     const handleSelectChange = (fieldName, selectedOption) => {
@@ -389,28 +373,26 @@ export default function CheckoutPage() {
         }
         
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        // Validación crítica: Si el subtotal es menor a 250000, el envío DEBE estar calculado
-        if (subtotal < 250000) {
-            if (!formData.cityCode) {
-                toast.error('Por favor, selecciona una ciudad para calcular el costo de envío.');
-                return;
-            }
-            if (isCalculatingShipping) {
-                toast.error('Espera mientras calculamos el costo de envío...');
-                return;
-            }
-            if (!shippingCalculated) {
-                toast.error('El costo de envío aún no se ha calculado. Por favor, espera unos segundos o selecciona otra ciudad.');
-                return;
-            }
-            if (shippingCost < 0) {
-                toast.error('El costo de envío no es válido. Por favor, intenta seleccionar otra ciudad o contacta a soporte.');
-                return;
-            }
+        // PARA PRUEBAS: Siempre validamos que el envío esté calculado
+        if (!formData.cityCode) {
+            toast.error('Por favor, selecciona una ciudad para calcular el costo de envío.');
+            return;
+        }
+        if (isCalculatingShipping) {
+            toast.error('Espera mientras calculamos el costo de envío...');
+            return;
+        }
+        if (!shippingCalculated) {
+            toast.error('El costo de envío aún no se ha calculado. Por favor, espera unos segundos o selecciona otra ciudad.');
+            return;
+        }
+        if (shippingCost < 0) {
+            toast.error('El costo de envío no es válido. Por favor, intenta seleccionar otra ciudad o contacta a soporte.');
+            return;
         }
         
         setIsProcessing(true);
-        const finalShippingCost = subtotal >= 250000 ? 0 : shippingCost;
+        const finalShippingCost = shippingCost; // Ignoramos el umbral para la prueba
         const total = subtotal + finalShippingCost;
         const totalInCents = Math.round(total * 100);
         const reference = `${Date.now()}`;
@@ -444,15 +426,13 @@ export default function CheckoutPage() {
     };
 
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const finalShippingCost = subtotal >= 250000 ? 0 : shippingCost;
+    const finalShippingCost = shippingCost; // Ignoramos el umbral para la prueba
     const total = subtotal + finalShippingCost;
     
     // Determinar si el botón debe estar deshabilitado
-    // Si subtotal >= 250000, envío es gratis, no necesita calcularse
-    // Si subtotal < 250000, DEBE tener ciudad seleccionada Y envío calculado Y shippingCost > 0
     const canSubmit = !isProcessing && 
                       !isCalculatingShipping && 
-                      (subtotal >= 250000 || (formData.cityCode && shippingCalculated && shippingCost >= 0));
+                      (formData.cityCode && shippingCalculated && shippingCost >= 0);
 
     if (cart.length === 0 && !isProcessing) return null;
 
@@ -845,7 +825,7 @@ export default function CheckoutPage() {
                             </div>
 
                             <div className="pb-4 border-b border-gray-200">
-                                {subtotal >= 250000 || (shippingCalculated && shippingCost === 0) ? (
+                                {(shippingCalculated && shippingCost === 0) ? (
                                     <div className="flex justify-between items-center">
                                         <span className="font-medium text-gray-800">Envío</span>
                                         <span className="font-bold text-green-600">¡Gratis!</span>
@@ -880,8 +860,6 @@ export default function CheckoutPage() {
                                 <span className="text-gray-900">{formatPrice(total)}</span>
                             </div>
                         </div>
-
-                        <BarraEnvioGratis subtotal={subtotal} />
 
                                                 {/* Método de pago Wompi */}
                         <div className="mt-6 border-t pt-4">
@@ -971,7 +949,7 @@ export default function CheckoutPage() {
                             type="submit"
                             disabled={!canSubmit}
                             className="w-full mt-6 bg-cyan-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-3"
-                            title={!canSubmit && subtotal < 250000 && !shippingCalculated ? 'Espera mientras se calcula el costo de envío' : ''}
+                            title={!canSubmit && !shippingCalculated ? 'Espera mientras se calcula el costo de envío' : ''}
                         >
                             {isProcessing ? (
                                 <>
@@ -983,7 +961,7 @@ export default function CheckoutPage() {
                                     <FaSpinner className="animate-spin" />
                                     <span>Calculando envío...</span>
                                 </>
-                            ) : !canSubmit && subtotal < 250000 ? (
+                            ) : !canSubmit ? (
                                 <>
                                     <FaSpinner className="animate-spin" />
                                     <span>Espera el cálculo...</span>
@@ -996,7 +974,7 @@ export default function CheckoutPage() {
                             )}
                         </button>
 
-                        {subtotal < 250000 && !shippingCalculated && formData.cityCode && (
+                        {!shippingCalculated && formData.cityCode && (
                             <p className="text-sm text-amber-600 mt-3 text-center flex items-center justify-center gap-2">
                                 <FaSpinner className="animate-spin" />
                                 Calculando costo de envío...
@@ -1022,7 +1000,7 @@ export default function CheckoutPage() {
                                 <><FaSpinner className="animate-spin mr-2" /><span>Procesando...</span></>
                             ) : isCalculatingShipping ? (
                                 <><FaSpinner className="animate-spin mr-2" /><span>Calculando...</span></>
-                            ) : !canSubmit && subtotal < 250000 ? (
+                            ) : !canSubmit ? (
                                 <><FaSpinner className="animate-spin mr-2" /><span>Espera...</span></>
                             ) : (
                                 <><FaShoppingBag className="mr-2" /><span>PAGAR</span></>

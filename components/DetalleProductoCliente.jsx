@@ -42,14 +42,6 @@ const EnvioInfoAccordion = () => (
           </div>
 
           <div className="flex items-start gap-3">
-            <FaGift className="text-green-600 mt-1 text-lg flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-green-600">Envío GRATIS</p>
-              <p className="text-sm text-gray-600">En compras superiores a $250.000</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
             <FaShieldAlt className="text-cyan-600 mt-1 text-lg flex-shrink-0" />
             <div>
               <p className="font-semibold text-gray-800">Compra 100% segura</p>
@@ -145,13 +137,17 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       // Sincronizar con el contexto
       setIsProductPage(true);
       setProduct(product);
-      setContextQuantity(1);
     }
     return () => {
       setIsProductPage(false);
       setProduct(null);
     };
-  }, [product, setIsProductPage, setProduct, setContextQuantity]);
+  }, [product, setIsProductPage, setProduct]);
+
+  // Sincronización automática de cantidad local al contexto
+  useEffect(() => {
+    setContextQuantity(quantity);
+  }, [quantity, setContextQuantity]);
 
   useEffect(() => {
     if (!isDesktop && swiperInstance && allImages.length > 0) {
@@ -189,7 +185,6 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
         });
         // Resetear cantidad a 1 después de agregar
         setQuantity(1);
-        setContextQuantity(1);
       } else if (result.reason === 'max_limit') {
         toast.error(`⚠️ Máximo ${result.max} unidades por producto en el carrito`, {
           duration: 3000,
@@ -199,7 +194,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       setIsAddingToCart(false);
       setContextIsAddingToCart(false);
     }
-  }, [agregarAlCarrito, product, quantity, isAddingToCart, setContextIsAddingToCart, setContextQuantity]);
+  }, [agregarAlCarrito, product, quantity, isAddingToCart, setContextIsAddingToCart]);
 
   // Sincronizar handleAddToCart con el contexto (después de su definición)
   useEffect(() => {
@@ -212,11 +207,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       const maxLimit = Math.min(product.stock, MAX_QUANTITY_PER_ITEM);
       
       if(quantity < maxLimit) {
-          setQuantity(q => {
-            const newQ = q + 1;
-            setContextQuantity(newQ);
-            return newQ;
-          });
+          setQuantity(q => q + 1);
       } else if (quantity >= MAX_QUANTITY_PER_ITEM) {
           toast.error(`⚠️ Máximo ${MAX_QUANTITY_PER_ITEM} unidades por producto`, {
             duration: 2000,
@@ -228,11 +219,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       }
   };
   const decreaseQuantity = () => {
-    setQuantity(q => {
-      const newQ = q > 1 ? q - 1 : 1;
-      setContextQuantity(newQ);
-      return newQ;
-    });
+    setQuantity(q => (q > 1 ? q - 1 : 1));
   };
   
   // Lógica de flechas para la VISTA DE ESCRITORIO (optimizada)

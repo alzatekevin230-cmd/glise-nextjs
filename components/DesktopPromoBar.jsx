@@ -6,12 +6,6 @@ import { FaTimes, FaTruck, FaGift, FaStar, FaFire, FaShoppingBag } from 'react-i
 
 const promoMessages = [
   { 
-    icon: FaGift, 
-    text: "Envío GRATIS en compras desde $250.000", 
-    link: "/categoria/all",
-    cta: "Ver ofertas"
-  },
-  { 
     icon: FaTruck, 
     text: "Envíos rápidos a todo Colombia - Llegamos en 2-5 días", 
     link: "/categoria/all",

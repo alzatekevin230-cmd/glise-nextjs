@@ -13,7 +13,7 @@ const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
 // Componente de barra de envío gratis mejorado
 const BarraEnvioGratis = ({ subtotal }) => {
-  const envioGratisDesde = 250000;
+  const envioGratisDesde = Infinity; // Deshabilitado para pruebas
   const progreso = Math.min((subtotal / envioGratisDesde) * 100, 100);
   const restante = envioGratisDesde - subtotal;
   const porcentaje = Math.round(progreso);
@@ -107,32 +107,9 @@ export default function CarritoModal() {
     return () => window.removeEventListener('resize', updateWindowSize);
   }, []);
 
-  // Detectar cuando se cruza exactamente el umbral de envío gratis y activar confetti
+  // DESHABILITADO: Detectar cuando se cruza el umbral de envío gratis
   useEffect(() => {
-    const subtotal = getSubtotal();
-    const envioGratisDesde = 250000;
-    const prevSubtotal = prevSubtotalRef.current;
-    
-    // Solo activar confetti cuando se cruza el umbral (de estar por debajo a estar por encima)
-    const estabaPorDebajo = prevSubtotal < envioGratisDesde;
-    const ahoraPorEncima = subtotal >= envioGratisDesde;
-    
-    if (estabaPorDebajo && ahoraPorEncima) {
-      setShowConfetti(true);
-      
-      // Desactivar confetti después de 3.5 segundos
-      const timer = setTimeout(() => {
-        setShowConfetti(false);
-      }, 3500);
-      
-      // Actualizar el subtotal anterior
-      prevSubtotalRef.current = subtotal;
-      
-      return () => clearTimeout(timer);
-    }
-    
-    // Actualizar el subtotal anterior
-    prevSubtotalRef.current = subtotal;
+    prevSubtotalRef.current = getSubtotal();
   }, [cart, getSubtotal]);
 
   // Cerrar con ESC
@@ -367,9 +344,6 @@ export default function CarritoModal() {
         {/* FOOTER DEL CARRITO */}
         {cart.length > 0 && (
           <div className="border-t border-gray-200 bg-white flex-shrink-0 p-5 sm:p-6">
-            {/* Barra de envío gratis */}
-            <BarraEnvioGratis subtotal={subtotal} />
-
             {/* Sección de Totales */}
             <div className="mb-5">
               <div className="flex justify-between items-center mb-3">
