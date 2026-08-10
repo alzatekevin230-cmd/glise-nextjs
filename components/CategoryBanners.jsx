@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
-import { FaChevronRight } from 'react-icons/fa';
+import { FaChevronRight, FaRegHeart } from 'react-icons/fa';
 import { getImageUrl } from '@/lib/imageUtils';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
@@ -16,7 +16,7 @@ export default function CategoryBanners({ categoryName, products = [] }) {
 
   // Mapeo de Títulos de Categoría
   const categoryTitles = {
-    'Milenario': 'Aceites Esenciales',
+    'Milenario': 'Aceites',
     'Naturales y Homeopáticos': 'Salud Natural',
     'Dermocosméticos': 'Cuidado de la Piel',
     'Cuidado Infantil': 'Mundo Bebé',
@@ -114,12 +114,25 @@ export default function CategoryBanners({ categoryName, products = [] }) {
     const normalized = products
       .filter(p => p && p.stock > 0)
       .map(product => {
-        const prices = config[product.name];
-        const price = prices ? prices.real : product.price;
+        const priceConfig = config[product.name];
+        let displayPrice, oldPrice;
+
+        if (priceConfig) {
+          // Si el producto tiene una configuración de precio específica, la usamos.
+          displayPrice = priceConfig.real;
+          oldPrice = priceConfig.inflated;
+        } else {
+          // Si no, simulamos un descuento para que siempre se vea la oferta.
+          displayPrice = product.price;
+          oldPrice = product.price * 1.3; // Replicamos lógica de detalle: inflar un 30% para el "antes".
+        }
+        const discount = oldPrice && displayPrice ? Math.round(((oldPrice - displayPrice) / oldPrice) * 100) : 0;
 
         return {
           ...product,
-          displayPrice: price,
+          displayPrice,
+          oldPrice,
+          discount,
           image: getImageUrl(product.image || product.images?.[0] || '/imagenespagina/placeholder.jpg')
         };
       });
@@ -162,6 +175,18 @@ export default function CategoryBanners({ categoryName, products = [] }) {
   // Si no hay productos, no mostramos nada
   if (featuredProducts.length === 0) return null;
 
+  const isMilenario = categoryName === 'Milenario';
+
+  const containerStyle = isMilenario
+    ? { // Gradiente en tonos salvia, para una sensación natural y premium
+      background: 'linear-gradient(135deg, #B8C7A8 0%, #7F966F 50%, #617A55 100%)',
+      } 
+    : { backgroundColor: bgColor };
+
+  const titleClasses = isMilenario
+    ? 'text-3xl sm:text-4xl font-bold text-white capitalize tracking-wide'
+    : 'text-xl sm:text-2xl font-bold text-gray-800 capitalize';
+
   useEffect(() => {
     if (swiperRef.current) {
         swiperRef.current.destroy(true, true);
@@ -203,13 +228,20 @@ export default function CategoryBanners({ categoryName, products = [] }) {
         {/* Contenedor Principal con Fondo y Bordes Redondeados */}
         <div 
           className="-mx-2 sm:-mx-6 md:mx-0 rounded-none md:rounded-[16px] py-2 px-0 md:p-6 relative"
-          style={{ backgroundColor: bgColor }}
+          style={containerStyle}
         >
           {/* Header: Título y Ver Todo (Ahora dentro del contenedor) */}
           <div className="flex justify-between items-center mb-2 px-5 md:px-0">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 capitalize">
-              {displayTitle}
-            </h2>
+            <div>
+              <h2 className={titleClasses}>
+                {displayTitle}
+              </h2>
+              {isMilenario && (
+                <p className="mt-1 text-sm text-white/90 sm:text-base">
+                  Ingredientes naturales para tu cuidado
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="swiper-container category-banners-swiper overflow-hidden min-h-[280px] sm:min-h-[320px]">
@@ -217,40 +249,59 @@ export default function CategoryBanners({ categoryName, products = [] }) {
               {featuredProducts.map((product) => (
                 <div key={product.id} className="swiper-slide !w-[42%] sm:!w-[42%] md:!w-[30%] lg:!w-[23%] xl:!w-[18%] h-auto">
                    {/* Tarjeta Blanca */}
-                   <Link href={`/producto/${product.slug}`} className="block h-full">
-                      {/* Tarjeta con estilos originales, pero producto ligeramente más grande */}
-                      <div className="bg-white rounded-xl h-full flex flex-col justify-between hover:shadow-lg transition-shadow duration-300 overflow-hidden relative">
-                        
-                        {/* Badge de Descuento */}
-                        <div className="absolute top-2 right-2 z-10 bg-red-600 text-white text-xs sm:text-sm font-extrabold px-3 py-1 rounded-full shadow-md">
-                            -5%
-                        </div>
-
-                        {/* Imagen Arriba con Fondo Gris (mismo alto original, producto un poco más grande) */}
-                        <div className="w-full h-44 sm:h-48 flex items-center justify-center bg-gray-100 p-1">
-                            <img 
-                                src={product.image} 
-                                alt={product.name}
-                                className="max-w-full max-h-full object-contain scale-105 hover:scale-110 transition-transform duration-300 mix-blend-multiply"
-                            />
-                        </div>
-
-                        {/* Contenido Texto (Fondo Blanco) */}
-                        <div className="flex flex-col flex-grow p-3">
-                            {/* Nombre del Producto */}
-                            <h3 className="text-xs sm:text-base font-medium text-gray-900 line-clamp-2 mb-2 min-h-[2.5em]">
-                                {product.name}
-                            </h3>
+                    <Link href={`/producto/${product.slug}`} className="block h-full">
+                        <div className="bg-white rounded-xl h-full flex flex-col justify-between hover:shadow-lg transition-shadow duration-300 overflow-hidden relative">
                             
-                            {/* Precio Abajo */}
-                            <div className="mt-auto">
-                                <span className="text-lg sm:text-xl font-extrabold text-gray-900 block">
-                                    ${Math.round(product.displayPrice).toLocaleString('es-CO')}
-                                </span>
+                            {/* Botón de Favoritos (ahora a la izquierda) */}
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    // Aquí iría la lógica para añadir a favoritos
+                                    console.log(`Toggle favorite for ${product.name}`);
+                                }}
+                                className="absolute top-2 left-2 z-10 p-1 text-gray-500 hover:text-red-500 transition-colors duration-200"
+                                aria-label="Añadir a favoritos"
+                            >
+                                <FaRegHeart className="w-6 h-6" />
+                            </button>
+
+                            {/* Badge de Descuento (en su posición original, derecha) */}
+                            {product.oldPrice && (
+                                <div className="absolute top-2 right-2 z-10 bg-red-600 text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-full shadow-md">
+                                    -5%
+                                </div>
+                            )}
+
+                            {/* Imagen Arriba */}
+                            <div className="w-full h-44 sm:h-48 flex items-center justify-center bg-gray-100 p-1">
+                                <img 
+                                    src={product.image} 
+                                    alt={product.name}
+                                    className="max-w-full max-h-full object-contain scale-105 hover:scale-110 transition-transform duration-300 mix-blend-multiply"
+                                />
+                            </div>
+
+                            {/* Contenido Texto (Fondo Blanco) */}
+                            <div className="flex flex-col flex-grow p-3">
+                                <h3 className="text-sm sm:text-base font-medium text-gray-900 line-clamp-2 mb-2 min-h-[2.5em]">
+                                    {product.name}
+                                </h3>
+                                
+                                {/* Precios y Urgencia */}
+                                <div className="mt-auto">
+                                    <p className="text-sm text-gray-400 font-medium">
+                                        Antes: <span className="line-through">${Math.round(product.oldPrice).toLocaleString('es-CO')}</span>
+                                    </p>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xl sm:text-2xl font-extrabold text-blue-600">${Math.round(product.displayPrice).toLocaleString('es-CO')}</span>
+                                        <span className="text-xs font-bold text-white bg-red-500 px-2 py-0.5 rounded-full shadow-sm transform -rotate-2">
+                                            AHORA
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                      </div>
-                   </Link>
+                    </Link>
                 </div>
               ))}
             </div>

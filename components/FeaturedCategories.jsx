@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import AnimatedSection from './AnimatedSection';
 import { FiGrid, FiFeather, FiDroplet, FiSmile, FiStar, FiHeart } from 'react-icons/fi';
 
@@ -10,6 +11,8 @@ import { FiGrid, FiFeather, FiDroplet, FiSmile, FiStar, FiHeart } from 'react-ic
 // import 'swiper/css/navigation';
 
 export default function FeaturedCategories() {
+  const pathname = usePathname();
+
   const categoriesData = [
     { 
       name: 'Todo', 
@@ -20,7 +23,15 @@ export default function FeaturedCategories() {
       iconClass: 'text-slate-700'
     },
     { 
-      name: 'Natural', 
+      name: 'Aceites', 
+      img: '/imagenespagina/catemilenario.webp', 
+      link: '/categoria/Milenario', 
+      icon: FiHeart,
+      circleClass: 'bg-amber-50 border-amber-200',
+      iconClass: 'text-amber-600'
+    },
+    { 
+      name: 'Naturales', 
       img: '/imagenespagina/catenatural.webp', 
       link: '/categoria/Naturales y Homeopáticos', 
       icon: FiFeather,
@@ -28,20 +39,12 @@ export default function FeaturedCategories() {
       iconClass: 'text-emerald-600'
     },
     { 
-      name: 'Dermocosmética', 
+      name: 'Dermo', 
       img: '/imagenespagina/catedermocosmetica.webp', 
       link: '/categoria/Dermocosméticos', 
       icon: FiDroplet,
       circleClass: 'bg-sky-50 border-sky-200',
       iconClass: 'text-sky-600'
-    },
-    { 
-      name: 'Milenario', 
-      img: '/imagenespagina/catemilenario.webp', 
-      link: '/categoria/Milenario', 
-      icon: FiHeart,
-      circleClass: 'bg-amber-50 border-amber-200',
-      iconClass: 'text-amber-600'
     },
     { 
       name: 'Infantil', 
@@ -107,33 +110,32 @@ export default function FeaturedCategories() {
     <>
       {/* Versión móvil: contenedor blanco con círculos de categoría (sin animación para que aparezca de una) */}
       {/* En móvil: pegado al banner arriba y un poco más de espacio hacia las tarjetas abajo */}
-      <section className="-mt-1 mb-5 md:hidden">
-        <div className="container mx-auto px-2 sm:px-6">
-          <div className="bg-white rounded-2xl shadow-md border border-gray-100 px-4 py-4">
-            <h2 className="text-lg font-bold text-gray-900 mb-3">
-              ¿Qué quieres comprar hoy?
-            </h2>
-            <div className="grid grid-cols-3 gap-4">
-              {categoriesData.map((cat, index) => (
+      <section className="mt-4 mb-8 md:hidden">
+        <div className="container mx-auto px-4 sm:px-6">
+          <h2 className="text-lg font-extrabold text-gray-900 mb-4 uppercase">
+            ¿Qué quieres comprar hoy?
+          </h2>
+        </div>
+        <div className="overflow-x-auto">
+          <div className="flex gap-x-4 px-4 pb-2">
+            {categoriesData.map((cat, index) => {
+              const isActive = pathname === cat.link;
+              return (
                 <a
                   key={index}
                   href={cat.link}
-                  className="flex flex-col items-center text-center"
+                  className="flex flex-col items-center text-center flex-shrink-0 w-[96px] group"
                 >
-                  <div className={`w-20 h-20 rounded-full overflow-hidden mb-1 border ${cat.circleClass}`}>
-                    <img
-                      src={cat.img}
-                      alt={cat.name}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
+                  <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-2 transition-transform group-hover:scale-110 overflow-hidden">
+                    <img src={cat.img} alt={cat.name} className="w-full h-full object-cover" loading="lazy" />
                   </div>
-                  <span className="text-[11px] font-semibold text-gray-800 leading-tight">
+                  <span className={`text-base font-bold leading-tight ${isActive ? 'text-gray-900' : 'text-gray-700'}`}>
                     {cat.name}
                   </span>
+                  {isActive && <div className="w-4/5 h-0.5 bg-[#607A55] rounded-full mt-1" />}
                 </a>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
