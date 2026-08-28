@@ -24,7 +24,7 @@ import ScrollProgressBar from '@/components/ScrollProgressBar';
 // Optimización de fuente con font-display: swap
 const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap', // ✅ Mejora FCP - muestra texto mientras carga la fuente
+  display: 'swap',
   preload: true,
   fallback: ['system-ui', 'arial']
 });
@@ -127,12 +127,37 @@ export default function RootLayout({ children }) {
     }
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": "https://glise.com.co"
+      }
+    ]
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Glisé",
+    "url": "https://glise.com.co",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://glise.com.co/buscar?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <html lang="es" data-scroll-behavior="smooth">
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbSchema, websiteSchema]) }}
         />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />

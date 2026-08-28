@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef } from 'react';
-import ProductCardSimple from './ProductCardSimple';
+import ProductCard from './ProductCard';
 import Swiper from 'swiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -28,10 +28,8 @@ export default function ProductCarousel({
         prevEl: `.${prevButtonClassName}`,
       },
       breakpoints: {
-        640: { slidesPerView: 2 },
         768: { slidesPerView: 3 },
-        1024: { slidesPerView: 4 },
-        1280: { slidesPerView: 5 }
+        1280: { slidesPerView: 4 }
       },
       // Optimizaciones de rendimiento para evitar forced reflows
       watchOverflow: true,
@@ -64,7 +62,7 @@ export default function ProductCarousel({
         <div className="swiper-wrapper">
           {products.map(product => (
             <div key={product.id} className="swiper-slide h-full">
-              <ProductCardSimple product={product} isSmall={isSmall} />
+              <ProductCard product={product} isSmall={isSmall} animated={false} />
             </div>
           ))}
         </div>

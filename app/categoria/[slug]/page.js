@@ -4,6 +4,7 @@
 import { getProductsByCategory, createSlug } from '@/lib/data.js';
 import PaginaCategoriaCliente from '@/components/PaginaCategoriaCliente.jsx';
 import Breadcrumbs from '@/components/Breadcrumbs.jsx';
+import { generateOfferSchema } from './metadata';
 
 // ISR: Revalidar cada 30 minutos
 export const revalidate = 1800;
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: `${capitalizedCategory} | Glisé - Tu Tienda Online de Confianza`, // ✅ Eliminado "Farmacia y Belleza Natural"
+    title: `${capitalizedCategory} | Glisé Colombia`,
     description: descripcionPersonalizada,
     keywords: [
       categoryName,
@@ -92,6 +93,12 @@ export default async function PaginaCategoria({ params }) {
         ]} />
         <PaginaCategoriaCliente initialProducts={productsWithSlugs} categoryName={categoryName} />
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateOfferSchema(productsWithSlugs, categoryName))
+        }}
+      />
     </main>
   );
 }

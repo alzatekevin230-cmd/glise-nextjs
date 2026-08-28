@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
-import ProductCardSimple from './ProductCardSimple';
+import ProductCard from './ProductCard';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -24,9 +24,8 @@ export default function NaturalProductsSection({ products }) {
       autoplay: { delay: 5000, disableOnInteraction: false },
       navigation: { nextEl: '.natural-next', prevEl: '.natural-prev' },
       breakpoints: {
-        640: { slidesPerView: 2 },
         768: { slidesPerView: 3 },
-        1024: { slidesPerView: 4 }
+        1280: { slidesPerView: 4 }
       }
     });
   }, []);
@@ -83,7 +82,7 @@ export default function NaturalProductsSection({ products }) {
             <div className="swiper-wrapper">
               {limitedProducts.map(product => (
                 <div key={product.id} className="swiper-slide h-full">
-                  <ProductCardSimple product={product} />
+                  <ProductCard product={product} animated={false} />
                 </div>
               ))}
             </div>

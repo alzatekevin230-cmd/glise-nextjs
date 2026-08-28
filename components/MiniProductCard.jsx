@@ -22,7 +22,7 @@ export default function MiniProductCard({ product }) {
         {/* Imagen */}
         <Image
           src={getImageUrl(product.images?.[0] || product.image || '/placeholder.png')}
-          alt={product.name || 'Producto'}
+          alt={`${product.name} - ${product.category || 'Productos'} - Glisé Colombia`}
           fill
           className="object-contain p-0.5 group-hover:scale-105 transition-transform duration-300"
           sizes="(max-width: 768px) 50vw, 150px"

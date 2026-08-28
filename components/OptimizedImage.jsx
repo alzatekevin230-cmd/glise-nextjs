@@ -74,6 +74,7 @@ export default function OptimizedImage({
         priority={priority}
         placeholder="blur"
         blurDataURL="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA="
+        fetchPriority={priority ? 'high' : 'auto'}
         {...props}
       />
     </div>

@@ -1,8 +1,16 @@
 User-agent: *
 Allow: /
+
+# Bloquear páginas privadas
 Disallow: /checkout
 Disallow: /mis-pedidos
 Disallow: /rastrear-pedido
 Disallow: /gracias
+Disallow: /admin
 
+# Permitir crawling de imágenes
+User-agent: Googlebot-Image
+Allow: /
+
+# Sitemap
 Sitemap: https://glise.com.co/sitemap.xml

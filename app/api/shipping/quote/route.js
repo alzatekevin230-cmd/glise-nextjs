@@ -12,22 +12,13 @@ export async function POST(request) {
     // Ejecutamos la cotización
     const quote = await getCoordinadoraQuote(destinationCityCode, cartItems);
 
-    // --- AQUÍ ESTÁ EL TRUCO ---
-    // En lugar de buscar logs, devolvemos la info al navegador
-    return NextResponse.json({
-      ...quote,
-      _DEBUG: {
-        destino: destinationCityCode,
-        items: cartItems.length,
-        // Si soapClient.js calcula el peso, lo verás aquí
-      }
-    });
+    return NextResponse.json(quote);
 
   } catch (error) {
-    // Si falla, el error saldrá directamente en la pantalla de la web
-    return NextResponse.json({ 
-      error: error.message,
-      stack: error.stack 
+    // El detalle completo queda en el log del servidor, no se le manda al navegador.
+    console.error('Error en /api/shipping/quote:', error);
+    return NextResponse.json({
+      error: 'No se pudo calcular el costo de envío. Por favor, intenta de nuevo.'
     }, { status: 500 });
   }
 }

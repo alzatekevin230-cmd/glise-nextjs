@@ -414,10 +414,24 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 .glise-carousel .swiper-slide,
 .related-products-carousel .swiper-slide,
 .blog-related-products-carousel .swiper-slide,
-.related-blog-carousel .swiper-slide {
+.related-blog-carousel .swiper-slide,
+.detail-recently-viewed-carousel .swiper-slide,
+.natural-products-carousel .swiper-slide,
+.featured-brand-carousel .swiper-slide {
     height: auto;
     display: flex;
     flex-direction: column;
+}
+
+/* Evita que Swiper estire las tarjetas a la altura de la más alta del grupo */
+.featured-carousel .swiper-wrapper,
+.glise-carousel .swiper-wrapper,
+.related-products-carousel .swiper-wrapper,
+.blog-related-products-carousel .swiper-wrapper,
+.detail-recently-viewed-carousel .swiper-wrapper,
+.natural-products-carousel .swiper-wrapper,
+.featured-brand-carousel .swiper-wrapper {
+    align-items: flex-start;
 }
 
 .featured-carousel .swiper-button-next,
@@ -1010,10 +1024,6 @@ body.lightbox-open {
 
 .small-product-card .product-card .fa-shopping-cart {
     margin-right: 0.25rem;
-}
-
-.detail-recently-viewed-carousel .swiper-slide {
-    height: auto;
 }
 
 .auth-input {

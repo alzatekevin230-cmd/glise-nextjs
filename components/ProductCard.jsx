@@ -9,14 +9,13 @@ import toast from 'react-hot-toast';
 import AnimatedSection from './AnimatedSection';
 import OptimizedImage from './OptimizedImage';
 import { getImageUrl } from '@/lib/imageUtils';
-import { FaStar, FaStarHalfAlt, FaShoppingCart, FaHeart, FaRegHeart } from 'react-icons/fa';
-import { FaRegStar } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 
 function formatPrice(price) {
   return `$${Math.round(price).toLocaleString('es-CO')}`;
 }
 
-export default function ProductCard({ product, isSmall = false }) {
+export default function ProductCard({ product, isSmall = false, animated = true }) {
   const { agregarAlCarrito } = useCarrito();
   const { toggleFavorite, isFavorite } = useFavorites();
   
@@ -45,21 +44,20 @@ export default function ProductCard({ product, isSmall = false }) {
   const imageSrc = getImageUrl((product.images && product.images.length > 0) ? product.images[0] : (product.image || 'https://placehold.co/300x300'));
   const isOutOfStock = product.stock === 0;
 
-  const rating = 3.5 + (product.popularity / 800) * 1.5;
-  const reviewCount = Math.floor(product.popularity / 15) + 3;
-  const stars = Array.from({ length: 5 }, (_, i) => {
+  const cardClasses = isSmall ? "p-1.5" : "p-2";
+  const titleClasses = isSmall
+    ? "font-bold text-gray-900 text-base leading-snug text-left"
+    : "font-bold text-gray-900 text-lg leading-snug text-left";
+  const priceClasses = isSmall ? "text-lg font-extrabold text-cyan-700 mb-1" : "text-2xl font-extrabold text-cyan-700 mb-1";
+  const reviewCount = product.reviewCount || 0;
+  const rating = product.rating || 0;
+  const ratingStars = Array.from({ length: 5 }, (_, i) => {
     if (rating >= i + 1) return <FaStar key={i} className="text-amber-400" />;
     if (rating >= i + 0.5) return <FaStarHalfAlt key={i} className="text-amber-400" />;
     return <FaRegStar key={i} className="text-amber-400" />;
   });
-
-  const cardClasses = isSmall ? "p-2" : "p-4";
-  const titleClasses = isSmall 
-    ? "font-semibold text-gray-800 my-1 flex-grow flex items-center justify-center h-10 text-sm"
-    : "font-semibold text-gray-800 my-1 flex-grow flex items-center justify-center h-14";
-  const priceClasses = isSmall ? "text-lg font-bold text-gray-900 mb-2" : "text-xl font-bold text-gray-900 mb-3";
   // Botón usa el azul/cyan principal de la marca
-  const buttonClasses = `w-full text-white font-bold rounded-lg transition-all duration-150 flex items-center justify-center ${isSmall ? 'py-1 px-2 text-xs' : 'py-2 px-4'} ${isOutOfStock ? 'btn-disabled' : 'bg-cyan-700 hover:bg-cyan-800 active:scale-95 active:bg-cyan-900'}`;
+  const buttonClasses = `w-full text-white font-bold rounded-lg transition-all duration-150 flex items-center justify-center whitespace-nowrap ${isSmall ? 'py-2 px-1 text-xs' : 'py-3 px-2 text-sm'} ${isOutOfStock ? 'btn-disabled' : 'bg-cyan-700 hover:bg-cyan-800 active:scale-95 active:bg-cyan-900'}`;
 
   const handleToggleFavorite = (e) => {
     e.preventDefault();
@@ -68,57 +66,66 @@ export default function ProductCard({ product, isSmall = false }) {
     toggleFavorite(product.id);
   };
 
-  return (
-    <AnimatedSection animation="slideUpScale" delay={0} duration={500}>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden product-card flex flex-col text-center border h-full relative transition-all duration-300 hover:shadow-xl group">
-        {isOutOfStock && <div className="out-of-stock-badge">Agotado</div>}
-        
-        {/* --- ENLACE CORREGIDO: AHORA USA product.slug --- */}
-        <Link href={`/producto/${product.slug}`} className={`cursor-pointer flex-grow flex flex-col ${isOutOfStock ? 'opacity-60' : ''}`}>
-          
-          <OptimizedImage 
-          src={imageSrc} 
-          alt={`${product.name} 100% natural - Glisé`} // 🔥 1. El ALT estratégico para SEO
-          className="aspect-square w-full"
-          sizes="(max-width: 768px) 50vw, 25vw"
-          unoptimized={true} // 🔥 2. Apaga el cobro de Vercel
-          priority={false}
-        />
+  const cardContent = (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden product-card flex flex-col text-center border h-full relative transition-all duration-300 hover:shadow-xl group">
+      {isOutOfStock && <div className="out-of-stock-badge">Agotado</div>}
 
-        <div className={`${cardClasses} flex-grow flex flex-col`}>
-          <p className={`text-xs text-gray-600 uppercase tracking-wider ${isSmall ? 'hidden' : ''}`}>{product.category}</p>
-          <h3 className={titleClasses} title={product.name}>
-            <span className="line-clamp-2">{product.name}</span>
-          </h3>
-          <div className={`flex items-center justify-center mt-2 ${isSmall ? 'hidden' : ''}`}>
-            {stars}
-            <button
-              onClick={handleToggleFavorite}
-              className="flex items-center justify-center transition-all duration-200 hover:scale-110 ml-1"
-              aria-label={favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-              onMouseDown={(e) => e.preventDefault()}
-            >
-              {favorite ? (
-                <FaHeart className="text-red-500" style={{width: '18px', height: '18px', minWidth: '18px', minHeight: '18px'}} />
-              ) : (
-                <FaRegHeart className="text-gray-600 hover:text-red-500 transition-colors" style={{width: '18px', height: '18px', minWidth: '18px', minHeight: '18px'}} />
-              )}
-            </button>
-          </div>
+      <button
+        onClick={handleToggleFavorite}
+        className="absolute top-2 right-2 z-10"
+        aria-label={favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+        onMouseDown={(e) => e.preventDefault()}
+      >
+        {favorite ? (
+          <FaHeart className="text-red-500" style={{width: '20px', height: '20px', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.5))'}} />
+        ) : (
+        <FaRegHeart className="text-red-400" style={{width: '20px', height: '20px', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))'}} />
+        )}
+      </button>
+
+      <Link href={`/producto/${product.slug}`} className={`cursor-pointer flex flex-col ${isOutOfStock ? 'opacity-60' : ''}`}>
+
+        <div className="relative overflow-hidden">
+          <OptimizedImage
+            src={imageSrc}
+            alt={`${product.name} - ${product.category} - Comprar en Glisé Colombia`}
+            className="aspect-square w-full transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 50vw, 25vw"
+            unoptimized={true}
+            priority={false}
+          />
+        </div>
+
+        <div className={`${cardClasses} flex flex-col`}>
+          <h3 className={titleClasses} title={product.name}>{product.name}</h3>
+          <p className="text-xs text-gray-500 mb-1 text-left">{product.category}</p>
+          {reviewCount > 0 && (
+            <div className="flex items-center justify-center gap-0.5 mb-1 text-xs">
+              {ratingStars}
+              <span className="text-gray-500 ml-1">({reviewCount})</span>
+            </div>
+          )}
         </div>
       </Link>
-      
-      <div className={`mt-auto ${isSmall ? 'px-2 pb-2' : 'px-4 pb-4'}`}>
+
+      <div className={`mt-auto ${isSmall ? 'px-2 pb-2' : 'px-3 pb-3'}`}>
         <p className={priceClasses}>{formatPrice(product.price)}</p>
         <button
           onClick={handleAddToCart}
           className={buttonClasses}
           disabled={isOutOfStock}
         >
-          <FaShoppingCart className={isSmall ? 'mr-1' : 'mr-2'} /> {isOutOfStock ? 'Agotado' : 'Agregar'}
+          {isOutOfStock ? 'Agotado' : 'AÑADIR AL CARRITO'}
         </button>
       </div>
-      </div>
+    </div>
+  );
+
+  return animated ? (
+    <AnimatedSection animation="slideUpScale" delay={0} duration={500}>
+      {cardContent}
     </AnimatedSection>
+  ) : (
+    cardContent
   );
 }

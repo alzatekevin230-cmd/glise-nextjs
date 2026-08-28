@@ -10,7 +10,7 @@ export async function generateMetadata({ params }) {
   const decodedBrandName = decodeURIComponent(brandName);
   
   return {
-    title: `${decodedBrandName} - Productos Originales y Certificados | Glisé`,
+    title: `${decodedBrandName} | Glisé Colombia`,
     description: `Compra productos ${decodedBrandName} originales al mejor precio. Envío rápido, garantía de calidad y autenticidad. Descubre toda la línea ${decodedBrandName} disponible.`,
     keywords: [
       decodedBrandName,

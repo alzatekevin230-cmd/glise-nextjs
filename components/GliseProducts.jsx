@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
-import ProductCardSimple from './ProductCardSimple'; // Usamos la versión sin animaciones
+import ProductCard from './ProductCard';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -23,9 +23,8 @@ export default function GliseProducts({ products }) {
       autoplay: { delay: 4500, disableOnInteraction: false },
       navigation: { nextEl: '.glise-next', prevEl: '.glise-prev' },
       breakpoints: {
-        640: { slidesPerView: 2 },
         768: { slidesPerView: 3 },
-        1024: { slidesPerView: 4 }
+        1280: { slidesPerView: 4 }
       }
     });
   }, []);
@@ -45,7 +44,7 @@ export default function GliseProducts({ products }) {
             <div className="swiper-wrapper">
               {limitedProducts.map(product => (
                 <div key={product.id} className="swiper-slide h-full">
-                  <ProductCardSimple product={product} />
+                  <ProductCard product={product} animated={false} />
                 </div>
               ))}
             </div>

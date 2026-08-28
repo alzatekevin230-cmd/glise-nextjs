@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
-import ProductCardSimple from './ProductCardSimple';
+import ProductCard from './ProductCard';
 import AnimatedSection from './AnimatedSection';
 
 export default function RecommendedProducts({ products }) {
@@ -26,9 +26,8 @@ export default function RecommendedProducts({ products }) {
         },
         slidesPerView: 2,
         breakpoints: {
-          640: { slidesPerView: 2 },
           768: { slidesPerView: 3 },
-          1024: { slidesPerView: 4 },
+          1280: { slidesPerView: 4 },
         },
       });
     }
@@ -58,7 +57,7 @@ export default function RecommendedProducts({ products }) {
             <div className="swiper-wrapper">
               {products.map(product => (
                 <div key={product.id} className="swiper-slide h-auto">
-                  <ProductCardSimple product={product} />
+                  <ProductCard product={product} animated={false} />
                 </div>
               ))}
             </div>

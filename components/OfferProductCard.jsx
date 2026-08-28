@@ -71,7 +71,7 @@ export default function OfferProductCard({ product }) {
         {/* Imagen del Producto */}
         <Image
           src={getImageUrl(product.images?.[0] || product.image || '/placeholder.png')}
-          alt={product.name || 'Producto'}
+          alt={`Oferta: ${product.name} - ${product.category} - Glisé`}
           fill
           className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
           sizes="(max-width: 768px) 90vw, 24vw"

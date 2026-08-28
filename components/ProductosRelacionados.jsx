@@ -35,8 +35,7 @@ export default function ProductosRelacionados({ products }) {
         },
         breakpoints: { 
           768: { slidesPerView: 3 }, 
-          1024: { slidesPerView: 4 }, 
-          1280: { slidesPerView: 5 } 
+          1280: { slidesPerView: 4 } 
         }
       });
     }

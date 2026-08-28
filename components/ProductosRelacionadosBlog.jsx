@@ -22,9 +22,8 @@ export default function ProductosRelacionadosBlog({ products }) {
       autoplay: { delay: 4000, disableOnInteraction: false },
       navigation: { nextEl: '.blog-related-products-next', prevEl: '.blog-related-products-prev' },
       breakpoints: {
-        640: { slidesPerView: 2 },
         768: { slidesPerView: 3 },
-        1024: { slidesPerView: 4 },
+        1280: { slidesPerView: 4 },
       }
     });
 
@@ -38,7 +37,7 @@ export default function ProductosRelacionadosBlog({ products }) {
   return (
     <section className="mb-12 mt-16 pt-8 border-t">
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">Productos que te pueden interesar</h2>
-      <div className="container mx-auto px-2 sm:px-6 relative group">
+      <div className="relative group">
         <div className="swiper-container blog-related-products-carousel overflow-hidden">
           <div className="swiper-wrapper">
             {products.map(product => (

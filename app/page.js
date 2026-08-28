@@ -10,6 +10,12 @@ import GliseProductsBanner from "@/components/GliseProductsBanner";
 import { FaCommentDots, FaWhatsapp } from 'react-icons/fa';
 import Link from 'next/link';
 
+export const metadata = {
+  alternates: {
+    canonical: 'https://glise.com.co'
+  }
+};
+
 // Este es el esqueleto de carga elegante (Skeleton Loader)
 const SectionSkeleton = () => (
   <div className="container mx-auto px-4 py-8 animate-pulse">

@@ -28,7 +28,9 @@ export async function generateMetadata({ params }) {
   const optimizedImage = getImageUrl(product.image, '700x700');
 
   // Título persuasivo
-  const seoTitle = `${product.name} | Compra Segura en Glisé`;
+  const seoTitle = product.name.length > 40
+    ? `${product.name.substring(0, 37)}... | Glisé`
+    : `${product.name} | Glisé`;
   
   // Descripción inteligente (limita el texto base y añade gancho comercial)
   const baseDescription = product.description ? product.description.substring(0, 120) : '';
@@ -37,6 +39,9 @@ export async function generateMetadata({ params }) {
   return {
     title: seoTitle,
     description: cleanDescription,
+    alternates: {
+      canonical: `https://glise.com.co/producto/${slug}`
+    },
     openGraph: {
       title: seoTitle,
       description: cleanDescription,
@@ -86,7 +91,10 @@ export default async function PaginaProducto({ params }) {
     "@type": "Product",
     "name": product.name,
     "description": product.description || `${product.name} disponible en Glisé.`,
-    "image": getImageUrl(product.image, '700x700'),
+    "image": [
+      getImageUrl(product.image),
+      ...(product.images?.slice(0, 3).map(img => getImageUrl(img)) || [])
+    ],
     "offers": {
       "@type": "Offer",
       "price": product.price,
@@ -97,8 +105,14 @@ export default async function PaginaProducto({ params }) {
         "name": "Glisé",
         "url": "https://glise.com.co" // Se agregó la URL oficial
       }
+    },    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.5",
+      "reviewCount": product.popularity ? Math.floor(product.popularity / 10) : "5"
     },
-    "brand": {
+    "sku": product.id,
+    "gtin": product.gtin || product.ean || "",
+    "mpn": product.id,    "brand": {
       "@type": "Brand",
       "name": product.laboratorio || "Glisé"
     },

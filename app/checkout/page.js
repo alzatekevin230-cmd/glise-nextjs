@@ -169,6 +169,7 @@ export default function CheckoutPage() {
     });
 
     const [shippingCost, setShippingCost] = useState(0);
+    const [realShippingCost, setRealShippingCost] = useState(0);
     const [deliveryDays, setDeliveryDays] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
@@ -219,6 +220,7 @@ export default function CheckoutPage() {
     const calculateShipping = useCallback(async (cityCode) => {
         if (!cityCode || cart.length === 0) {
             setShippingCost(0);
+            setRealShippingCost(0);
             setDeliveryDays(null);
             setShippingCalculated(false);
             setIsCalculatingShipping(false);
@@ -240,12 +242,14 @@ export default function CheckoutPage() {
 
             const data = await response.json();
             setShippingCost(data.shippingCost);
+            setRealShippingCost(data.realShippingCost ?? data.shippingCost);
             setDeliveryDays(data.deliveryDays);
             setShippingCalculated(true);
         } catch (error) {
             console.error("Error al calcular envío:", error);
             toast.error("No se pudo calcular el costo de envío. Por favor, intenta de nuevo.");
             setShippingCost(0);
+            setRealShippingCost(0);
             setDeliveryDays(null);
             setShippingCalculated(false);
         } finally {
@@ -311,6 +315,7 @@ export default function CheckoutPage() {
             }));
             setTouched(prev => ({ ...prev, state: true }));
             setShippingCost(0);
+            setRealShippingCost(0);
             setDeliveryDays(null);
             setShippingCalculated(false);
         }
@@ -396,7 +401,7 @@ export default function CheckoutPage() {
         const total = subtotal + finalShippingCost;
         const totalInCents = Math.round(total * 100);
         const reference = `${Date.now()}`;
-        const orderPayload = { orderId: reference, customerDetails: formData, items: cart, subtotal, shippingCost: finalShippingCost, total, orderNotes: formData.orderNotes };
+        const orderPayload = { orderId: reference, customerDetails: formData, items: cart, subtotal, shippingCost: finalShippingCost, realShippingCost, total, orderNotes: formData.orderNotes };
         try {
             const response = await fetch('/api/orders/process', {
                 method: 'POST',
