@@ -2,6 +2,17 @@
 import { getHomePageData } from '@/lib/data';
 import { getImageUrl } from '@/lib/imageUtils';
 
+// Next.js NO escapa entidades XML en `url` ni en `images` al generar el sitemap,
+// así que las URLs de Firebase con "&token=..." rompen el XML si no se escapan aquí.
+function escapeXml(str = '') {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 export default async function sitemap() {
   const baseUrl = 'https://glise.com.co';
 
@@ -43,10 +54,10 @@ export default async function sitemap() {
   const productRoutes = (products || []).map((product) => {
     const rawImages = [product.image, ...(Array.isArray(product.images) ? product.images : [])].filter(Boolean);
     // Quitamos duplicados y limitamos a 5 imágenes por producto (límite recomendado por Google)
-    const images = [...new Set(rawImages)].slice(0, 5).map((img) => getImageUrl(img, '700x700'));
+    const images = [...new Set(rawImages)].slice(0, 5).map((img) => escapeXml(getImageUrl(img, '700x700')));
 
     return {
-      url: `${baseUrl}/producto/${product.slug || product.id}`,
+      url: escapeXml(`${baseUrl}/producto/${product.slug || product.id}`),
       lastModified: product.updatedAt ? new Date(product.updatedAt) : new Date(),
       changeFrequency: 'weekly',
       priority: 0.7,
@@ -56,10 +67,10 @@ export default async function sitemap() {
 
   // 🔥 5. NUEVO: Mapeamos dinámicamente los artículos del blog
   const blogRoutes = (blogPosts || []).map((post) => {
-    const image = post.imageUrl ? getImageUrl(post.imageUrl, '1200x630') : null;
+    const image = post.imageUrl ? escapeXml(getImageUrl(post.imageUrl, '1200x630')) : null;
 
     return {
-      url: `${baseUrl}/blog/${post.slug || post.id}`, // <-- Ajusta '/blog/' si tu ruta es distinta
+      url: escapeXml(`${baseUrl}/blog/${post.slug || post.id}`), // <-- Ajusta '/blog/' si tu ruta es distinta
       lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(),
       changeFrequency: 'monthly', // Los artículos suelen cambiar menos frecuentemente que los productos
       priority: 0.6,
