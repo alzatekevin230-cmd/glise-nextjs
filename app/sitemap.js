@@ -1,5 +1,6 @@
 // app/sitemap.js (o donde lo tengas ubicado)
 import { getHomePageData } from '@/lib/data';
+import { getImageUrl } from '@/lib/imageUtils';
 
 export default async function sitemap() {
   const baseUrl = 'https://glise.com.co';
@@ -38,21 +39,33 @@ export default async function sitemap() {
     priority: 0.9,
   }));
 
-  // 4. Mapeamos dinámicamente los productos
-  const productRoutes = (products || []).map((product) => ({
-    url: `${baseUrl}/producto/${product.slug || product.id}`,
-    lastModified: product.updatedAt ? new Date(product.updatedAt) : new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.7,
-  }));
+  // 4. Mapeamos dinámicamente los productos (incluyendo imágenes para Google Images)
+  const productRoutes = (products || []).map((product) => {
+    const rawImages = [product.image, ...(Array.isArray(product.images) ? product.images : [])].filter(Boolean);
+    // Quitamos duplicados y limitamos a 5 imágenes por producto (límite recomendado por Google)
+    const images = [...new Set(rawImages)].slice(0, 5).map((img) => getImageUrl(img, '700x700'));
+
+    return {
+      url: `${baseUrl}/producto/${product.slug || product.id}`,
+      lastModified: product.updatedAt ? new Date(product.updatedAt) : new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+      ...(images.length > 0 ? { images } : {}),
+    };
+  });
 
   // 🔥 5. NUEVO: Mapeamos dinámicamente los artículos del blog
-  const blogRoutes = (blogPosts || []).map((post) => ({
-    url: `${baseUrl}/blog/${post.slug || post.id}`, // <-- Ajusta '/blog/' si tu ruta es distinta
-    lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(),
-    changeFrequency: 'monthly', // Los artículos suelen cambiar menos frecuentemente que los productos
-    priority: 0.6,
-  }));
+  const blogRoutes = (blogPosts || []).map((post) => {
+    const image = post.imageUrl ? getImageUrl(post.imageUrl, '1200x630') : null;
+
+    return {
+      url: `${baseUrl}/blog/${post.slug || post.id}`, // <-- Ajusta '/blog/' si tu ruta es distinta
+      lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(),
+      changeFrequency: 'monthly', // Los artículos suelen cambiar menos frecuentemente que los productos
+      priority: 0.6,
+      ...(image ? { images: [image] } : {}),
+    };
+  });
 
   // Combinamos TODO (incluyendo el blog) y se lo entregamos a Next.js
   return [...staticRoutes, ...categories, ...productRoutes, ...blogRoutes];

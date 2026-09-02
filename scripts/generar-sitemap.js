@@ -1,4 +1,6 @@
 // scripts/generar-sitemap.js
+// ⚠️ DEPRECADO: app/sitemap.js ya genera el sitemap (con imágenes) en producción.
+// Escribir aquí a public/sitemap.xml vuelve a crear el conflicto de rutas duplicadas. No usar.
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';

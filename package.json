@@ -10,7 +10,6 @@
     "start": "next start",
     "lint": "next lint",
     "deploy-firestore-rules": "node scripts/deploy-firestore-rules.js",
-    "generar-sitemap": "node scripts/generar-sitemap.js",
     "update-cache": "node scripts/update-storage-cache.js",
     "test-mongodb": "node scripts/test-mongodb.js",
     "migrate-to-mongodb": "node scripts/migrate-firestore-to-mongodb.js",
