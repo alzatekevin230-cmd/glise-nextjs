@@ -75,22 +75,24 @@ export default function HeaderMobile() {
           )}
         </button>
       </div>
-      <div className="bg-pink-50 py-2 w-full border-t border-b border-pink-100">
+      <div className="bg-white py-1.5 w-full border-t border-b border-gray-200">
         <div
           className="relative px-4 overflow-visible"
           onFocus={() => setIsSearchFocused(true)}
           onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
         >
-          <input
-            type="text"
-            placeholder="Busca tus productos..."
-            className="w-full pl-5 pr-16 py-3 border-2 border-cyan-500 rounded-full focus:outline-none focus:rounded-full focus:border-cyan-600 transition-colors text-sm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button type="button" className="absolute right-5 bg-cyan-600 text-white w-10 h-10 rounded-full hover:bg-cyan-700 flex items-center justify-center transition-colors border-0 shadow-none outline-none" style={{top: '50%', transform: 'translateY(-50%)', boxShadow: 'none', border: 'none'}} aria-label="Buscar">
-            <FiSearch style={{width: '28px', height: '28px', minWidth: '28px', minHeight: '28px'}} />
-          </button>
+          <div className="relative h-11 bg-white border-2 border-cyan-500 rounded-full focus-within:border-cyan-600 transition-colors">
+            <input
+              type="text"
+              placeholder="Busca tus productos..."
+              className="w-full h-full pl-5 pr-12 text-sm bg-transparent border-0 rounded-full outline-none focus:outline-none focus-visible:outline-none focus:ring-0"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button type="button" className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 min-h-0 min-w-0 p-0 bg-cyan-600 text-white rounded-full hover:bg-cyan-700 flex items-center justify-center transition-colors outline-none focus:outline-none focus-visible:outline-none" aria-label="Buscar">
+              <FiSearch style={{width: '17px', height: '17px', minWidth: '17px', minHeight: '17px'}} />
+            </button>
+          </div>
           {isSearchFocused && <SearchResults suggestions={suggestions} />}
         </div>
       </div>

@@ -2,6 +2,17 @@
 const nextConfig = {
   // Configurar Turbopack (Next.js 16+)
   turbopack: {},
+
+  // 301s para URLs de producto que cambiaron de slug (ej. al renombrar un producto)
+  async redirects() {
+    return [
+      {
+        source: '/producto/aceite-de-coco-refinado-desodorizado-500-ml',
+        destination: '/producto/aceite-de-coco-500ml',
+        permanent: true,
+      },
+    ];
+  },
   
   images: {
     // ✅ DESACTIVADO - No usar optimizador para evitar costos de Vercel

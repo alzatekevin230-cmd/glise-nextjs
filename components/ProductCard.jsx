@@ -69,17 +69,18 @@ export default function ProductCard({ product, isSmall = false, animated = true 
   const cardContent = (
     <div className="bg-white rounded-lg shadow-md overflow-hidden product-card flex flex-col text-center border h-full relative transition-all duration-300 hover:shadow-xl group">
       {isOutOfStock && <div className="out-of-stock-badge">Agotado</div>}
+      {!isOutOfStock && product.isNew && <div className="new-product-badge">Nuevo</div>}
 
       <button
         onClick={handleToggleFavorite}
-        className="absolute top-2 right-2 z-10"
+        className="absolute top-2 right-2 z-10 p-1 text-gray-500 hover:text-red-500 transition-colors duration-200"
         aria-label={favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
         onMouseDown={(e) => e.preventDefault()}
       >
         {favorite ? (
-          <FaHeart className="text-red-500" style={{width: '20px', height: '20px', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.5))'}} />
+          <FaHeart className="w-6 h-6 text-red-500" />
         ) : (
-        <FaRegHeart className="text-red-400" style={{width: '20px', height: '20px', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))'}} />
+          <FaRegHeart className="w-6 h-6" />
         )}
       </button>
 

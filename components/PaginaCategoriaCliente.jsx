@@ -341,9 +341,9 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
               <option value="name-az">Nombre: A-Z</option>
             </select>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-0 items-start">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-0 md:gap-y-8 items-start">
             {paginatedProducts.map(product => (
-              <div key={product.id} className="-mb-2 overflow-visible">
+              <div key={product.id} className="-mb-2 overflow-visible md:mb-0">
                 <TarjetaProducto product={product} />
               </div>
             ))}

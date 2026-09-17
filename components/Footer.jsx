@@ -54,13 +54,23 @@ export default function Footer() {
 
   return (
     <footer ref={footerRef} data-nosnippet className="bg-white pb-24 md:pb-0 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] border-t border-gray-100">
-      <div className="bg-pink-50 py-3 px-6">
-        <div className="container mx-auto flex flex-col md:flex-row items-center justify-center gap-6">
-          <h3 className="text-xl font-bold text-cyan-700 text-center md:text-left flex-shrink-0">
-            Suscríbete a nuestro boletín
-          </h3>
-          <form id="newsletter-form" onSubmit={handleSubmit} className="w-full max-w-2xl">
-            <div className="flex flex-col md:flex-row items-center gap-4">
+      <div className="bg-gradient-to-r from-cyan-800 to-cyan-600 py-8 px-6">
+        <div className="container mx-auto flex flex-col md:flex-row items-center justify-center md:justify-between gap-6">
+          <div className="flex items-center gap-4 text-center md:text-left">
+            <div className="hidden sm:flex w-14 h-14 rounded-full bg-white/10 items-center justify-center flex-shrink-0">
+              <FaEnvelope className="text-white text-2xl" />
+            </div>
+            <div>
+              <h3 className="text-xl md:text-2xl font-bold text-white">
+                Suscríbete a nuestro boletín
+              </h3>
+              <p className="text-cyan-100 text-sm mt-0.5">
+                Ofertas exclusivas y novedades directo a tu correo.
+              </p>
+            </div>
+          </div>
+          <form id="newsletter-form" onSubmit={handleSubmit} className="w-full md:w-auto md:max-w-lg">
+            <div className="flex flex-col sm:flex-row items-center gap-3">
               <div className="w-full flex-grow">
                 <label htmlFor="newsletter-email" className="sr-only">Correo electrónico</label>
                 <input 
@@ -70,24 +80,24 @@ export default function Footer() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Ingresa tu correo electrónico" 
                   required 
-                  className="w-full px-4 py-2.5 rounded-md border-2 border-cyan-500 text-gray-800 focus:outline-none focus:ring-2 focus:ring-cyan-500" 
+                  className="w-full px-5 py-3 rounded-full border-0 text-gray-800 bg-white placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30" 
                 />
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
                 <button 
                   type="submit" 
                   disabled={loading}
-                  className="bg-cyan-700 hover:bg-cyan-800 text-white font-bold px-6 py-2.5 rounded-md transition-colors whitespace-nowrap disabled:opacity-50"
+                  className="bg-white text-cyan-800 font-bold px-6 py-3 rounded-full hover:bg-cyan-50 transition-colors whitespace-nowrap disabled:opacity-50 shadow-md"
                 >
                   {loading ? '...' : 'Suscribirme'}
                 </button>
-                <div className="flex items-center">
-                  <input id="newsletter-acceptance" name="newsletter-acceptance" type="checkbox" required className="h-5 w-5 rounded border-gray-400 text-blue-600 focus:ring-blue-500" />
-                  <label htmlFor="newsletter-acceptance" className="ml-2 text-sm text-gray-600">
-                    Acepto <a href="/politicas" className="text-blue-600 hover:underline font-medium">políticas y términos</a>.
-                  </label>
-                </div>
               </div>
+            </div>
+            <div className="flex items-center mt-3 justify-center sm:justify-start">
+              <input id="newsletter-acceptance" name="newsletter-acceptance" type="checkbox" required className="h-4 w-4 rounded border-white/50 text-cyan-600 focus:ring-cyan-300" />
+              <label htmlFor="newsletter-acceptance" className="ml-2 text-xs text-cyan-100">
+                Acepto <a href="/politicas" className="underline hover:text-white font-medium">políticas y términos</a>.
+              </label>
             </div>
           </form>
         </div>

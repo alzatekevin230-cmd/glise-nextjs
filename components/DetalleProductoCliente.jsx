@@ -237,30 +237,6 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
   if (!product) return <div>Cargando detalles del producto...</div>;
 
-  // 1. JSON-LD PARA GOOGLE
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    image: allImages.length > 0 ? allImages : [product.image || 'https://glise.com.co/imagenespagina/logodeglise.webp'],
-    description: product.description,
-    brand: {
-      '@type': 'Brand',
-      name: product.laboratorio || product.brand || 'Glisé'
-    },
-    offers: {
-      '@type': 'Offer',
-      url: `https://glise.com.co/producto/${product.slug || product.id}`,
-      priceCurrency: 'COP',
-      price: product.price,
-      availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-      seller: {
-        '@type': 'Organization',
-        name: 'Glisé'
-      }
-    }
-  };
-
   const renderGallery = () => {
     return (
       <>
@@ -347,10 +323,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {/* JSON-LD del producto ya se renderiza en app/producto/[slug]/page.js, no duplicar aquí */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Galería de imágenes */}
         <div className="flex flex-col lg:flex-row gap-4">
