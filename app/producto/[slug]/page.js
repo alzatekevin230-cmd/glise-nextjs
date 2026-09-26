@@ -1,7 +1,7 @@
 // app/producto/[slug]/page.js
 
 // CAMBIO: Importamos las funciones necesarias desde lib/data.js
-import { getProductBySlug, getRelatedProducts, createSlug, getAllProducts } from '@/lib/data.js';
+import { getProductBySlug, getRelatedProducts, createSlug, getAllProducts, getProductReviewStats } from '@/lib/data.js';
 import { getImageUrl } from '@/lib/imageUtils';
 import DetalleProductoCliente from '@/components/DetalleProductoCliente';
 import { notFound } from 'next/navigation';
@@ -73,6 +73,7 @@ export default async function PaginaProducto({ params }) {
   }
   
   const relatedProductsRaw = await getRelatedProducts(product.category, product.id);
+  const reviewStats = await getProductReviewStats(product.id);
 
   // ✅ MANTENIDO: Tu lógica segura para mapear los slugs de productos relacionados
   const relatedProducts = relatedProductsRaw.map(p => ({
@@ -105,18 +106,21 @@ export default async function PaginaProducto({ params }) {
         "name": "Glisé",
         "url": "https://glise.com.co" // Se agregó la URL oficial
       }
-    },    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.5",
-      "reviewCount": product.popularity ? Math.floor(product.popularity / 10) : "5"
-    },
-    "sku": product.id,
+    },    "sku": product.id,
     "gtin": product.gtin || product.ean || "",
     "mpn": product.id,    "brand": {
       "@type": "Brand",
       "name": product.laboratorio || "Glisé"
     },
-    "category": product.category
+    "category": product.category,
+    // Solo incluimos aggregateRating si hay reseñas reales (evita rich snippets engañosos)
+    ...(reviewStats.count > 0 && {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": String(reviewStats.average),
+        "reviewCount": reviewStats.count
+      }
+    })
   };
   
   return (

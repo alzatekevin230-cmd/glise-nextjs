@@ -92,6 +92,8 @@ export const ProveedorAuth = ({ children }) => {
           email: user.email,
           createdAt: new Date()
         });
+        const { mirrorUserByEmail } = await import('@/lib/userIndex');
+        await mirrorUserByEmail({ uid: user.uid, name: user.displayName, email: user.email });
       }
       
       // Cerramos el modal después del inicio de sesión exitoso

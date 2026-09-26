@@ -40,6 +40,17 @@ service cloud.firestore {
     }
     
     // ========================================
+    // ÍNDICE DE USUARIOS POR CORREO (solo para soporte vía consola de Firebase)
+    // ========================================
+    match /usersByEmail/{emailId} {
+      // El usuario solo puede crear su propio registro espejo al registrarse
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+
+      // Nadie puede leer/editar/borrar desde el cliente (solo Admin SDK / consola de Firebase)
+      allow read, update, delete: if false;
+    }
+
+    // ========================================
     // BLOG POSTS
     // ========================================
     match /blogPosts/{postId} {
