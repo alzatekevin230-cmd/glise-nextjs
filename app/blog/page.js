@@ -2,6 +2,7 @@
 import { getAllBlogPosts } from '@/lib/data';
 import BlogPageClient from './BlogPageClient';
 
+export const revalidate = 86400;
 export const metadata = {
   title: 'Blog de Bienestar y Belleza - Glisé',
   description: 'Descubre consejos, guías y novedades sobre belleza, bienestar y cuidado personal. Artículos escritos por expertos para tu salud y belleza.',

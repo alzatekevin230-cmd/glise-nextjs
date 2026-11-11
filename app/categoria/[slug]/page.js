@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs.jsx';
 import { generateOfferSchema } from './metadata';
 
 // ISR: Revalidar cada 30 minutos
-export const revalidate = 1800;
+export const revalidate = 86400;
 
 // Generar metadata dinámica para cada categoría de forma eficiente
 export async function generateMetadata({ params }) {

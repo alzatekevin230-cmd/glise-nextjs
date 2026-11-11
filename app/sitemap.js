@@ -2,6 +2,7 @@
 import { getHomePageData } from '@/lib/data';
 import { getImageUrl } from '@/lib/imageUtils';
 
+export const revalidate = 86400;
 // Next.js NO escapa entidades XML en `url` ni en `images` al generar el sitemap,
 // así que las URLs de Firebase con "&token=..." rompen el XML si no se escapan aquí.
 function escapeXml(str = '') {

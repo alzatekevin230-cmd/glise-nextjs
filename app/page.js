@@ -40,18 +40,29 @@ const NaturalProductsSection = dynamic(() => import('@/components/NaturalProduct
 const ArticulosBlog = dynamic(() => import('@/components/ArticulosBlog'), { loading: () => <SectionSkeleton /> });
 const ProductosVistosRecientemente = dynamic(() => import('@/components/ProductosVistosRecientemente'), { loading: () => <SectionSkeleton /> });
 
-export const revalidate = 600;
+// Caché de 24 horas (se actualiza al instante con /api/actualizar o al vender en Wompi)
+export const revalidate = 86400;
 
 export default async function HomePage() {
   const { products: allProducts, blogPosts } = await getHomePageData();
 
-  // Agrupar productos por categoría para la sección "Mejores Ofertas"
-  // Categorías principales reales (en orden)
-  // 1) Dermocosméticos
-  // 2) Infantil
-  // 3) Milenario
-  // 4) Belleza
-  // 5) Naturales y Homeopáticos
+  // Versión ligera de productos (sin descripciones pesadas) para reducir uso de CPU y memoria
+  const lightProducts = allProducts.map(p => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    price: p.price,
+    oldPrice: p.oldPrice || p.originalPrice || null,
+    originalPrice: p.originalPrice || null,
+    image: p.image,
+    images: Array.isArray(p.images) && p.images.length > 0 ? [p.images[0]] : [],
+    stock: p.stock,
+    category: p.category,
+    laboratorio: p.laboratorio,
+    popularity: p.popularity || 0,
+    isNew: p.isNew || false
+  }));
+
   const mainCategories = [
     { label: 'Dermocosméticos', filter: 'Dermocosméticos' },
     { label: 'Infantil', filter: 'Cuidado Infantil' },
@@ -60,51 +71,45 @@ export default async function HomePage() {
     { label: 'Naturales y Homeopáticos', filter: 'Naturales y Homeopáticos' }
   ];
 
-  // Crear estructura de categorías con 4 productos cada una
   const categoryGroupedProducts = mainCategories.map(({ label, filter }) => {
-    const categoryProducts = allProducts
+    const categoryProducts = lightProducts
       .filter(p => {
         if (!p.stock) return false;
         if (p.category !== filter) return false;
         return true;
       })
       .sort((a, b) => {
-        // Priorizar productos en oferta
         const aDiscount = (a.oldPrice || a.originalPrice || 0) - a.price;
         const bDiscount = (b.oldPrice || b.originalPrice || 0) - b.price;
         if (aDiscount !== bDiscount) return bDiscount - aDiscount;
-        // Luego por popularidad
         return (b.popularity || 0) - (a.popularity || 0);
       })
-      .slice(0, 4) // Exactamente 4 productos por categoría
+      .slice(0, 4)
       .map(p => ({
         ...p,
         oldPrice: p.oldPrice || p.originalPrice || (p.price * 1.15)
       }));
 
     const categoryName = label;
-
     return {
       categoryName,
       categorySlug: categoryName.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
       linkToAll: `/categoria/${encodeURIComponent(categoryName)}`,
       products: categoryProducts
     };
-  }).filter(group => group.products.length > 0); // Solo mostrar categorías con productos
+  }).filter(group => group.products.length > 0);
 
   const bestOffersProducts = categoryGroupedProducts;
+  const featuredProductsData = lightProducts.filter(p => [143, 58, 123, 74, 95, 7, 183, 151].includes(Number(p.id)));
+  const gliseProductsData = lightProducts.filter(p => p.laboratorio === 'GLISÉ');
+  const naturalProductsData = lightProducts.filter(p => p.category === 'Naturales y Homeopáticos');
 
-  const featuredProductsData = allProducts.filter(p => [143, 58, 123, 74, 95, 7, 183, 151].includes(p.id));
-  const gliseProductsData = allProducts.filter(p => p.laboratorio === 'GLISÉ');
-  const naturalProductsData = allProducts.filter(p => p.category === 'Naturales y Homeopáticos');
-
-  // Productos destacados para MobilePromo
-  const orangeOilProduct = allProducts
+  const orangeOilProduct = lightProducts
     .filter(p => p.name.toLowerCase().includes('naranja') && p.stock > 0)
-    .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))[0] || 
-    allProducts.find(p => p.category === 'Milenario' && p.stock > 0);
+    .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))[0] ||
+    lightProducts.find(p => p.category === 'Milenario' && p.stock > 0);
 
-  const naturalesProduct = allProducts
+  const naturalesProduct = lightProducts
     .filter(p => p.category === 'Naturales y Homeopáticos' && p.stock > 0)
     .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))[0] || null;
 
@@ -121,30 +126,26 @@ export default async function HomePage() {
             </a>
           </div>
         </div>
-
         <div className="mt-4">
           <MainBanner />
         </div>
       </div>
-
-      {/* Compra por categoría: justo debajo del banner principal en móvil */}
       <FeaturedCategories />
-
       <MobilePromo milenarioProduct={orangeOilProduct} naturalesProduct={naturalesProduct} />
-      
+
       <BestOffers products={bestOffersProducts} />
-      
+
       <ShopByBrand />
       <FeaturedProductsBanner />
       <RecommendedProducts products={featuredProductsData} />
       <GliseProductsBanner />
       <GliseProducts products={gliseProductsData} />
       <NaturalProductsSection products={naturalProductsData} />
-      
+
       <div className="container mx-auto px-2 sm:px-6">
-        <ProductosVistosRecientemente allProducts={allProducts} />
+        <ProductosVistosRecientemente allProducts={lightProducts} />
       </div>
-      
+
       <ArticulosBlog posts={blogPosts} />
     </main>
   );

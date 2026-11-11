@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
 // ISR: Revalidar cada 0 segundos (siempre fresco)
-export const revalidate = 0;
+export const revalidate = 86400;
 
 // Genera todas las rutas de productos en build time
 export async function generateStaticParams() {

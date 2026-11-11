@@ -1,8 +1,11 @@
+// app/api/webhooks/wompi/route.js
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { generateCoordinadoraGuide } from '@/lib/soapClient';
 import { sendOrderConfirmation } from '@/lib/email';
+import { clearDataCache } from '@/lib/data';
 
 export async function POST(request) {
   try {
@@ -38,18 +41,15 @@ export async function POST(request) {
 
     const orderDoc = querySnapshot.docs[0];
     const orderRef = orderDoc.ref;
-    // Assuming structure: users/{userId}/orders/{orderId}
     const userId = orderDoc.ref.parent.parent.id;
 
     let orderDataBeforeUpdate;
     let shouldProcess = false;
 
-    // Transaction to update order status and stock
     await db.runTransaction(async (t) => {
       const doc = await t.get(orderRef);
       orderDataBeforeUpdate = doc.data();
 
-      // Only process if currently pending
       if (orderDataBeforeUpdate.status !== 'pending_payment') {
         return;
       }
@@ -58,7 +58,6 @@ export async function POST(request) {
       t.update(orderRef, { status: newStatus.toLowerCase() });
 
       if (newStatus === 'APPROVED' && orderDataBeforeUpdate.items) {
-        // Decrease stock
         for (const item of orderDataBeforeUpdate.items) {
           const productRef = db.collection("products").doc(String(item.id));
           t.update(productRef, { stock: FieldValue.increment(-item.quantity) });
@@ -71,6 +70,10 @@ export async function POST(request) {
     }
 
     if (newStatus === 'APPROVED') {
+      // Actualiza el stock en vivo en toda la tienda inmediatamente después de la compra
+      clearDataCache();
+      revalidatePath('/', 'layout');
+
       const customerPhone = orderDataBeforeUpdate.customerDetails?.phone;
       if (userId !== 'anonymous' && customerPhone) {
         const profileRef = db.collection(`users/${userId}/profile`).doc('data');

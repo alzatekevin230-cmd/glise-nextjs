@@ -1,3 +1,4 @@
+// app/api/reviews/[id]/helpful/route.js
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
@@ -13,6 +14,7 @@ export async function PATCH(request, { params }) {
 
     const field = type === 'yes' ? 'helpfulYes' : 'helpfulNo';
     const reviewRef = db.collection('reviews').doc(id);
+
     await reviewRef.update({ [field]: FieldValue.increment(1) });
 
     return NextResponse.json({ success: true });

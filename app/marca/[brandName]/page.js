@@ -4,6 +4,7 @@ import { getProductsByBrand } from '@/lib/data.js';
 import PaginaMarcaCliente from '@/components/PaginaMarcaCliente.jsx';
 import Breadcrumbs from '@/components/Breadcrumbs.jsx';
 
+export const revalidate = 86400;
 // Generar metadata para SEO
 export async function generateMetadata({ params }) {
   const { brandName } = await params;
