@@ -129,7 +129,7 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
     if (activeBrands.length > 0) { filtered = filtered.filter(p => activeBrands.includes(p.laboratorio)); }
     if (activePresentations.length > 0) { filtered = filtered.filter(p => activePresentations.includes(p.presentacionFarmaceutica)); }
     if (activeUnits.length > 0) {
-        const productsWithUnits = initialProducts.map(p => {
+        const productsWithUnits = filtered.map(p => {
             const unitRegex = /\b(\d+[\.,]?\d*\s*(?:g|gr|G|GR|mg|MG|mcg|MCG|ml|mL|ML|l|L|cápsulas|capsulas|cap|cáps|caps|tabletas|tabs|comprimidos|perlas|sobres|unidades|und|uds))\b/i;
             const match = p.name.match(unitRegex);
             return { ...p, unitOfMeasure: match ? match[0].replace(/\s+/g, ' ').trim() : null };
@@ -199,7 +199,7 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
   }, [isFilterOpen]);
 
 
-  const Sidebar = () => (
+  const sidebarContent = (
     <aside className="lg:col-span-1 bg-white p-4 rounded-lg shadow h-fit sticky top-32">
       <div className="space-y-2">
         <div className="flex justify-between items-center px-2 pb-2 border-b">
@@ -288,7 +288,7 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
               <FiX className="text-xl" />
             </button>
             <div className="mt-8">
-              <Sidebar />
+              {sidebarContent}
             </div>
           </div>
         </div>
@@ -309,7 +309,7 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Sidebar siempre visible en escritorio */}
         <div className="hidden lg:block">
-          <Sidebar />
+          {sidebarContent}
         </div>
         
         <div className="lg:col-span-3">
@@ -322,7 +322,7 @@ export default function PaginaCategoriaCliente({ initialProducts, categoryName }
                 className="lg:hidden bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-3 rounded-lg flex items-center gap-2"
               >
                 <FiMenu className="text-lg" />
-                <span className="text-sm">Show</span>
+                <span className="text-sm">Filtros</span>
               </button>
             )}
 

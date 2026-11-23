@@ -27,7 +27,7 @@ export default function SearchResults({ suggestions }) {
     <div className="absolute mt-2 w-full rounded-md bg-white shadow-lg z-50 border max-h-96 overflow-y-auto">
       {suggestions.map(p => {
         // 2. AHORA LA FUNCIÓN ESTÁ DISPONIBLE LOCALMENTE
-        const productSlug = createSlug(p.name);
+        const productSlug = p.slug || createSlug(p.name);
 
         return (
           // 3. Y LA USAMOS PARA CREAR EL ENLACE CORRECTO

@@ -94,7 +94,7 @@ export default async function HomePage() {
     return {
       categoryName,
       categorySlug: categoryName.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
-      linkToAll: `/categoria/${encodeURIComponent(categoryName)}`,
+      linkToAll: `/categoria/${encodeURIComponent(filter)}`,
       products: categoryProducts
     };
   }).filter(group => group.products.length > 0);

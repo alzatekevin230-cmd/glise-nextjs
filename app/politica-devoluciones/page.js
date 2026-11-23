@@ -30,7 +30,7 @@ export default function PoliticaDevolucionesPage() {
         <h2 className="text-2xl md:text-3xl font-bold mb-2">Política de devoluciones y reembolsos</h2>
         <p className="text-gray-500 mb-6">¡Tu experiencia lo es todo para nosotros! Aquí te explicamos nuestro proceso, súper rápido y sencillo.</p>
 
-        <span className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full mb-2 text-xs font-medium">Actualizado 2024</span>
+        <span className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full mb-2 text-xs font-medium">Actualizado 2026</span>
         <hr className="my-5" />
 
         <h3 className="font-semibold text-lg mt-6 mb-1">📅 ¿Cuánto tiempo tengo para pedir un cambio o devolución?</h3>

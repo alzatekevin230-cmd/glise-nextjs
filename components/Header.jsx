@@ -9,17 +9,33 @@ import { useAuth } from '@/contexto/ContextoAuth';
 import HeaderMobile from './HeaderMobile';
 import { useSearch } from '@/hooks/useSearch';
 import SearchResults from './SearchResults';
-import { 
-  FiHome, FiShoppingBag, FiFeather, FiDroplet, FiSun, FiSmile, FiAward, FiChevronDown, FiUser, 
-  FiShoppingCart, FiHeart, FiLogOut, FiBox, FiTruck, FiGrid 
+import {
+  FiMenu,
+  FiHome,
+  FiShoppingBag,
+  FiFeather,
+  FiDroplet,
+  FiSun,
+  FiSmile,
+  FiAward,
+  FiChevronDown,
+  FiUser,
+  FiShoppingCart,
+  FiHeart,
+  FiLogOut,
+  FiBox,
+  FiTruck,
+  FiGrid,
+  FiSearch,
+  FiMapPin,
+  FiX,
 } from 'react-icons/fi';
-import { HiSearch } from 'react-icons/hi';
 
 export default function Header() {
   const { openModal, setAuthTab } = useModal();
   const { cart } = useCarrito();
   const { currentUser, logout } = useAuth();
-  
+
   const [isGuestMenuOpen, setGuestMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setUserMenuOpen] = useState(false);
@@ -28,17 +44,23 @@ export default function Header() {
   const guestMenuRef = useRef(null);
   const menuRef = useRef(null);
   const userMenuRef = useRef(null);
-  
+
   const { searchTerm, setSearchTerm, suggestions } = useSearch();
   const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
+  const firstName =
+    currentUser?.displayName?.split(' ')[0] ||
+    currentUser?.email?.split('@')[0] ||
+    'Usuario';
 
   const handleLogout = async () => {
-    try { 
+    try {
       await logout();
       setUserMenuOpen(false);
-    } catch (error) { console.error("Error al cerrar sesión:", error); }
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
   };
-  
+
   const handleOpenAuthModal = (tab) => {
     setAuthTab(tab);
     openModal('auth');
@@ -61,99 +83,238 @@ export default function Header() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [guestMenuRef, menuRef, userMenuRef]);
+  }, []);
 
   return (
-    <header className="bg-white shadow-md">
-      <div className="container mx-auto px-4 h-28 hidden md:flex items-center justify-between">
-        <div className="flex items-center gap-x-8">
-          <div className="flex-shrink-0">
-            <Link href="/"><Image src="/imagenespagina/logodeglise.webp" alt="Logo Glisé" width={150} height={96} className="h-24 w-auto" style={{ width: 'auto' }} priority /></Link>
-          </div>
-          <div className="relative flex-shrink-0" ref={menuRef}>
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center justify-between bg-cyan-600 hover:bg-cyan-700 text-white font-semibold px-5 py-3 rounded-full transition-colors duration-200">
-              <span className="mr-2">Menú</span>
-              <FiChevronDown className={`text-xs transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {isMenuOpen && (
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50 border" onClick={() => setIsMenuOpen(false)}>
-                <div className="p-2">
-                  <Link href="/" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiHome className="w-4" />Inicio</Link>
-                  <Link href="/categoria/all" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiShoppingBag className="w-4" />Tienda</Link>
-                  <Link href="/categoria/Naturales y Homeopáticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiFeather className="w-4" />Natural</Link>
-                  <Link href="/categoria/Dermocosméticos" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiDroplet className="w-4" />Dermocosmética</Link>
-                  <Link href="/categoria/Milenario" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiSun className="w-4" />Milenario</Link>
-                  <Link href="/categoria/Cuidado Infantil" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiSmile className="w-4" />Infantil</Link>
-                  <Link href="/categoria/Cuidado y Belleza" className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white flex items-center gap-2"><FiAward className="w-4" />Belleza</Link>
-                </div>
-              </div>
-            )}
+    <header className="relative z-40 shadow-md">
+      {/* ==================== VERSIÓN ESCRITORIO ==================== */}
+      <div className="hidden md:block">
+        {/* Franja superior compacta de envíos */}
+        <div className="bg-cyan-800 text-cyan-50 text-xs">
+          <div className="container mx-auto px-4 h-8 flex items-center justify-between">
+            <Link
+              href="/politicas-de-envio"
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              <FiMapPin size={13} className="text-cyan-300" />
+              <span>
+                Envíos a todo Colombia <span className="text-cyan-400 mx-1">•</span>{' '}
+                <strong className="font-semibold text-white">Envío gratis en Palmira</strong>
+              </span>
+            </Link>
+
+            <div className="flex items-center gap-5">
+              <Link href="/rastrear-pedido" className="hover:text-white transition-colors flex items-center gap-1">
+                <FiTruck size={13} />
+                <span>Rastrear pedido</span>
+              </Link>
+              <Link href="/politicas-de-envio" className="hover:text-white transition-colors">
+                Envíos y devoluciones
+              </Link>
+            </div>
           </div>
         </div>
-        
-          <div className="relative w-full max-w-3xl md:max-w-sm lg:max-w-3xl mx-8 md:mx-2 lg:mx-8 overflow-visible" onFocus={() => setIsSearchFocused(true)} onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}>
-            <input type="text" placeholder="Busca tus productos, marcas y más..." className="w-full pl-5 pr-16 py-3 border-2 border-cyan-500 rounded-full focus:outline-none focus:rounded-full focus:border-cyan-600 transition-colors" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-            <button type="button" className="absolute right-2 top-1/2 bg-cyan-600 text-white w-10 h-10 rounded-full hover:bg-cyan-700 flex items-center justify-center transition-colors" style={{transform: 'translateY(-50%)'}} aria-label="Buscar"><HiSearch style={{width: '24px', height: '24px'}} /></button>
-            {isSearchFocused && <SearchResults suggestions={suggestions} />}
-          </div>
 
-          <div className="flex items-center gap-x-6 flex-shrink-0">
-          {currentUser ? (
-            <div className="relative" ref={userMenuRef}>
-              <button onClick={() => setUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 transition-colors">
-                <FiUser className="text-3xl" />
-                <span className="text-sm font-medium">Hola, {currentUser.displayName?.split(' ')[0] || currentUser.email?.split('@')[0] || 'Usuario'}</span>
-                <FiChevronDown className={`text-xs transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {isUserMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border">
-                  <div className="p-2" onClick={() => setUserMenuOpen(false)}>
-                    <Link href="/mi-cuenta" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FiGrid />Mi Dashboard
-                    </Link>
-                    <Link href="/mis-pedidos" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FiBox />Mis Pedidos
-                    </Link>
-                    <Link href="/mis-favoritos" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FiHeart />Mis Favoritos
-                    </Link>
-                    <Link href="/mi-perfil" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FiUser />Mi Perfil
-                    </Link>
-                    <Link href="/rastrear-pedido" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-500 hover:text-white">
-                      <FiTruck />Rastrear Pedido
-                    </Link>
-                    <div className="border-t my-2"></div>
-                    <button onClick={handleLogout} className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-red-600 rounded-md hover:bg-red-500 hover:text-white">
-                      <FiLogOut />Cerrar Sesión
-                    </button>
+        {/* Fila principal (sin barra inferior adicional) */}
+        <div className="bg-gradient-to-b from-cyan-50/90 to-white border-b border-cyan-100">
+          <div className="container mx-auto px-4 h-20 flex items-center justify-between gap-5">
+            {/* Logo + Menú desplegable */}
+            <div className="flex items-center gap-5 flex-shrink-0">
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/imagenespagina/logodeglise.webp"
+                  alt="Logo Glisé"
+                  width={140}
+                  height={64}
+                  className="h-16 w-auto object-contain"
+                  style={{ width: 'auto' }}
+                  priority
+                />
+              </Link>
+
+              <div className="relative" ref={menuRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold px-4 py-2.5 rounded-lg transition-colors duration-200 text-sm shadow-sm"
+                >
+                  <FiMenu size={18} />
+                  <span>Categorías</span>
+                  <FiChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {isMenuOpen && (
+                  <div
+                    className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl z-50 border border-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="p-2">
+                      <Link href="/" className="w-full text-left px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white flex items-center gap-2.5 transition-colors"><FiHome className="w-4" />Inicio</Link>
+                      <Link href="/categoria/all" className="w-full text-left px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white flex items-center gap-2.5 transition-colors"><FiShoppingBag className="w-4" />Toda la Tienda</Link>
+                      <Link href="/categoria/Milenario" className="w-full text-left px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white flex items-center gap-2.5 transition-colors"><FiSun className="w-4" />Aceites Milenarios</Link>
+                      <Link href="/categoria/Naturales y Homeopáticos" className="w-full text-left px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white flex items-center gap-2.5 transition-colors"><FiFeather className="w-4" />Natural y Homeopáticos</Link>
+                      <Link href="/categoria/Dermocosméticos" className="w-full text-left px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white flex items-center gap-2.5 transition-colors"><FiDroplet className="w-4" />Dermocosmética</Link>
+                      <Link href="/categoria/Cuidado Infantil" className="w-full text-left px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white flex items-center gap-2.5 transition-colors"><FiSmile className="w-4" />Cuidado Infantil</Link>
+                      <Link href="/categoria/Cuidado y Belleza" className="w-full text-left px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white flex items-center gap-2.5 transition-colors"><FiAward className="w-4" />Cuidado y Belleza</Link>
+                    </div>
                   </div>
+                )}
+              </div>
+            </div>
+
+            {/* Buscador cuadrado central */}
+            <div
+              className="relative flex-1 max-w-2xl overflow-visible"
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+            >
+              <div className="flex items-center h-11 bg-white rounded-lg border-2 border-cyan-500 shadow-sm focus-within:border-cyan-600 focus-within:ring-2 focus-within:ring-cyan-500/20 overflow-hidden transition-all">
+                <input
+                  type="text"
+                  placeholder="Busca tus productos, marcas y más..."
+                  className="flex-1 min-w-0 h-full pl-4 pr-2 text-sm text-gray-800 placeholder:text-gray-400 bg-transparent border-0 outline-none focus:outline-none focus:ring-0"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchTerm('')}
+                    className="w-8 h-full text-gray-400 hover:text-gray-600 flex items-center justify-center flex-shrink-0"
+                    aria-label="Limpiar búsqueda"
+                  >
+                    <FiX size={17} />
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  className="w-12 h-full bg-cyan-600 hover:bg-cyan-700 text-white flex items-center justify-center flex-shrink-0 transition-colors"
+                  aria-label="Buscar"
+                >
+                  <FiSearch size={20} strokeWidth={2.5} />
+                </button>
+              </div>
+
+              {isSearchFocused && <SearchResults suggestions={suggestions} />}
+            </div>
+
+            {/* Acciones de usuario */}
+            <div className="flex items-center gap-4 flex-shrink-0">
+              {currentUser ? (
+                <div className="relative" ref={userMenuRef}>
+                  <button
+                    type="button"
+                    onClick={() => setUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-cyan-100/70 text-cyan-950 transition-colors"
+                  >
+                    <FiUser size={23} className="text-cyan-700 flex-shrink-0" />
+                    <div className="text-left leading-tight">
+                      <span className="block text-[11px] text-gray-500">Hola, {firstName}</span>
+                      <span className="flex items-center gap-1 text-xs font-bold text-cyan-950">
+                        Mi Cuenta
+                        <FiChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                      </span>
+                    </div>
+                  </button>
+
+                  {isUserMenuOpen && (
+                    <div className="absolute top-full right-0 mt-2 w-52 bg-white rounded-xl shadow-xl z-50 border border-gray-100">
+                      <div className="p-2" onClick={() => setUserMenuOpen(false)}>
+                        <Link href="/mi-cuenta" className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white transition-colors"><FiGrid />Mi Dashboard</Link>
+                        <Link href="/mis-pedidos" className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white transition-colors"><FiBox />Mis Pedidos</Link>
+                        <Link href="/mis-favoritos" className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white transition-colors"><FiHeart />Mis Favoritos</Link>
+                        <Link href="/mi-perfil" className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white transition-colors"><FiUser />Mi Perfil</Link>
+                        <Link href="/rastrear-pedido" className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-cyan-600 hover:text-white transition-colors"><FiTruck />Rastrear Pedido</Link>
+                        <div className="border-t my-2"></div>
+                        <button
+                          type="button"
+                          onClick={handleLogout}
+                          className="flex items-center gap-2.5 w-full text-left px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-500 hover:text-white transition-colors"
+                        >
+                          <FiLogOut />Cerrar Sesión
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="relative" ref={guestMenuRef}>
+                  <button
+                    type="button"
+                    onClick={() => setGuestMenuOpen(!isGuestMenuOpen)}
+                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-cyan-100/70 text-cyan-950 transition-colors"
+                  >
+                    <FiUser size={23} className="text-cyan-700 flex-shrink-0" />
+                    <div className="text-left leading-tight">
+                      <span className="block text-[11px] text-gray-500">Hola, identifícate</span>
+                      <span className="flex items-center gap-1 text-xs font-bold text-cyan-950">
+                        Cuenta y pedidos
+                        <FiChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isGuestMenuOpen ? 'rotate-180' : ''}`} />
+                      </span>
+                    </div>
+                  </button>
+
+                  {isGuestMenuOpen && (
+                    <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl p-2 z-50 border border-gray-100">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenAuthModal('login')}
+                        className="block w-full text-center px-4 py-2 text-sm bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg font-semibold transition-colors mb-1.5"
+                      >
+                        Iniciar Sesión
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenAuthModal('register')}
+                        className="block w-full text-left px-3 py-2 text-sm text-gray-700 rounded-lg transition-colors hover:bg-cyan-50 hover:text-cyan-800"
+                      >
+                        Crear cuenta nueva
+                      </button>
+                      <div className="border-t my-2"></div>
+                      <Link
+                        href="/rastrear-pedido"
+                        onClick={() => setGuestMenuOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg transition-colors hover:bg-cyan-50 hover:text-cyan-800"
+                      >
+                        <FiTruck size={15} />
+                        Seguimiento de tu Pedido
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          ) : ( 
-            <div className="relative" ref={guestMenuRef}>
-              <button onClick={() => setGuestMenuOpen(!isGuestMenuOpen)} className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 transition-colors">
-                <FiUser className="text-3xl" />
-                <span className="text-sm font-medium">Mi Cuenta</span>
-                <FiChevronDown className={`text-xs transition-transform duration-300 ${isGuestMenuOpen ? 'rotate-180' : ''}`} />
+
+              <Link
+                href="/mis-favoritos"
+                className="hidden lg:flex items-center gap-1.5 px-2.5 py-2 rounded-lg hover:bg-cyan-100/70 text-cyan-950 transition-colors"
+                aria-label="Mis favoritos"
+              >
+                <FiHeart size={21} className="text-cyan-700" />
+                <span className="text-xs font-bold">Favoritos</span>
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => openModal('carrito')}
+                className="relative flex items-center gap-2 px-3.5 py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white transition-colors shadow-sm !overflow-visible"
+                aria-label={cartItemCount > 0 ? `Abrir carrito, ${cartItemCount} artículos` : 'Abrir carrito'}
+              >
+                <FiShoppingCart size={20} />
+                <span className="text-xs font-bold hidden lg:inline">Carrito</span>
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[11px] font-bold rounded-full min-w-[20px] h-5 px-1 flex items-center justify-center shadow">
+                    {cartItemCount}
+                  </span>
+                )}
               </button>
-              {isGuestMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-md shadow-xl p-2 z-20 border">
-                  <button onClick={() => handleOpenAuthModal('login')} className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md transition-colors hover:bg-blue-500 hover:text-white font-semibold">Iniciar Sesión</button>
-                  <button onClick={() => handleOpenAuthModal('register')} className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md transition-colors hover:bg-blue-500 hover:text-white">Registrarse</button>
-                  <div className="border-t my-2"></div>
-                  <Link href="/rastrear-pedido" onClick={() => setGuestMenuOpen(false)} className="block w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md transition-colors hover:bg-blue-500 hover:text-white">Seguimiento de tu Pedido</Link>
-                </div>
-              )}
             </div>
-          )}
-          <button onClick={() => openModal('carrito')} className="relative text-cyan-600 hover:text-cyan-700 transition-colors p-3">
-            <FiShoppingCart className="text-3xl" />
-            {cartItemCount > 0 && ( <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{cartItemCount}</span> )}
-          </button>
+          </div>
         </div>
       </div>
+
+      {/* ==================== VERSIÓN MÓVIL ==================== */}
       <HeaderMobile />
     </header>
   );

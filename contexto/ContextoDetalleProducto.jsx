@@ -31,7 +31,7 @@ export const ProveedorDetalleProducto = ({ children }) => {
 
   const increaseQuantity = () => {
     if (product) {
-      const maxLimit = Math.min(product.stock, MAX_QUANTITY_PER_ITEM);
+      const maxLimit = Math.max(1, Math.min(product.stock ?? MAX_QUANTITY_PER_ITEM, MAX_QUANTITY_PER_ITEM));
       setQuantity(q => Math.min(q + 1, maxLimit));
     }
   };

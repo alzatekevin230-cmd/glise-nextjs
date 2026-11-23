@@ -24,7 +24,6 @@ export default function Footer() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulación de envío
     await new Promise(resolve => setTimeout(resolve, 1000));
     toast.success('¡Gracias por suscribirte!');
     setEmail('');

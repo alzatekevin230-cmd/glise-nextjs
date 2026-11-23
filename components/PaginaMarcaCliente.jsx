@@ -180,7 +180,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
     if (activePresentations.length > 0) { filtered = filtered.filter(p => activePresentations.includes(p.presentacionFarmaceutica)); }
     if (activeCategories.length > 0) { filtered = filtered.filter(p => activeCategories.includes(p.category)); }
     if (activeUnits.length > 0) {
-        const productsWithUnits = initialProducts.map(p => {
+        const productsWithUnits = filtered.map(p => {
             const unitRegex = /\b(\d+[\.,]?\d*\s*(?:g|gr|G|GR|mg|MG|mcg|MCG|ml|mL|ML|l|L|cápsulas|capsulas|cap|cáps|caps|tabletas|tabs|comprimidos|perlas|sobres|unidades|und|uds))\b/i;
             const match = p.name.match(unitRegex);
             return { ...p, unitOfMeasure: match ? match[0].replace(/\s+/g, ' ').trim() : null };
@@ -209,7 +209,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
   const paginatedProducts = sortedAndFilteredProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
 
   // Componente Sidebar
-  const Sidebar = () => (
+  const sidebarContent = (
     <aside className="lg:col-span-1 bg-white p-4 rounded-lg shadow h-fit sticky top-32">
       <div className="space-y-2">
         <div className="flex justify-between items-center px-2 pb-2 border-b">
@@ -367,7 +367,7 @@ export default function PaginaMarcaCliente({ brandName, initialProducts }) {
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className={`lg:block ${isFilterOpen ? 'block' : 'hidden'}`}>
-          <Sidebar />
+          {sidebarContent}
         </div>
         
         <div className="lg:col-span-3">

@@ -1,27 +1,24 @@
+// app/api/search/route.js
 import { getAllProducts } from '@/lib/data';
 import { NextResponse } from 'next/server';
 import Fuse from 'fuse.js';
 
-// Caché en memoria
+let cachedProductsRef = null;
 let cachedFuse = null;
-let cacheTime = null;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
 async function getFuseInstance() {
-  // Si hay caché válida, retornarla
-  if (cachedFuse && cacheTime && (Date.now() - cacheTime) < CACHE_DURATION) {
+  const products = await getAllProducts();
+  if (cachedFuse && cachedProductsRef === products) {
     return cachedFuse;
   }
 
-  // Si no, crear nueva instancia
-  const products = await getAllProducts();
+  cachedProductsRef = products;
   cachedFuse = new Fuse(products, {
     keys: ['name', 'category', 'laboratorio'],
     includeScore: true,
     threshold: 0.4,
   });
-  cacheTime = Date.now();
-  
+
   return cachedFuse;
 }
 
@@ -29,7 +26,7 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q');
-    const limit = parseInt(searchParams.get('limit') || '5');
+    const limit = Math.min(Math.max(parseInt(searchParams.get('limit') || '5', 10) || 5, 1), 20);
 
     if (!query || query.length < 2) {
       return NextResponse.json([]);
@@ -48,4 +45,3 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Error en búsqueda' }, { status: 500 });
   }
 }
-

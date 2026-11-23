@@ -3,7 +3,7 @@
 
 export const metadata = {
   title: 'Política de Devoluciones - Glisé Farmacia y Belleza Natural',
-  description: '🔄 Lee nuestra política de devoluciones en Glisé. Cambios y devoluciones sin complicaciones hasta 30 días. ¡Compra con confianza en nuestro farmacia online!',
+  description: '🔄 Lee nuestra política de devoluciones en Glisé. Solicita cambios o devoluciones dentro de los 3 días calendario posteriores a la entrega.',
   keywords: ['devoluciones', 'cambios', 'política devoluciones', 'Glisé', 'farmacia online', 'garantía'],
   openGraph: {
     title: 'Política de Devoluciones - Glisé Farmacia',

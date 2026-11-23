@@ -10,6 +10,7 @@ import MenuLateral from '@/components/MenuLateral';
 import { ProveedorModal } from '@/contexto/ContextoModal.jsx';
 import { ProveedorCarrito } from '@/contexto/ContextoCarrito.jsx';
 import { ProveedorAuth } from '@/contexto/ContextoAuth.jsx';
+import { ProveedorFavoritos } from '@/contexto/ContextoFavoritos.jsx';
 import { Toaster } from 'react-hot-toast';
 import { ProveedorProductos } from '@/contexto/ContextoProductos';
 import { ProveedorMenuLateral } from '@/contexto/ContextoMenuLateral';
@@ -85,7 +86,6 @@ export const metadata = {
       { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#2563eb' },
     ],
   },
-  manifest: '/site.webmanifest',
   alternates: {
     canonical: 'https://glise.com.co'
   },
@@ -104,7 +104,7 @@ export default function RootLayout({ children }) {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Glisé',
-    description: 'Tu Tienda Online de Confianza en Colombia', // ✅ Modificado aquí también
+    description: 'Tu Tienda Online de Confianza en Colombia',
     url: 'https://glise.com.co',
     logo: 'https://glise.com.co/imagenespagina/logodeglise.webp',
     image: 'https://glise.com.co/imagenespagina/logodeglise.webp',
@@ -164,7 +164,6 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         
         {/* Preconnect a dominios críticos - Mejora Network Waterfall */}
-        {/* Firebase - El más crítico (1148ms de ahorro potencial) */}
         <link rel="preconnect" href="https://glise-58e2b.firebaseapp.com" />
         <link rel="dns-prefetch" href="https://glise-58e2b.firebaseapp.com" />
         
@@ -178,40 +177,38 @@ export default function RootLayout({ children }) {
         {/* Firebase Storage para imágenes de productos */}
         <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
         <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
-        
       </head>
       <body className={inter.className}>
         <SmoothScrollProvider>
           <ProveedorModal>
             <ProveedorAuth>
-              <ProveedorCarrito>
-                <ProveedorDetalleProducto>
-                  <ProveedorMenuLateral>
-                    <ProveedorProductos>
-                      <ScrollProgressBar />
-                      <Toaster position="bottom-center" />
-                    
-                    {/* El Header y Menú Lateral se mantienen fuera del div que se mueve */}
-                    <Header />
-                    <MenuLateral />
-                    
-                    <div id="page-content-wrapper" className="relative z-0">
-                      <main className="md:pt-0 pb-20 md:pb-0">{children}</main>
-                      <Footer />
-                    </div>
+              <ProveedorFavoritos>
+                <ProveedorCarrito>
+                  <ProveedorDetalleProducto>
+                    <ProveedorMenuLateral>
+                      <ProveedorProductos>
+                        <ScrollProgressBar />
+                        <Toaster position="bottom-center" />
+                      
+                        <Header />
+                        <MenuLateral />
 
-                    {/* Los modales y otros elementos fijos se mantienen al final */}
-                    <CarritoModal />
-                    <ModalAutenticacion />
-                    <Lightbox />
-                    <BotonWhatsapp />
-                    <BarraNavegacionMovil />
-                    <SmoothScrollToFooter />
-                    
-                  </ProveedorProductos>
-                </ProveedorMenuLateral>
-                </ProveedorDetalleProducto>
-              </ProveedorCarrito>
+                        <div id="page-content-wrapper" className="relative z-0">
+                          <main className="md:pt-0 pb-20 md:pb-0">{children}</main>
+                          <Footer />
+                        </div>
+
+                        <CarritoModal />
+                        <ModalAutenticacion />
+                        <Lightbox />
+                        <BotonWhatsapp />
+                        <BarraNavegacionMovil />
+                        <SmoothScrollToFooter />
+                      </ProveedorProductos>
+                    </ProveedorMenuLateral>
+                  </ProveedorDetalleProducto>
+                </ProveedorCarrito>
+              </ProveedorFavoritos>
             </ProveedorAuth>
           </ProveedorModal>
         </SmoothScrollProvider>

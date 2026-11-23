@@ -1,5 +1,6 @@
+// app/api/feeds/merchant/route.js
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/firebaseAdmin';
+import { getAllProducts } from '@/lib/data';
 
 function generateMerchantXML(products) {
   const items = products.map(product => {
@@ -49,7 +50,7 @@ function generateMerchantXML(products) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
   <channel>
-    <title>Glisé - Droguería y Farmacia</title>
+    <title>Glisé - Tienda Online de Bienestar y Belleza</title>
     <link>https://glise.com.co</link>
     <description>Feed de productos para Google Merchant Center</description>
 ${items}
@@ -59,21 +60,14 @@ ${items}
 
 export async function GET() {
   try {
-    const productsSnapshot = await db.collection('products').get();
+    const products = await getAllProducts();
 
-    if (productsSnapshot.empty) {
+    if (!products || products.length === 0) {
       return new NextResponse('<?xml version="1.0"?><error>No hay productos</error>', {
         status: 404,
-        headers: {
-          'Content-Type': 'application/xml; charset=utf-8',
-        },
+        headers: { 'Content-Type': 'application/xml; charset=utf-8' },
       });
     }
-
-    const products = [];
-    productsSnapshot.forEach(doc => {
-      products.push({ id: doc.id, ...doc.data() });
-    });
 
     const xml = generateMerchantXML(products);
 
@@ -81,17 +75,14 @@ export async function GET() {
       status: 200,
       headers: {
         'Content-Type': 'application/xml; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
       },
     });
-
   } catch (error) {
     console.error('Error generando feed de Google Merchant:', error);
     return new NextResponse('<?xml version="1.0"?><error>Error interno del servidor</error>', {
       status: 500,
-      headers: {
-        'Content-Type': 'application/xml; charset=utf-8',
-      },
+      headers: { 'Content-Type': 'application/xml; charset=utf-8' },
     });
   }
 }

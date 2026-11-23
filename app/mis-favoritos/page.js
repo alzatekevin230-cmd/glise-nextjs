@@ -21,7 +21,10 @@ export default function MisFavoritosPage() {
 
   useEffect(() => {
     if (currentUser) {
+      setLoading(true);
       loadFavorites();
+    } else {
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);

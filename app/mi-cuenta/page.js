@@ -24,7 +24,10 @@ export default function MiCuentaPage() {
 
   useEffect(() => {
     if (currentUser) {
+      setLoading(true);
       loadUserStats();
+    } else {
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);

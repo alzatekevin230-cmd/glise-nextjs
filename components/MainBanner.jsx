@@ -8,6 +8,49 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
+const BANNER_SLIDES = [
+  {
+    href: '/categoria/Milenario',
+    mobileSrc: '/imagenespagina/banermovil5.webp',
+    desktopSrc: '/imagenespagina/baner1.webp',
+    alt: 'Oferta en Aceites Glise',
+    priority: true,
+    quality: 90,
+  },
+  {
+    href: '/categoria/Cuidado Infantil',
+    mobileSrc: '/imagenespagina/banerbaby.webp',
+    desktopSrc: '/imagenespagina/baner2.webp',
+    alt: 'Banner Cuidado de Bebé',
+    priority: false,
+    quality: 75,
+  },
+  {
+    href: '/categoria/Naturales y Homeopáticos',
+    mobileSrc: '/imagenespagina/banermovil3.webp',
+    desktopSrc: '/imagenespagina/baner3.webp',
+    alt: 'Banner Productos Naturales',
+    priority: false,
+    quality: 75,
+  },
+  {
+    href: '/categoria/Cuidado y Belleza',
+    mobileSrc: '/imagenespagina/banermovil4.webp',
+    desktopSrc: '/imagenespagina/baner4.webp',
+    alt: 'Banner Cuidado y Belleza',
+    priority: false,
+    quality: 75,
+  },
+  {
+    href: '/categoria/Dermocosméticos',
+    mobileSrc: '/imagenespagina/banermovil1.webp',
+    desktopSrc: '/imagenespagina/baner5.webp',
+    alt: 'Banner Dermocosméticos',
+    priority: false,
+    quality: 75,
+  },
+];
+
 export default function MainBanner() {
   useEffect(() => {
     let swiper = null;
@@ -50,178 +93,47 @@ export default function MainBanner() {
   return (
     <section className="-mt-5 md:mt-0 mb-0 md:mb-12">
       <div className="px-2 sm:px-4">
-        {/* Agregamos pb-5 para que el carrusel no corte la sombra con una línea recta */}
         <div className="swiper-container main-banner-carousel relative overflow-hidden pb-5 pt-2">
           <div className="swiper-wrapper">
-            {/* TARJETA 1 */}
-            <div className="swiper-slide !w-auto">
-              {/* Capa EXTERNA: Controla el tamaño y proyecta la sombra perfecta */}
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
-                {/* Capa INTERNA: Recorte limpio nativo sin hacks */}
-                <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                  <Link 
-                    href="/categoria/Milenario" 
-                    className="block md:hidden absolute inset-0 z-10 rounded-2xl overflow-hidden p-0 m-0 focus:outline-none"
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    <Image 
-                      src="/imagenespagina/banermovil5.webp"
-                      alt="Oferta en Aceites Glise"
-                      fill
-                      className="object-cover rounded-2xl"
-                      priority
-                      fetchPriority="high"
-                      quality={90}
-                      sizes="100vw"
-                    />
-                  </Link>
-                  <Image 
-                    src="/imagenespagina/baner1.webp" 
-                    alt="Oferta en Aceites Glise"
-                    fill
-                    className="object-cover hidden md:block rounded-2xl"
-                    priority
-                    fetchPriority="high"
-                    quality={90}
-                    sizes="100vw"
-                  />
+            {BANNER_SLIDES.map((slide) => (
+              <div key={slide.href} className="swiper-slide !w-auto">
+                <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
+                  <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                    <Link
+                      href={slide.href}
+                      className="block absolute inset-0 z-10 rounded-2xl overflow-hidden p-0 m-0 focus:outline-none"
+                      style={{ WebkitTapHighlightColor: 'transparent' }}
+                    >
+                      <Image
+                        src={slide.mobileSrc}
+                        alt={slide.alt}
+                        fill
+                        className="object-cover block md:hidden rounded-2xl"
+                        priority={slide.priority}
+                        loading={slide.priority ? undefined : 'lazy'}
+                        fetchPriority={slide.priority ? 'high' : undefined}
+                        quality={slide.quality}
+                        sizes="100vw"
+                      />
+                      <Image
+                        src={slide.desktopSrc}
+                        alt={slide.alt}
+                        fill
+                        className="object-cover hidden md:block rounded-2xl"
+                        priority={slide.priority}
+                        loading={slide.priority ? undefined : 'lazy'}
+                        fetchPriority={slide.priority ? 'high' : undefined}
+                        quality={slide.quality}
+                        sizes="100vw"
+                      />
+                    </Link>
+                  </div>
                 </div>
               </div>
+            ))}
           </div>
-
-          {/* TARJETA 2 */}
-          <div className="swiper-slide !w-auto">
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
-                <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                  <Link 
-                    href="/categoria/Cuidado Infantil" 
-                    className="block md:hidden absolute inset-0 z-10 rounded-2xl overflow-hidden p-0 m-0 focus:outline-none"
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    <Image 
-                      src="/imagenespagina/banerbaby.webp" 
-                      alt="Banner Cuidado de Bebé"
-                      fill
-                      className="object-cover rounded-2xl"
-                      loading="lazy"
-                      quality={75}
-                      sizes="100vw"
-                    />
-                  </Link>
-                  <Image 
-                    src="/imagenespagina/baner2.webp" 
-                    alt="Banner Cuidado de Bebé"
-                    fill
-                    className="object-cover hidden md:block rounded-2xl"
-                    loading="lazy"
-                    quality={75}
-                    sizes="100vw"
-                  />
-                </div>
-              </div>
-          </div>
-
-          {/* TARJETA 3 */}
-          <div className="swiper-slide !w-auto">
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
-                <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                  <Link 
-                    href="/categoria/Naturales y Homeopáticos" 
-                    className="block md:hidden absolute inset-0 z-10 rounded-2xl overflow-hidden p-0 m-0 focus:outline-none"
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    <Image 
-                      src="/imagenespagina/banermovil3.webp" 
-                      alt="Banner Productos Naturales"
-                      fill
-                      className="object-cover rounded-2xl"
-                      loading="lazy"
-                      quality={75}
-                      sizes="100vw"
-                    />
-                  </Link>
-                  <Image 
-                    src="/imagenespagina/baner3.webp" 
-                    alt="Banner Productos Naturales"
-                    fill
-                    className="object-cover hidden md:block rounded-2xl"
-                    loading="lazy"
-                    quality={75}
-                    sizes="100vw"
-                  />
-                </div>
-              </div>
-          </div>
-
-          {/* TARJETA 4 */}
-          <div className="swiper-slide !w-auto">
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
-                <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                  <Link 
-                    href="/categoria/Cuidado y Belleza" 
-                    className="block md:hidden absolute inset-0 z-10 rounded-2xl overflow-hidden p-0 m-0 focus:outline-none"
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    <Image 
-                      src="/imagenespagina/banermovil4.webp" 
-                      alt="Banner Adicional 1"
-                      fill
-                      className="object-cover rounded-2xl"
-                      loading="lazy"
-                      quality={75}
-                      sizes="100vw"
-                    />
-                  </Link>
-                  <Image 
-                    src="/imagenespagina/baner4.webp" 
-                    alt="Banner Adicional 1"
-                    fill
-                    className="object-cover hidden md:block rounded-2xl"
-                    loading="lazy"
-                    quality={75}
-                    sizes="100vw"
-                  />
-                </div>
-              </div>
-          </div>
-
-          {/* TARJETA 5 */}
-          <div className="swiper-slide !w-auto">
-              <div className="relative aspect-[2/3] md:aspect-[1440/380] w-[75vw] md:w-[80vw] rounded-2xl shadow-lg bg-white">
-                <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                  <Link 
-                    href="/categoria/Dermocosméticos" 
-                    className="block md:hidden absolute inset-0 z-10 rounded-2xl overflow-hidden p-0 m-0 focus:outline-none"
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    <Image 
-                      src="/imagenespagina/banermovil1.webp" 
-                      alt="Banner Adicional 2"
-                      fill
-                      className="object-cover rounded-2xl"
-                      loading="lazy"
-                      quality={75}
-                      sizes="100vw"
-                    />
-                  </Link>
-                  <Image 
-                    src="/imagenespagina/baner5.webp" 
-                    alt="Banner Adicional 2"
-                    fill
-                    className="object-cover hidden md:block rounded-2xl"
-                    loading="lazy"
-                    quality={75}
-                    sizes="100vw"
-                  />
-                </div>
-              </div>
-          </div>
-
         </div>
-
-        {/* Paginación y navegación */}
-        {/* <div className="swiper-pagination main-banner-pagination mt-4"></div> */}
-        {/* Flechas eliminadas */}
-      </div>    </div>    </section>
+      </div>
+    </section>
   );
 }

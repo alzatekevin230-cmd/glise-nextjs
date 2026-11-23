@@ -34,11 +34,13 @@ export default function MiPerfilPage() {
 
   useEffect(() => {
     if (currentUser) {
+      setLoading(true);
       loadUserProfile();
+    } else {
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
-
   const loadUserProfile = async () => {
     try {
       const userDoc = await getDoc(doc(db, 'users', currentUser.uid));

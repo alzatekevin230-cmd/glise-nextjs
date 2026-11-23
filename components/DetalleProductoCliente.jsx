@@ -18,7 +18,13 @@ const ResenasProducto = dynamic(() => import('./ResenasProducto'));
 
 // Ayudante para detectar tamaño de pantalla
 import { useWindowSize } from './hooks/useWindowSize';
-import { FaTruck, FaChevronDown, FaShippingFast, FaGift, FaShieldAlt, FaUndo, FaArrowRight, FaChevronLeft, FaChevronRight, FaShoppingCart, FaSpinner } from 'react-icons/fa';
+import { FaTruck, FaChevronDown, FaShippingFast, FaShieldAlt, FaUndo, FaArrowRight, FaChevronLeft, FaChevronRight, FaShoppingCart, FaSpinner } from 'react-icons/fa';
+
+// Componentes del carrusel (solo para móvil)
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 // Componente de información de envío mejorado
 const EnvioInfoAccordion = () => (
@@ -27,7 +33,7 @@ const EnvioInfoAccordion = () => (
       <summary className="flex items-center justify-between cursor-pointer list-none">
         <div className="flex items-center gap-3">
           <FaTruck className="text-cyan-600 text-xl" />
-          <span className="text-base md:text-lg font-semibold text-gray-800">Información de envío y garantías</span>
+          <span className="text-base md:text-lg font-semibold text-gray-800">Información de envío y garantias</span>
         </div>
         <FaChevronDown className="icon-arrow text-cyan-600 transition-transform group-open:rotate-180" />
       </summary>
@@ -44,16 +50,16 @@ const EnvioInfoAccordion = () => (
           <div className="flex items-start gap-3">
             <FaShieldAlt className="text-cyan-600 mt-1 text-lg flex-shrink-0" />
             <div>
-              <p className="font-semibold text-gray-800">Compra 100% segura</p>
-              <p className="text-sm text-gray-600">Garantía de satisfacción de 30 días</p>
+              <p className="font-semibold text-gray-800">Productos 100% originales</p>
+              <p className="text-sm text-gray-600">Empaques sellados y pagos protegidos con Wompi</p>
             </div>
           </div>
 
           <div className="flex items-start gap-3">
             <FaUndo className="text-purple-600 mt-1 text-lg flex-shrink-0" />
             <div>
-              <p className="font-semibold text-gray-800">Devoluciones fáciles</p>
-              <p className="text-sm text-gray-600">Si no estás satisfecho, te devolvemos tu dinero</p>
+              <p className="font-semibold text-gray-800">Cambios y devoluciones</p>
+              <p className="text-sm text-gray-600">Hasta 3 días calendario en productos sellados o con error de envío</p>
             </div>
           </div>
         </div>
@@ -69,12 +75,6 @@ const EnvioInfoAccordion = () => (
   </div>
 );
 
-// Componentes del carrusel (solo para móvil)
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
-
 // --- COMPONENTES AUXILIARES ---
 const DetailRow = ({ label, value }) => (
   <div className="flex justify-between items-center py-3 border-b border-gray-200 text-sm">
@@ -83,21 +83,24 @@ const DetailRow = ({ label, value }) => (
   </div>
 );
 
-// 1. AQUI CAMBIAMOS EL COMPONENTE THUMBNAIL PARA EL SEO
 const Thumbnail = ({ src, isActive, onClick, productName }) => {
-    const optimizedSrc = getImageUrl(src, '400x400'); // Miniaturas usan 400x400
-    return (
-        <div className={`relative w-20 h-20 border-2 rounded-lg cursor-pointer transition-all duration-200 ${isActive ? 'border-blue-600' : 'border-transparent hover:border-gray-400'}`} onClick={onClick}>
-            <Image 
-              src={optimizedSrc} 
-              alt={`Miniatura de ${productName} - Glisé`} 
-              fill 
-              sizes="80px" 
-              className="object-cover rounded-md" 
-            />
-        </div>
-    );
+  const optimizedSrc = getImageUrl(src, '400x400');
+  return (
+    <div
+      className={`relative w-20 h-20 border-2 rounded-lg cursor-pointer transition-all duration-200 ${isActive ? 'border-blue-600' : 'border-transparent hover:border-gray-400'}`}
+      onClick={onClick}
+    >
+      <Image
+        src={optimizedSrc}
+        alt={`Miniatura de ${productName} - Glisé`}
+        fill
+        sizes="80px"
+        className="object-contain rounded-md bg-white"
+      />
+    </div>
+  );
 };
+
 const formatPrice = (price) => `$${Math.round(price).toLocaleString('es-CO')}`;
 
 export default function DetalleProductoCliente({ product, relatedProducts }) {
@@ -106,24 +109,35 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   const { allProducts, loadProducts } = useProductos();
   const { width } = useWindowSize();
   const isDesktop = width >= 768;
-  const { setIsProductPage, setProduct, setQuantity: setContextQuantity, setIsAddingToCart: setContextIsAddingToCart, setHandleAddToCart } = useDetalleProducto();
+  const {
+    setIsProductPage,
+    setProduct,
+    quantity,
+    setQuantity,
+    setIsAddingToCart: setContextIsAddingToCart,
+    setHandleAddToCart,
+  } = useDetalleProducto();
 
+  // Mismo orden de imagen que ProductCard para aprovechar la caché del navegador sin duplicados
   const getInitialImages = useCallback(() => {
     if (!product) return { all: [] };
-    const all = [product.image, ...(product.images || [])].filter(Boolean).map(img => getImageUrl(img, '700x700'));
+    const rawImages = [...(product.images || []), product.image].filter(Boolean);
+    const uniqueImages = Array.from(new Set(rawImages));
+    const all = uniqueImages.map(img => getImageUrl(img, '700x700'));
     return { all };
   }, [product]);
 
   const { all: allImages } = getInitialImages();
   const [activeImage, setActiveImage] = useState(allImages.length > 0 ? allImages[0] : 'https://placehold.co/600x600');
-  const [quantity, setQuantity] = useState(1);
   const [swiperInstance, setSwiperInstance] = useState(null);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [pulseEffect, setPulseEffect] = useState(true);
 
-  // Cargar productos para el carrusel de vistos recientemente
+  // Cargar productos vistos recientemente cuando el navegador esté libre (sin frenar la foto principal)
   useEffect(() => {
-    loadProducts();
+    const timer = setTimeout(() => {
+      loadProducts();
+    }, 1500);
+    return () => clearTimeout(timer);
   }, [loadProducts]);
 
   useEffect(() => {
@@ -131,10 +145,11 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       const viewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
       const updatedIds = [product.id, ...viewedIds.filter(id => String(id) !== String(product.id))].slice(0, 20);
       localStorage.setItem('recentlyViewed', JSON.stringify(updatedIds));
-      const newImages = [product.image, ...(product.images || [])].filter(Boolean).map(img => getImageUrl(img, '700x700'));
+      const newImages = Array.from(
+        new Set([...(product.images || []), product.image].filter(Boolean))
+      ).map(img => getImageUrl(img, '700x700'));
       if (newImages.length > 0) setActiveImage(newImages[0]);
       setQuantity(1);
-      // Sincronizar con el contexto
       setIsProductPage(true);
       setProduct(product);
     }
@@ -142,12 +157,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       setIsProductPage(false);
       setProduct(null);
     };
-  }, [product, setIsProductPage, setProduct]);
-
-  // Sincronización automática de cantidad local al contexto
-  useEffect(() => {
-    setContextQuantity(quantity);
-  }, [quantity, setContextQuantity]);
+  }, [product, setIsProductPage, setProduct, setQuantity]);
 
   useEffect(() => {
     if (!isDesktop && swiperInstance && allImages.length > 0) {
@@ -163,9 +173,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
     openLightbox(imageUrl, allImages);
   };
 
-  // ================================================================
-  // === LÓGICA DE CARRITO Y CANTIDAD (MEJORADA CON LOADING) ===
-  // ================================================================
+  // Lógica de carrito y cantidad
   const handleAddToCart = useCallback(async () => {
     if (isAddingToCart) return;
 
@@ -175,15 +183,17 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       const result = agregarAlCarrito({ ...product }, quantity);
 
       if (result.success) {
-        toast.success(result.isNew ? `🛒 ${quantity}x ${product.name} añadido al carrito!` : `✅ Cantidad actualizada en el carrito`, {
-          duration: 2500,
-          style: {
-            background: '#22c55e',
-            color: '#fff',
-            fontWeight: 'bold',
-          },
-        });
-        // Resetear cantidad a 1 después de agregar
+        toast.success(
+          result.isNew ? `🛒 ${quantity}x ${product.name} añadido al carrito!` : `✅ Cantidad actualizada en el carrito`,
+          {
+            duration: 2500,
+            style: {
+              background: '#22c55e',
+              color: '#fff',
+              fontWeight: 'bold',
+            },
+          }
+        );
         setQuantity(1);
       } else if (result.reason === 'max_limit') {
         toast.error(`⚠️ Máximo ${result.max} unidades por producto en el carrito`, {
@@ -194,9 +204,8 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
       setIsAddingToCart(false);
       setContextIsAddingToCart(false);
     }
-  }, [agregarAlCarrito, product, quantity, isAddingToCart, setContextIsAddingToCart]);
+  }, [agregarAlCarrito, product, quantity, isAddingToCart, setContextIsAddingToCart, setQuantity]);
 
-  // Sincronizar handleAddToCart con el contexto (después de su definición)
   useEffect(() => {
     if (setHandleAddToCart) {
       setHandleAddToCart(() => handleAddToCart);
@@ -204,35 +213,35 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   }, [handleAddToCart, setHandleAddToCart]);
 
   const increaseQuantity = () => {
-      const maxLimit = Math.min(product.stock, MAX_QUANTITY_PER_ITEM);
-      
-      if(quantity < maxLimit) {
-          setQuantity(q => q + 1);
-      } else if (quantity >= MAX_QUANTITY_PER_ITEM) {
-          toast.error(`⚠️ Máximo ${MAX_QUANTITY_PER_ITEM} unidades por producto`, {
-            duration: 2000,
-          });
-      } else {
-          toast.error(`Solo quedan ${product.stock} unidades en stock`, {
-            duration: 2000,
-          });
-      }
+    const maxLimit = Math.min(product.stock, MAX_QUANTITY_PER_ITEM);
+
+    if (quantity < maxLimit) {
+      setQuantity(q => q + 1);
+    } else if (quantity >= MAX_QUANTITY_PER_ITEM) {
+      toast.error(`⚠️ Máximo ${MAX_QUANTITY_PER_ITEM} unidades por producto`, {
+        duration: 2000,
+      });
+    } else {
+      toast.error(`Solo quedan ${product.stock} unidades en stock`, {
+        duration: 2000,
+      });
+    }
   };
+
   const decreaseQuantity = () => {
     setQuantity(q => (q > 1 ? q - 1 : 1));
   };
-  
-  // Lógica de flechas para la VISTA DE ESCRITORIO (optimizada)
+
   const handleNextImage = useCallback(() => {
-      const activeImageIndex = allImages.findIndex(img => img === activeImage);
-      const nextIndex = (activeImageIndex + 1) % allImages.length;
-      setActiveImage(allImages[nextIndex]);
+    const activeImageIndex = allImages.findIndex(img => img === activeImage);
+    const nextIndex = (activeImageIndex + 1) % allImages.length;
+    setActiveImage(allImages[nextIndex]);
   }, [allImages, activeImage]);
 
   const handlePrevImage = useCallback(() => {
-      const activeImageIndex = allImages.findIndex(img => img === activeImage);
-      const prevIndex = (activeImageIndex - 1 + allImages.length) % allImages.length;
-      setActiveImage(allImages[prevIndex]);
+    const activeImageIndex = allImages.findIndex(img => img === activeImage);
+    const prevIndex = (activeImageIndex - 1 + allImages.length) % allImages.length;
+    setActiveImage(allImages[prevIndex]);
   }, [allImages, activeImage]);
 
   if (!product) return <div>Cargando detalles del producto...</div>;
@@ -240,17 +249,14 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
   const renderGallery = () => {
     return (
       <>
-        {/* ================================================================
-            === VERSIÓN PARA ESCRITORIO ===
-            ================================================================ */}
-        <div className="hidden md:block flex-grow flex flex-col">
+        {/* Versión para escritorio */}
+      <div className="hidden md:flex flex-grow flex-col">
           <div className="relative w-full group">
-            {/* 2. AQUI INYECTAMOS EL ALT DINÁMICO */}
-            <ImageWithZoom 
-              src={activeImage} 
-              alt={`${product.name} 100% natural - Glisé`} 
-              openLightbox={handleOpenLightbox} 
-              priority 
+            <ImageWithZoom
+              src={activeImage}
+              alt={`${product.name} 100% natural - Glisé`}
+              openLightbox={handleOpenLightbox}
+              priority
             />
 
             {allImages.length > 1 && (
@@ -297,20 +303,27 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
           </div>
         </div>
 
-        {/* ============================================================
-            === VERSIÓN PARA MÓVIL ===
-            ============================================================ */}
+        {/* Versión para móvil */}
         <div className="md:hidden flex-1">
           <div className="relative w-full aspect-square group">
-            <Swiper modules={[Pagination]} pagination={{ clickable: true }} loop={allImages.length > 1} onSwiper={setSwiperInstance} onSlideChange={(swiper) => { if (allImages.length > 0) setActiveImage(allImages[swiper.realIndex]); }} allowTouchMove={allImages.length > 1} className="product-gallery-carousel h-full">
+            <Swiper
+              modules={[Pagination]}
+              pagination={{ clickable: true }}
+              loop={allImages.length > 1}
+              onSwiper={setSwiperInstance}
+              onSlideChange={(swiper) => {
+                if (allImages.length > 0) setActiveImage(allImages[swiper.realIndex]);
+              }}
+              allowTouchMove={allImages.length > 1}
+              className="product-gallery-carousel h-full"
+            >
               {allImages.map((imgSrc) => (
                 <SwiperSlide key={imgSrc} className="h-full relative">
-                  {/* 3. AQUI TAMBIÉN INYECTAMOS EL ALT DINÁMICO */}
-                  <ImageWithZoom 
-                    src={imgSrc} 
-                    alt={`${product.name} 100% natural - Glisé`} 
-                    openLightbox={handleOpenLightbox} 
-                    priority={imgSrc === allImages[0]} 
+                  <ImageWithZoom
+                    src={imgSrc}
+                    alt={`${product.name} 100% natural - Glisé`}
+                    openLightbox={handleOpenLightbox}
+                    priority={imgSrc === allImages[0]}
                   />
                 </SwiperSlide>
               ))}
@@ -323,7 +336,6 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
 
   return (
     <>
-      {/* JSON-LD del producto ya se renderiza en app/producto/[slug]/page.js, no duplicar aquí */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Galería de imágenes */}
         <div className="flex flex-col lg:flex-row gap-4">
@@ -335,14 +347,13 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
                   src={imgSrc}
                   isActive={imgSrc === activeImage}
                   onClick={() => setActiveImage(imgSrc)}
-                  productName={product.name} /* PASAMOS EL NOMBRE AL THUMBNAIL */
+                  productName={product.name}
                 />
               ))}
             </div>
           )}
           <div className="flex-grow">
             {renderGallery()}
-            {/* Versión de escritorio: Debajo de la galería */}
             <div className="hidden lg:block mt-6">
               <EnvioInfoAccordion />
             </div>
@@ -355,7 +366,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
                   src={imgSrc}
                   isActive={imgSrc === activeImage}
                   onClick={() => setActiveImage(imgSrc)}
-                  productName={product.name} /* PASAMOS EL NOMBRE AL THUMBNAIL */
+                  productName={product.name}
                 />
               ))}
             </div>
@@ -409,7 +420,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
               </div>
             </div>
           </div>
-          
+
           <div className="hidden md:block bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200 mt-8">
             {product.stock > 0 ? (
               <div className="flex flex-col gap-4">
@@ -444,7 +455,7 @@ export default function DetalleProductoCliente({ product, relatedProducts }) {
                   <button
                     onClick={handleAddToCart}
                     disabled={isAddingToCart}
-                    className={`flex-grow bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-8 rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-400 disabled:to-blue-500 disabled:cursor-not-allowed transition-all flex items-center justify-center text-xl gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 ring-4 ring-yellow-400 ring-opacity-75 animate-pulse`}
+                    className="flex-grow bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-8 rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-400 disabled:to-blue-500 disabled:cursor-not-allowed transition-all flex items-center justify-center text-xl gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 ring-4 ring-yellow-400 ring-opacity-75 animate-pulse"
                     aria-label={isAddingToCart ? "Agregando al carrito..." : "Agregar al carrito"}
                   >
                     {isAddingToCart ? (
